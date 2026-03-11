@@ -220,6 +220,11 @@ class WallpaperApp:
     def cmd_redo(self):
         if self.history_idx<len(self.history)-1: self.history_idx+=1; self._restore()
     def _restore(self): self.images=[i.clone() for i in self.history[self.history_idx]]; self.active_idx=None; self._refresh_canvas()
+    
+    def _sync_z_indices(self):
+        """Assure que les indices Z correspondent à l'ordre de la liste pour le rendu"""
+        for i, img in enumerate(self.images):
+            img.z_index = i
 
     def screen_to_logic(self, sx, sy): return (sx-self.pan_x)/self.zoom, (sy-self.pan_y)/self.zoom
     def logic_to_screen(self, lx, ly): return (lx*self.zoom)+self.pan_x, (ly*self.zoom)+self.pan_y
@@ -346,11 +351,15 @@ class WallpaperApp:
             if monitors and len(self.images) > 0 and len(self.images) <= len(monitors):
                 vx, vy, _, _ = virtual_desktop_bbox(monitors)
                 for i, img in enumerate(self.images):
-                    if i < len(monitors):
-                        m = monitors[i]
-            AutoLayoutStrategy.apply(layout_mode, self.target_w, self.target_h, self.images)
-        
-        self._save_state("Auto"); self._refresh_canvas()
+                    m = monitors[i]
+                    AutoLayoutStrategy._apply_fit_inside(img, m["x"] - vx, m["y"] - vy, m["width"], m["height"])
+                self._sync_z_indices()
+                self._refresh_canvas()
+                return
+
+        AutoLayoutStrategy.apply(layout_id, self.target_w, self.target_h, self.images)
+        self._sync_z_indices()
+        self._refresh_canvas()
         
     def cmd_remove_img(self): 
         if self.active_idx is not None: 
