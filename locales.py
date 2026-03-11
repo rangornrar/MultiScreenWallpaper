@@ -157,6 +157,12 @@ _STRINGS = {
         "fr": "Langue/Language:",
         "es": "Idioma/Lang:",
         "de": "Sprache/Lang:"
+    },
+    "btn_kofi": {
+        "en": "☕ Buy me a Ko-fi",
+        "fr": "☕ M'offrir un Ko-fi",
+        "es": "☕ Cómprame un Ko-fi",
+        "de": "☕ Ko-fi spendieren"
     }
 }
 

@@ -39,9 +39,9 @@ IID_IDesktopWallpaper  = GUID("{B92B56A9-8B55-4E14-9A89-0199BBB6F93B}")
 # Définition de la VTable (Table des méthodes virtuelles COM)
 class IDesktopWallpaperVtbl(ctypes.Structure):
     _fields_ = [
-        ("QueryInterface", ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.POINTER(GUID), ctypes.POINTER(ctypes.c_void_p))),
-        ("AddRef", ctypes.WINFUNCTYPE(ctypes.c_ulong)),
-        ("Release", ctypes.WINFUNCTYPE(ctypes.c_ulong)),
+        ("QueryInterface", ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(GUID), ctypes.POINTER(ctypes.c_void_p))),
+        ("AddRef", ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)),
+        ("Release", ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)),
         # Method 3: SetWallpaper
         ("SetWallpaper", ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_wchar_p)),
         ("GetWallpaper", ctypes.c_void_p),

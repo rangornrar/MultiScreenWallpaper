@@ -7,6 +7,7 @@ import tkinter.ttk as ttk
 import os
 import threading
 import tempfile
+import webbrowser
 from PIL import ImageTk, Image
 
 from image_tools import (
@@ -125,14 +126,21 @@ class WallpaperApp:
         self.chk_monitors.pack(pady=10)
         
         # Espace
-        tk.Frame(self.side_panel, bg="#222").pack(fill=tk.BOTH, expand=True)
+        filler = tk.Frame(self.side_panel, bg="#222")
+        filler.pack(fill=tk.BOTH, expand=True)
         
-        # Bouton Appliquer
-        self.btn_apply = tk.Button(self.side_panel, text=tr("btn_apply"), command=self.cmd_apply_wallpaper, bg="#27ae60", fg="white", font=("Segoe UI", 12, "bold"), bd=0, pady=12)
-        self.btn_apply.pack(fill=tk.X, padx=15, pady=20)
-        
+        # Bottom-up packing for the bottom section
         self.status_var = tk.StringVar(value=tr("status_ready"))
-        tk.Label(self.side_panel, textvariable=self.status_var, bg="#222", fg="#888", font=("Segoe UI", 9)).pack(side=tk.BOTTOM, pady=10)
+        self.lbl_status = tk.Label(self.side_panel, textvariable=self.status_var, bg="#222", fg="#888", font=("Segoe UI", 9))
+        self.lbl_status.pack(side=tk.BOTTOM, pady=(5, 10))
+        
+        # Ko-fi button just above status
+        self.btn_kofi = tk.Button(self.side_panel, text=tr("btn_kofi"), command=self.cmd_open_kofi, bg="#222", fg="#ee82ee", font=("Segoe UI", 10), bd=0, activebackground="#333", activeforeground="#ee82ee", cursor="hand2")
+        self.btn_kofi.pack(side=tk.BOTTOM, pady=(0, 5))
+
+        # Apply button above Ko-fi
+        self.btn_apply = tk.Button(self.side_panel, text=tr("btn_apply"), command=self.cmd_apply_wallpaper, bg="#27ae60", fg="white", font=("Segoe UI", 12, "bold"), bd=0, pady=12)
+        self.btn_apply.pack(side=tk.BOTTOM, fill=tk.X, padx=15, pady=(20, 10))
 
         # --- DROITE : Preview ---
         self.canvas_frame = tk.Frame(main_pane, bg="#111")
@@ -179,6 +187,7 @@ class WallpaperApp:
         self.btn_rem.config(text=tr("btn_remove"))
         self.chk_monitors.config(text=tr("chk_show_monitors"))
         self.btn_apply.config(text=tr("btn_apply"))
+        self.btn_kofi.config(text=tr("btn_kofi"))
         self.status_var.set(tr("status_ready"))
         
     def toggle_mode(self):
@@ -209,6 +218,9 @@ class WallpaperApp:
             messagebox.showerror(tr("error_title"), str(e))
         finally: 
             self.status_var.set(tr("status_ready"))
+
+    def cmd_open_kofi(self):
+        webbrowser.open("https://ko-fi.com/rangorn")
 
     def _save_state(self, n):
         if self.history_idx < len(self.history)-1: self.history = self.history[:self.history_idx+1]
