@@ -1,8 +1,12 @@
 # 🎨 WallCraft Pro - Multi-Monitor Wallpaper Generator
 
+🌍 **[English](README_en.md)** | **[Français](README.md)** | **[Español](README_es.md)** | **[Deutsch](README_de.md)**
+
 **WallCraft Pro** est une application Python performante conçue pour créer, organiser et appliquer des fonds d'écran sur des configurations multi-écrans complexes. 
 
-Elle résout le problème des résolutions différentes et des bordures d'écrans en permettant de positionner précisément des images ou de générer des mosaïques intelligentes (Grilles, Maçonnerie, Style Lapis Lazuli) sans déformer vos photos.
+Elle résout le problème des résolutions et des bordures de moniteurs disparates grâce à son puissant moteur intelligent : elle permet de fusionner de multiples photos sans **jamais les déformer ni les rogner**, garantissant une **visibilité absolue à 100%** de votre image ("Fit Inside").
+
+![WallCraft Interface](assets/wallcraft_app_ui_1773221294829.png)
 
 ---
 
@@ -11,20 +15,28 @@ Elle résout le problème des résolutions différentes et des bordures d'écran
 ### 🖥️ Gestion Multi-Écrans Avancée
 - **Détection automatique** de la disposition physique de vos écrans (gauche/droite, hauteur).
 - **Application native** : Applique un fond d'écran différent par moniteur (via l'API Windows `IDesktopWallpaper`).
-- **Mode Secours** : Bascule automatiquement en mode "Panorama" (Span) si l'API multi-écran n'est pas supportée.
+- **Mode Secours** : Bascule en mode "Panorama" (Span) si l'API n'est pas supportée.
 
-### 📐 Algorithmes de Mise en Page (Auto-Layout)
-- **Grid (Cover)** : Grille classique remplissant les cases.
-- **Masonry** : Colonnes type Pinterest.
-- **Smart BSP** : Partitionnement binaire de l'espace (optimisation de la surface).
-- **Justified (No Crop)** : Alignement type Flickr/Google Photos. Respecte 100% du ratio de l'image (pas de rognage).
-- **Lapis Lazuli (Weighted)** : Mosaïque aléatoire organique ("Opus Incertum"). Mélange tailles variées et placement intelligent pour minimiser les vides.
+### 📐 Le Moteur de Visibilité Absolue (Fit Inside)
+Le programme garantit la règle du 100% :
+- **0 Rognage (Crop)** : Aucune image uploadée ne verra ses bords coupés.
+- **0 Superposition** : Aucune photo ne couvre une autre photo.
+- **0 Dépassement** : Les images ne déborderont jamais de l'écran.
+- **0 Déformation** : Le ratio original est mathématiquement préservé.
+
+### 🧩 6 Algorithmes d'Organisation (Auto-Layout)
+- ⭐ **Optimisation Maximale (Lent)** : Le fleuron de l'application. Simule des centaines de milliers de variantes géométriques via un arbre de découpage binaire ("Slicing Floorplan") pour imbriquer vos images sans vide interstitiel, formant un bloc colossal qui réduit statistiquement les bandes noires à néant.
+- **Mosaïque Parfaite** : Un arrangement aléatoire de type patchwork (technique BSP).
+- **Lignes Justifiées** : Alignement type Flickr/Google Images.
+- **Grille Régulière** : Quadrillage mathématique et étendu.
+- **Bandes Verticales** et **Bandes Horizontales** : Découpage panoramique pleine hauteur ou largeur.
+
+![Optimisation Maximale Heuristique](assets/wallcraft_optimal_layout_1773221310533.png)
 
 ### ⚡ Performance & Édition
-- **Système de Proxy** : Utilise des miniatures pour une interface fluide (60fps) même avec des images 8K.
-- **Rendu HD** : L'export final utilise les fichiers originaux pour une qualité maximale.
-- **Retouche** : Luminosité, Contraste, Saturation, Flou et Rotation par image.
-- **Drag & Drop** : Déplacement, Zoom (Molette) et Panoramique (Clic molette).
+- **Système de Proxy** : Utilise des miniatures pour une interface hyper fluide même avec des images 8K.
+- **Retouche Intégrée** : Luminosité, Contraste, Saturation, Flou et Rotation.
+- **Rendu HD** : L'export final utilise les fichiers Ultra HD originaux pour une qualité absolue.
 
 ---
 
@@ -32,67 +44,31 @@ Elle résout le problème des résolutions différentes et des bordures d'écran
 
 ### Prérequis
 - Python 3.8 ou supérieur.
-- Windows 10 ou 11 (pour l'API de fond d'écran).
+- Windows 10/11 (requis en raison de l'API de fond d'écran).
 
 ### Dépendances
-Installez les bibliothèques nécessaires via pip :
-
 ```bash
 pip install pillow screeninfo
 ```
-(Note : L'application utilise ctypes et winreg (natifs) pour communiquer avec Windows, donc pas besoin de pywin32 ou comtypes lourds).
 
 ## 🛠️ Utilisation
-1. Lancer l'application :
-
-```Bash
-python main.py
-```
-2. Importer des images : Cliquez sur + Ajouter ou glissez des fichiers.
-
-3. Choisir un Layout :
-
-    * Sélectionnez un mode (ex: lapis, justified) dans la liste déroulante.
-    * Cliquez sur Auto.
-
-4. Ajuster :
-
-    * Cliquez sur une image pour la sélectionner.
-    * Utilisez les curseurs (Luminosité, Flou...) en haut.
-    * Déplacez-la à la souris.
-
-5. Appliquer :
-
-    * 💾 Export : Sauvegarde une image PNG géante.
-    * ✂ Split : Sauvegarde une image par écran dans un dossier.
-    * 🖥️ Appliquer : Change immédiatement votre fond d'écran Windows.
+1. Lancer l'application : `python main.py`
+2. **Ajouter des images** : Cliquez sur le bouton ou glissez des fichiers.
+3. **Menu Langue** : Choisissez EN/FR/ES/DE directement depuis l'interface.
+4. **Choisir un Layout** : Sélectionnez l'un des 6 modes ("Optimisation Maximale" recommandé pour limiter les bandes noires).
+5. **Auto-Organiser** : Appuyez sur le bouton "🎲" et laissez le moteur mathématique faire le reste.
+6. **Appliquer** :
+    * 💾 Export : Sauvegarde une grande maquette.
+    * ✂ Split : Divise la composition en images respectant les écrans physiques.
+    * 🖥️ Appliquer : Modifie activement votre bureau Windows.
 
 ## 📂 Structure du Projet
-* main.py : Point d'entrée. Configure la fenêtre et la gestion High-DPI pour éviter le flou.
-* ui.py : Gestion de l'interface graphique (Tkinter), des événements souris et des panneaux de contrôle.
-* image_tools.py : Cœur logique. Contient la classe LoadedImage (gestion proxy/HD) et tous les algorithmes mathématiques de mise en page (AutoLayoutStrategy).
-* screen_splitter.py : Interface bas niveau avec Windows. Gère la détection des écrans, le découpage des images et l'injection du wallpaper via les appels système ctypes.
+* `main.py` : Point d'entrée, gestion High-DPI Windows.
+* `ui.py` : Fenêtre, canevas interactif, menus et interactions souris.
+* `locales.py` : Registre multilingue des chaînes de caractères.
+* `image_tools.py` : Le Cœur logique. Manipulation d'images (Crop/Fit) et moteurs de layout (`AutoLayoutStrategy`).
+* `screen_splitter.py` : Appels système ctypes pour l'injection native sur Windows.
 
-## 🏗️ Compiler en .EXE (Optionnel)
-Pour créer un exécutable autonome à partager ou à placer sur le bureau :
-
-1. Installez PyInstaller :
-
-```Bash
-pip install pyinstaller
-```
-2. Lancez la compilation :
-
-```Bash
-pyinstaller --noconsole --onefile --name="WallCraft" main.py
-```
-3. L'exécutable sera dans le dossier dist/.
-
-
-
-## 🐛 Dépannage fréquent
-* L'application est floue ? Le script main.py force le mode "DPI Aware". Assurez-vous de lancer via python main.py et non via un IDE qui pourrait brider l'affichage.
-
-* Les écrans sont dans le mauvais ordre ? L'algorithme trie les écrans par leur position physique (coordonnée X) de gauche à droite, et non par leur numéro Windows (1, 2, 3). Assurez-vous que vos écrans sont bien disposés dans les "Paramètres d'affichage" de Windows.
-
-* Bandes noires en mode "Lapis" ou "Justified" ? C'est normal. Ces modes sont conçus pour ne jamais rogner une photo. Si la somme des photos ne correspond pas exactement au ratio de l'écran, des bandes noires sont ajoutées pour combler le vide ("Fit Inside").
+## 🐛 Dépannage
+* **L'application est floue ?** Lancez via le terminal Windows classique (cmd/powershell) plutôt que via l'IDE pour assurer la gestion High-DPI de Windows.
+* **Bandes noires visibles ?** C'est le comportement attendu. L'application refusant tout rognage par conception, les espaces non remplis des boîtes géométriques affichent une bande noire pour conserver l'image 100% visible. L'option "Optimisation Maximale" permet justement de compresser cela.

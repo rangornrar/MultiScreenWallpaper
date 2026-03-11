@@ -134,13 +134,106 @@ class AutoLayoutStrategy:
             img.z_index = idx
             img.crop_box_norm = (0.0, 0.0, 1.0, 1.0) # Reset crop
 
-        if mode == "grid": AutoLayoutStrategy._grid_cover(target_w, target_h, images)
-        elif mode == "horizontal": AutoLayoutStrategy._horizontal_strip(target_w, target_h, images)
-        elif mode == "masonry": AutoLayoutStrategy._masonry(target_w, target_h, images)
-        elif mode == "smart_mosaic": AutoLayoutStrategy._mosaic_smart(target_w, target_h, images) # <--- NOUVEAU
-        elif mode == "smart_bsp": AutoLayoutStrategy._mosaic_bsp(0, 0, target_w, target_h, images) # <--- NOUVEAU
-        elif mode == "justified": AutoLayoutStrategy._justified_optimized(target_w, target_h, images) # <--- NOUVEAU
-        elif mode == "lapis": AutoLayoutStrategy._lapis_weighted(target_w, target_h, images) # <--- NOUVEAU
+        if mode == "layout_mosaic": AutoLayoutStrategy._perfect_mosaic(target_w, target_h, images)
+        elif mode == "layout_grid": AutoLayoutStrategy._grid_fit(target_w, target_h, images)
+        elif mode == "layout_lines": AutoLayoutStrategy._justified_fit(target_w, target_h, images)
+        elif mode == "layout_v_strip": AutoLayoutStrategy._vertical_strip(target_w, target_h, images)
+        elif mode == "layout_h_strip": AutoLayoutStrategy._horizontal_strip(target_w, target_h, images)
+        elif mode == "layout_optimal": AutoLayoutStrategy._optimal_fit(target_w, target_h, images)
+        else: AutoLayoutStrategy._perfect_mosaic(target_w, target_h, images) # fallback
+
+    @staticmethod
+    def _optimal_fit(tw, th, images):
+        """
+        Trouve la meilleure combinaison avec un Slicing Floorplan qui 
+        maximise l'aire globale à l'écran sans aucun trou entre les images.
+        """
+        import time
+        import random
+        
+        n = len(images)
+        if n == 0: return
+        elif n == 1:
+            AutoLayoutStrategy._apply_fit_inside(images[0], 0, 0, tw, th)
+            return
+            
+        target_ratio = tw / th
+        
+        def make_random_tree(imgs_slice):
+            if len(imgs_slice) == 1:
+                return {"type": "leaf", "img": imgs_slice[0], "R": imgs_slice[0].current_aspect()}
+            
+            split_idx = random.randint(1, len(imgs_slice) - 1)
+            left = make_random_tree(imgs_slice[:split_idx])
+            right = make_random_tree(imgs_slice[split_idx:])
+            
+            op = random.choice(['H', 'V'])
+            if op == 'H':
+                R = left["R"] + right["R"]
+            else:
+                R = 1.0 / (1.0 / left["R"] + 1.0 / right["R"])
+                
+            return {"type": op, "left": left, "right": right, "R": R}
+
+        best_tree = None
+        best_score = -1
+        
+        start_time = time.time()
+        max_time = 0.85
+        
+        imgs_copy = images.copy()
+        
+        iterations = 0
+        while time.time() - start_time < max_time:
+            iterations += 1
+            if n <= 10 and iterations > 100000:
+                break
+                
+            random.shuffle(imgs_copy)
+            tree = make_random_tree(imgs_copy)
+            
+            TR = tree["R"]
+            if TR >= target_ratio:
+                score = target_ratio / TR
+            else:
+                score = TR / target_ratio
+                
+            if score > best_score:
+                best_score = score
+                best_tree = tree
+
+        R_total = best_tree["R"]
+        if R_total >= target_ratio:
+            global_w = tw
+            global_h = tw / R_total
+        else:
+            global_h = th
+            global_w = th * R_total
+            
+        start_x = (tw - global_w) / 2
+        start_y = (th - global_h) / 2
+        
+        def place_tree(node, x, y, w, h):
+            if node["type"] == "leaf":
+                AutoLayoutStrategy._apply_fit_inside(node["img"], x, y, w, h)
+                return
+            
+            left = node["left"]
+            right = node["right"]
+            if node["type"] == 'H':
+                w_left = w * (left["R"] / node["R"])
+                w_right = w - w_left
+                place_tree(left, x, y, w_left, h)
+                place_tree(right, x + w_left, y, w_right, h)
+            else:
+                inv_l = 1.0 / left["R"]
+                inv_r = 1.0 / right["R"]
+                h_left = h * (inv_l / (inv_l + inv_r))
+                h_right = h - h_left
+                place_tree(left, x, y, w, h_left)
+                place_tree(right, x, y + h_left, w, h_right)
+
+        place_tree(best_tree, start_x, start_y, global_w, global_h)
 
     @staticmethod
     def _apply_fit_inside(img, box_x, box_y, box_w, box_h):
@@ -187,366 +280,149 @@ class AutoLayoutStrategy:
             img.crop_box_norm = (0.0, margin, 1.0, 1.0 - margin)
 
     @staticmethod
-    def _lapis_weighted(target_w, target_h, images):
+    def _justified_fit(tw, th, images):
         """
-        Mélange les images (aléatoire) mais calcule la taille des cases 
-        selon le poids des images (optimisation espace).
-        """
-        if not images: return
-        
-        # 1. Aléatoire : On mélange l'ordre des images
-        shuffled = images.copy()
-        random.shuffle(shuffled)
-        
-        # 2. Découpe récursive intelligente
-        AutoLayoutStrategy._recursive_weighted_split(0, 0, target_w, target_h, shuffled)
-
-    @staticmethod
-    def _recursive_weighted_split(x, y, w, h, images):
-        n = len(images)
-        if n == 0: return
-        
-        # Cas de base
-        if n == 1:
-            AutoLayoutStrategy._apply_fit_inside(images[0], x, y, w, h)
-            return
-
-        # Décision : On coupe le côté le plus long pour éviter les rectangles trop fins
-        split_vertical = w > h
-
-        # Calcul des poids pour minimiser les bandes noires
-        # Si on coupe Verticalement, on veut équilibrer la somme des largeurs relatives (Aspect Ratio)
-        # Si on coupe Horizontalement, on veut équilibrer la somme des hauteurs relatives (1 / Aspect Ratio)
-        if split_vertical:
-            ratios = [img.current_aspect() for img in images]
-        else:
-            ratios = [1.0 / img.current_aspect() for img in images]
-        
-        total_weight = sum(ratios)
-        
-        # Découpe de la LISTE des images
-        # Pour garder un effet "Lapis" (mosaïque irrégulière), on ne coupe pas forcément au milieu de la liste.
-        # On coupe à un index aléatoire, mais on évite les extrêmes (0 ou N)
-        if n == 2:
-            split_idx = 1
-        else:
-            # On choisit un point de coupure aléatoire dans la liste (entre 1 et N-1)
-            # C'est ça qui crée la variété de tailles (un groupe de 2 vs un groupe de 10)
-            split_idx = random.randint(1, n - 1)
-        
-        group_a = images[:split_idx]
-        group_b = images[split_idx:]
-        
-        # Calcul du poids du groupe A
-        weight_a = sum(ratios[:split_idx])
-        
-        # Pourcentage de l'espace que le groupe A "mérite" pour être bien affiché
-        split_pct = weight_a / total_weight if total_weight > 0 else 0.5
-        
-        # Application de la découpe physique de l'écran
-        if split_vertical:
-            w_a = w * split_pct
-            w_b = w - w_a
-            # Récursion
-            AutoLayoutStrategy._recursive_weighted_split(x, y, w_a, h, group_a)
-            AutoLayoutStrategy._recursive_weighted_split(x + w_a, y, w_b, h, group_b)
-        else:
-            h_a = h * split_pct
-            h_b = h - h_a
-            # Récursion
-            AutoLayoutStrategy._recursive_weighted_split(x, y, w, h_a, group_a)
-            AutoLayoutStrategy._recursive_weighted_split(x, y + h_a, w, h_b, group_b)
-    @staticmethod
-    def _mosaic_smart(tw, th, images):
-        """
-        Algorithme 'Justified Layout' :
-        1. Calcule combien de lignes sont nécessaires pour remplir le ratio de l'écran.
-        2. Distribue les images sur ces lignes.
-        3. Ajuste la hauteur de chaque ligne pour qu'elle fasse exactement la largeur de l'écran.
+        Crée des lignes pour remplir TW. Et réduit le tout si nécessaire pour rentrer dans TH (Fit Inside).
         """
         if not images: return
-        
-        # 1. Calculer le 'Poids' total (somme des ratios)
         ratios = [img.current_aspect() for img in images]
         total_ratio = sum(ratios)
-        
-        # Ratio de la zone cible (L'écran)
         screen_ratio = tw / th
         
-        # 2. Estimation du nombre de lignes idéal
-        # Si on empile des lignes de ratio ~screen_ratio, alors:
-        # Nombre de lignes ~ Racine(Total_Ratio / Screen_Ratio * N) ?? 
-        # Plus simple : Si on met tout sur 1 ligne, ratio = Total. On veut ratio = Screen.
-        # Donc on divise par K lignes. Moyenne ratio ligne = Total / K.
-        # On veut Total / K ≈ Screen. Donc K ≈ Total / Screen.
-        
-        ideal_rows = round(total_ratio / screen_ratio)
-        ideal_rows = max(1, ideal_rows) # Au moins 1 ligne
-        
-        # 3. Distribution gloutonne des images dans les lignes
+        ideal_rows = max(1, round(total_ratio / screen_ratio))
         rows = []
         current_row = []
         current_row_ratio = 0.0
-        
-        # Ratio cible par ligne pour être équilibré
         avg_target_row_ratio = total_ratio / ideal_rows
         
         for i, img in enumerate(images):
             current_row.append(img)
             current_row_ratio += ratios[i]
-            
-            # Si la ligne est assez remplie (proche de la moyenne ou du ratio écran)
-            # On coupe ici, sauf si c'est la dernière image
             if current_row_ratio >= avg_target_row_ratio and len(rows) < ideal_rows - 1:
                 rows.append((current_row, current_row_ratio))
                 current_row = []
                 current_row_ratio = 0.0
-        
-        # Ajouter le reste dans la dernière ligne
         if current_row:
             rows.append((current_row, current_row_ratio))
             
-        # 4. Calcul de la géométrie finale
-        # On calcule la hauteur totale utilisée pour centrer verticalement si besoin
-        total_used_height = 0
-        
-        # D'abord, on calcule la hauteur de chaque ligne pour qu'elle fasse largeur TW
-        # W = H * Ratio => H = W / Ratio
         row_heights = []
+        total_used_height = 0
         for r_imgs, r_ratio in rows:
             if r_ratio == 0: continue
             h = tw / r_ratio
             row_heights.append(h)
             total_used_height += h
             
-        # Facteur d'échelle pour faire tenir tout ça dans TH (si ça dépasse)
-        # On veut faire rentrer 'total_used_height' dans 'th'
-        scale_factor = 1.0
-        if total_used_height > th:
-            scale_factor = th / total_used_height
-        
-        # Si ça ne remplit pas tout (trop petit), on peut choisir de centrer ou d'agrandir.
-        # Ici on agrandit pour remplir (COVER) sauf si c'est vraiment trop étiré.
-        # Pour le mode "Espace disponible", on va essayer de remplir TH si possible.
-        elif total_used_height < th and total_used_height > 0:
-             scale_factor = th / total_used_height
-
-        # Position de départ Y (Centrage vertical si on ne scale pas à fond, mais ici on scale)
+        scale_factor = min(1.0, th / total_used_height) if total_used_height > 0 else 1.0
         current_y = (th - (total_used_height * scale_factor)) / 2
         
         for idx_row, (r_imgs, r_ratio) in enumerate(rows):
-            # Hauteur de cette ligne (ajustée au scale global)
             h_raw = row_heights[idx_row]
             final_h = h_raw * scale_factor
-            
-            current_x = 0
+            current_x = (tw - (tw * scale_factor)) / 2
             for img in r_imgs:
-                # Largeur = Hauteur * Ratio
-                # On utilise final_h pour que tout soit aligné
                 w = final_h * img.current_aspect()
-                
-                img.x = current_x
-                img.y = current_y
-                img.w = int(w) + 1 # +1 pour éviter les micro-gaps d'arrondi
-                img.h = int(final_h) + 1
-                
+                AutoLayoutStrategy._apply_fit_inside(img, current_x, current_y, w, final_h)
                 current_x += w
-            
             current_y += final_h
 
     @staticmethod
-    def _mosaic_bsp(x, y, w, h, images):
+    def _perfect_mosaic(tw, th, images):
         """
-        Partitionnement Binaire de l'Espace (BSP).
-        Divise récursivement la zone (x,y,w,h) en 2 selon le poids des images.
+        Garantit que 100% de l'espace (tw, th) est couvert, sans aucunes bandes noires.
+        1. S'il n'y a qu'1 image, elle remplit tout.
+        2. Sinon, on utilise un BSP aléatoire équilibré où chaque cellule résultat
+           est remplie avec _apply_crop_cover() au lieu de _apply_fit_inside().
         """
         if not images: return
+        
+        # On mélange légèrement pour l'effet patchwork
+        shuffled = images.copy()
+        random.shuffle(shuffled)
+        
+        AutoLayoutStrategy._recursive_perfect_bsp(0, 0, tw, th, shuffled)
 
-        # Cas de base : 1 seule image -> Elle prend toute la place
-        if len(images) == 1:
+    @staticmethod
+    def _recursive_perfect_bsp(x, y, w, h, images):
+        n = len(images)
+        if n == 0: return
+        
+        # Cas de base: 1 seule image pour cette zone
+        if n == 1:
             img = images[0]
-            img.x = int(x)
-            img.y = int(y)
             AutoLayoutStrategy._apply_fit_inside(img, x, y, w, h)
             return
 
-        # Décision : Couper Verticalement ou Horizontalement ?
-        # On coupe généralement le côté le plus long du rectangle
-        split_vertical = w > h
-
-        # Calcul des "Poids" pour savoir où couper la liste des images
-        # Si coupe Verticale (côte à côte) : Poids = Ratio (Largeur relative)
-        # Si coupe Horizontale (empilé) : Poids = 1/Ratio (Hauteur relative)
-        if split_vertical:
-            weights = [img.current_aspect() for img in images]
+        # On coupe aléatoirement le côté le plus long souvent, mais parfois le court
+        # pour un effet patchwork plus dynamique.
+        if w > h * 1.5:
+            split_vertical = True
+        elif h > w * 1.5:
+            split_vertical = False
         else:
-            weights = [1.0 / img.current_aspect() for img in images]
+            split_vertical = random.choice([True, False])
 
-        total_weight = sum(weights)
-        half_weight = total_weight / 2.0
-        
-        # Trouver l'index de coupure pour équilibrer les poids ( ~ moitié / moitié )
-        current_w = 0
-        split_idx = 1
-        best_diff = float('inf')
-
-        # On cherche l'index qui divise le mieux la liste en deux masses égales
-        for i in range(len(weights) - 1):
-            current_w += weights[i]
-            diff = abs(current_w - half_weight)
-            if diff < best_diff:
-                best_diff = diff
-                split_idx = i + 1
-            else:
-                # Si la différence augmente, on a dépassé l'optimum
-                break
-        
-        # Séparation des groupes
+        # On coupe la liste des images aléatoirement pour éviter des grilles parfaites
+        if n == 2:
+            split_idx = 1
+        else:
+            # coupe aléatoire entre 1 et n-1
+            split_idx = random.randint(1, n - 1)
+            
         group_a = images[:split_idx]
         group_b = images[split_idx:]
         
-        weight_a = sum(weights[:split_idx])
-        weight_total = sum(weights)
-        
-        # Ratio de surface pour le groupe A
-        ratio_a = weight_a / weight_total if weight_total > 0 else 0.5
+        # La taille physique de la découpe dépend du ratio du nombre d'images, 
+        # avec une petite marge d'aléatoire pour le style patchwork.
+        base_ratio = len(group_a) / n
+        jitter = random.uniform(-0.1, 0.1) # +/- 10%
+        final_ratio = max(0.2, min(0.8, base_ratio + jitter))
 
         if split_vertical:
-            # Coupe sur la largeur (X)
-            w_a = w * ratio_a
+            w_a = w * final_ratio
             w_b = w - w_a
-            # Récursion Gauche
-            AutoLayoutStrategy._mosaic_bsp(x, y, w_a, h, group_a)
-            # Récursion Droite
-            AutoLayoutStrategy._mosaic_bsp(x + w_a, y, w_b, h, group_b)
+            AutoLayoutStrategy._recursive_perfect_bsp(x, y, w_a, h, group_a)
+            AutoLayoutStrategy._recursive_perfect_bsp(x + w_a, y, w_b, h, group_b)
         else:
-            # Coupe sur la hauteur (Y)
-            h_a = h * ratio_a
+            h_a = h * final_ratio
             h_b = h - h_a
-            # Récursion Haut
-            AutoLayoutStrategy._mosaic_bsp(x, y, w, h_a, group_a)
-            # Récursion Bas
-            AutoLayoutStrategy._mosaic_bsp(x, y + h_a, w, h_b, group_b)
+            AutoLayoutStrategy._recursive_perfect_bsp(x, y, w, h_a, group_a)
+            AutoLayoutStrategy._recursive_perfect_bsp(x, y + h_a, w, h_b, group_b)
 
     @staticmethod
-    def _justified_optimized(target_w, target_h, images):
-        """
-        Version "Fit Inside" stricte.
-        Calcule le meilleur layout puis le réduit si nécessaire pour qu'il rentre
-        intégralement dans l'écran, sans aucun dépassement.
-        """
+    def _grid_fit(tw, th, images):
         if not images: return
-        count = len(images)
-        if count == 0: return
-
-        ratios = [img.current_aspect() for img in images]
-        best_layout = None
-        min_waste = float('inf')
-
-        # Tester différentes quantités de lignes
-        max_test_rows = min(count, 30) 
-        
-        for n_rows in range(1, max_test_rows + 1):
-            rows = []; current_row = []; current_r_sum = 0.0
-            total_ratio = sum(ratios); target_row_r = total_ratio / n_rows
-            
-            img_idx = 0
-            for r in range(n_rows):
-                row_imgs = []; row_r_sum = 0.0
-                while img_idx < count:
-                    if r == n_rows - 1:
-                        row_imgs.append(images[img_idx])
-                        row_r_sum += ratios[img_idx]; img_idx += 1
-                        continue
-                    curr_img_r = ratios[img_idx]
-                    dist_now = abs(target_row_r - row_r_sum)
-                    dist_with = abs(target_row_r - (row_r_sum + curr_img_r))
-                    if row_imgs and dist_with > dist_now: break
-                    row_imgs.append(images[img_idx])
-                    row_r_sum += curr_img_r; img_idx += 1
-                if row_imgs: rows.append( {'imgs': row_imgs, 'sum': row_r_sum} )
-
-            simulated_total_h = 0
-            for row in rows:
-                if row['sum'] > 0: simulated_total_h += target_w / row['sum']
-            
-            diff = abs(simulated_total_h - target_h)
-            if diff < min_waste:
-                min_waste = diff
-                best_layout = {'rows': rows, 'total_h': simulated_total_h}
-
-        if not best_layout: return
-
-        # --- LOGIQUE CORRIGÉE ICI ---
-        # On veut que le bloc final rentre dans (target_w, target_h).
-        # Le bloc layout a une largeur théorique de target_w et une hauteur de best_layout['total_h'].
-        
-        # Scale X : on veut que width <= target_w -> target_w / target_w = 1.0
-        # Scale Y : on veut que height <= target_h -> target_h / total_h
-        
-        # On prend le MINIMUM pour que les deux conditions soient vraies.
-        scale_h = target_h / best_layout['total_h']
-        final_scale = min(1.0, scale_h)
-        
-        final_block_w = target_w * final_scale
-        final_block_h = best_layout['total_h'] * final_scale
-        
-        # Centrage
-        start_x = (target_w - final_block_w) / 2
-        start_y = (target_h - final_block_h) / 2
-        
-        current_y = start_y
-        for row in best_layout['rows']:
-            if row['sum'] == 0: continue
-            raw_h = target_w / row['sum']
-            display_h = raw_h * final_scale
-            
-            current_x = start_x
-            for img in row['imgs']:
-                display_w = display_h * img.current_aspect()
-                img.x = current_x
-                img.y = current_y
-                # +1 pixel pour éviter les trous d'arrondi visuels, 
-                # mais vu qu'on a un scale < 1.0, ça ne devrait pas dépasser l'écran.
-                img.w = int(display_w) + 1 
-                img.h = int(display_h) + 1
-                img.crop_box_norm = (0.0, 0.0, 1.0, 1.0)
-                current_x += display_w
-            current_y += display_h
-            
-    # --- (Garder les autres méthodes Grid, Horizontal, Masonry si vous voulez) ---
-    @staticmethod
-    def _grid_cover(tw, th, images):
-        # ... (Code existant inchangé) ...
         count = len(images)
         cols = math.ceil(math.sqrt(count))
         rows = math.ceil(count / cols)
         cw, ch = tw / cols, th / rows
         for i, img in enumerate(images):
-            img.x = (i % cols) * cw
-            img.y = (i // cols) * ch
-            AutoLayoutStrategy._apply_crop_cover(img, cw, ch)
+            col_idx = i % cols
+            row_idx = i // cols
+            
+            # Gestion de la dernière ligne incomplète
+            items_in_this_row = count - (row_idx * cols)
+            if row_idx == rows - 1 and items_in_this_row < cols:
+                special_w = tw / items_in_this_row
+                AutoLayoutStrategy._apply_fit_inside(img, col_idx * special_w, row_idx * ch, special_w, ch)
+            else:
+                AutoLayoutStrategy._apply_fit_inside(img, col_idx * cw, row_idx * ch, cw, ch)
 
     @staticmethod
     def _horizontal_strip(tw, th, images):
-        # ... (Code existant inchangé) ...
-        x = 0
-        for img in images:
-            img.x = x; img.y = 0; img.h = int(th)
-            img.w = int(th * img.current_aspect())
-            img.crop_box_norm = (0.0, 0.0, 1.0, 1.0)
-            x += img.w
+        count = len(images)
+        if count == 0: return
+        ch = th / count
+        for i, img in enumerate(images):
+            AutoLayoutStrategy._apply_fit_inside(img, 0, i * ch, tw, ch)
 
     @staticmethod
-    def _masonry(tw, th, images):
-        # ... (Code existant inchangé) ...
-        cols = max(3, int(tw / 500)); col_w = tw / cols; heights = [0] * cols
-        for img in images:
-            sc = heights.index(min(heights))
-            nh = int(col_w / img.current_aspect())
-            img.x = sc * col_w; img.y = heights[sc]; img.w, img.h = int(col_w), nh
-            img.crop_box_norm = (0.0, 0.0, 1.0, 1.0)
-            heights[sc] += nh
+    def _vertical_strip(tw, th, images):
+        count = len(images)
+        if count == 0: return
+        cw = tw / count
+        for i, img in enumerate(images):
+            AutoLayoutStrategy._apply_fit_inside(img, i * cw, 0, cw, th)
             
 # IO
 def save_project_json(path, data):
