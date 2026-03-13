@@ -109,6 +109,36 @@ class LoadedImage:
         self._preview_cache[cache_key] = tk_img
         return tk_img
 
+    def _get_rendered_base(self, target_w, target_h):
+        """Returns a PIL image of this object as it appears (rotated, cropped, filtered)."""
+        if target_w <= 0 or target_h <= 0: return None
+        im_rot = self.display_image.rotate(self.angle, expand=True, resample=Image.Resampling.NEAREST)
+        rw, rh = im_rot.size
+        cl, ct, cr, cb = self.crop_box_norm
+        l, t = int(cl * rw), int(ct * rh)
+        r, b = int(cr * rw), int(cb * rh)
+        if r - l < 1: r = l + 1
+        if b - t < 1: b = t + 1
+        im_cropped = im_rot.crop((l, t, r, b))
+        return im_cropped.resize((int(target_w), int(target_h)), Image.Resampling.BILINEAR)
+
+    def get_tk_image_slice(self, l, t, r, b, target_w, target_h):
+        """Returns a PhotoImage of a specific slice of this image."""
+        if target_w <= 0 or target_h <= 0: return None
+        
+        # We need the image at its 'logic' size to crop it with logic coordinates
+        full_visible = self._get_rendered_base(self.w, self.h)
+        if not full_visible: return None
+        
+        # Crop the slice
+        try:
+            slice_img = full_visible.crop((int(l), int(t), int(r), int(b)))
+            slice_img = slice_img.resize((target_w, target_h), Image.Resampling.BILINEAR)
+            from PIL import ImageTk
+            return ImageTk.PhotoImage(slice_img)
+        except Exception:
+            return None
+
 def load_images_from_paths(paths):
     res = []
     for p in paths:

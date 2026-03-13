@@ -69,10 +69,10 @@ _STRINGS = {
         "de": "Horizontale Streifen"
     },
     "layout_optimal": {
-        "en": "Maximum Optimization (Slow)",
-        "fr": "Optimisation Maximale (Lent)",
-        "es": "Optimización Máxima (Lento)",
-        "de": "Maximale Optimierung (Langsam)"
+        "en": "Maximum Optimization",
+        "fr": "Optimisation Maximale",
+        "es": "Optimización Máxima",
+        "de": "Maximale Optimierung"
     },
     "btn_auto_arrange": {
         "en": "🎲 Auto-Arrange",
@@ -163,6 +163,12 @@ _STRINGS = {
         "fr": "☕ M'offrir un Ko-fi",
         "es": "☕ Cómprame un Ko-fi",
         "de": "☕ Ko-fi spendieren"
+    },
+    "lbl_simulated_view": {
+        "en": "Real-world View",
+        "fr": "Vue Simulée",
+        "es": "Vista Real",
+        "de": "Reale Ansicht"
     }
 }
 
