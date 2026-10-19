@@ -4,7 +4,7 @@
 
 🌍 **[English](README_en.md)** | **[Français](README.md)** | **[Español](README_es.md)** | **[Deutsch](README_de.md)**
 
-**WallCraft Pro** est une application Python conçue pour créer, organiser et appliquer des fonds d'écran sur des configurations multi-écrans complexes. 
+**WallCraft Pro** est une application Python conçue pour créer, organiser et appliquer des fonds d'écran sur des configurations multi-écrans complexes.
 
 Elle résout le problème des résolutions et des bordures de moniteurs disparates grâce à son moteur de placement : elle permet de fusionner de multiples photos sans **jamais les déformer ni les rogner**, en conservant l’intégralité de chaque image dans les modes de placement décrits ("Fit Inside").
 
