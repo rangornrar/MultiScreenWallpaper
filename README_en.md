@@ -74,3 +74,8 @@ pip install pillow screeninfo
 ## 🐛 Troubleshooting
 * **Is the application blurry?** Run it via the standard Windows terminal (cmd/powershell) rather than an IDE terminal to ensure Windows High-DPI handling is engaged.
 * **Are black bars visible on the edges?** This is expected behavior. Because the application refuses to ever crop by design, the geometry boxes display a black bar to keep the image 100% visible. The "Maximum Optimization" option allows you to compress these black bars to the absolute possible minimum mathematically.
+
+
+## Architecture & validation
+
+[Architecture and trade-offs](docs/ARCHITECTURE.md) · [Quality and test scope](docs/QUALITY.md).

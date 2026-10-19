@@ -74,3 +74,8 @@ pip install pillow screeninfo
 ## 🐛 Fehlerbehebung
 * **Ist die Anwendung unscharf?** Führen Sie sie über das Standard-Terminal von Windows (cmd/powershell) und nicht über eine Entwicklungsumgebung (IDE) aus. 
 * **Sind schwarze Balken sichtbar?** Dies ist das erwartete Verhalten. Da die Anwendung Bilder absichtlich nicht zuschneidet ("No Crop"), wird der verbleibende Platz durch schwarze Balken gefüllt ("Fit Inside"). Verwenden Sie "Maximale Optimierung", um dies zu verringern.
+
+
+## Architecture & validation
+
+[Architecture and trade-offs](docs/ARCHITECTURE.md) · [Quality and test scope](docs/QUALITY.md).

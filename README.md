@@ -4,9 +4,9 @@
 
 🌍 **[English](README_en.md)** | **[Français](README.md)** | **[Español](README_es.md)** | **[Deutsch](README_de.md)**
 
-**WallCraft Pro** est une application Python performante conçue pour créer, organiser et appliquer des fonds d'écran sur des configurations multi-écrans complexes. 
+**WallCraft Pro** est une application Python conçue pour créer, organiser et appliquer des fonds d'écran sur des configurations multi-écrans complexes.
 
-Elle résout le problème des résolutions et des bordures de moniteurs disparates grâce à son puissant moteur intelligent : elle permet de fusionner de multiples photos sans **jamais les déformer ni les rogner**, garantissant une **visibilité absolue à 100%** de votre image ("Fit Inside").
+Elle résout le problème des résolutions et des bordures de moniteurs disparates grâce à son moteur de placement : elle permet de fusionner de multiples photos sans **jamais les déformer ni les rogner**, en conservant l’intégralité de chaque image dans les modes de placement décrits ("Fit Inside").
 
 ![WallCraft Interface](assets/wallcraft_app_ui_1773221294829.png)
 
@@ -27,7 +27,7 @@ Le programme garantit la règle du 100% :
 - **0 Déformation** : Le ratio original est mathématiquement préservé.
 
 ### 🧩 6 Algorithmes d'Organisation (Auto-Layout)
-- ⭐ **Optimisation Maximale (Lent)** : Le fleuron de l'application. Simule des centaines de milliers de variantes géométriques via un arbre de découpage binaire ("Slicing Floorplan") pour imbriquer vos images sans vide interstitiel, formant un bloc colossal qui réduit statistiquement les bandes noires à néant.
+- ⭐ **Optimisation Maximale (Lent)** : Recherche heuristique bornée à environ 0,85 seconde, utilisant des arbres de découpage binaires. Elle cherche à réduire les espaces libres ; le résultat dépend des images et ne garantit pas un optimum global.
 - **Mosaïque Parfaite** : Un arrangement aléatoire de type patchwork (technique BSP).
 - **Lignes Justifiées** : Alignement type Flickr/Google Images.
 - **Grille Régulière** : Quadrillage mathématique et étendu.
@@ -36,9 +36,9 @@ Le programme garantit la règle du 100% :
 ![Optimisation Maximale Heuristique](assets/wallcraft_optimal_layout_1773221310533.png)
 
 ### ⚡ Performance & Édition
-- **Système de Proxy** : Utilise des miniatures pour une interface hyper fluide même avec des images 8K.
+- **Système de Proxy** : Utilise des miniatures pour une interface plus réactive grâce à des miniatures de 1 024 pixels maximum.
 - **Retouche Intégrée** : Luminosité, Contraste, Saturation, Flou et Rotation.
-- **Rendu HD** : L'export final utilise les fichiers Ultra HD originaux pour une qualité absolue.
+- **Rendu HD** : L'export final utilise les fichiers Ultra HD originaux pour préserver la résolution disponible.
 
 ---
 
@@ -50,7 +50,7 @@ Le programme garantit la règle du 100% :
 
 ### Dépendances
 ```bash
-pip install pillow screeninfo
+python -m pip install -r requirements.txt
 ```
 
 ## 🛠️ Utilisation
@@ -74,3 +74,7 @@ pip install pillow screeninfo
 ## 🐛 Dépannage
 * **L'application est floue ?** Lancez via le terminal Windows classique (cmd/powershell) plutôt que via l'IDE pour assurer la gestion High-DPI de Windows.
 * **Bandes noires visibles ?** C'est le comportement attendu. L'application refusant tout rognage par conception, les espaces non remplis des boîtes géométriques affichent une bande noire pour conserver l'image 100% visible. L'option "Optimisation Maximale" permet justement de compresser cela.
+
+## Architecture & validation
+
+[Architecture and trade-offs](docs/ARCHITECTURE.md) · [Quality and test scope](docs/QUALITY.md).
