@@ -492,6 +492,9 @@ def compose_wallpaper_contain(ts, images, bg):
         sw, sh = src.size
         cl, ct, cr, cb = li.crop_box_norm
         src = src.crop((int(cl*sw), int(ct*sh), int(cr*sw), int(cb*sh)))
-        if li.w and li.h: src = src.resize((li.w, li.h), Image.Resampling.LANCZOS)
+        if li.w and li.h:
+            target_w = max(1, int(round(li.w)))
+            target_h = max(1, int(round(li.h)))
+            src = src.resize((target_w, target_h), Image.Resampling.LANCZOS)
         canvas.paste(src, (int(li.x), int(li.y)), src if src.mode=='RGBA' else None)
     return canvas

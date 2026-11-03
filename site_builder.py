@@ -4,13 +4,19 @@ import posixpath
 import shutil
 from html import escape
 
-TODAY = "2026-03-13"
-BASE_URL = "https://rangornrar.github.io/MultiScreenWallpaper/html/"
+TODAY = "2026-03-14"
+BASE_URL = "https://wallcraft.archi-it.fr/"
+PROJECT_BASE_URL = BASE_URL.removesuffix("html/")
 REPO_URL = "https://github.com/rangornrar/MultiScreenWallpaper"
-DOWNLOAD_URL = "https://github.com/rangornrar/MultiScreenWallpaper/releases/download/v1.0/WallCraft-Pro-v1.0.0-Windows.exe"
+DOWNLOAD_URL = "https://github.com/rangornrar/MultiScreenWallpaper/releases/download/Tag_v2026.3.14/WallCraft-Pro-v2026.3.14-Windows.exe"
 RELEASES_URL = f"{REPO_URL}/releases"
-SCREEN_1 = "assets/wallcraft_app_ui_1773221294829.png"
-SCREEN_2 = "assets/wallcraft_optimal_layout_1773221310533.png"
+ARCHI_IT_URL = "https://www.archi-it.fr/#labs"
+ARCHI_IT_HOME_URL = "https://www.archi-it.fr/"
+PRODUCT_VERSION = "2026.3.14"
+GOOGLE_SITE_VERIFICATION = ""
+SCREEN_1 = "assets/wallcraft_2026_workspace.png"
+SCREEN_2 = "assets/wallcraft_2026_clean_output.png"
+SCREEN_3 = "assets/wallcraft_2026_workspace_stage.png"
 
 CSS_CONTENT = """
 :root {
@@ -277,11 +283,12 @@ LANGS = {
             "mixed-monitor-wallpaper-setup": "Mixed monitors",
         },
         "footer_about_title": "WallCraft Pro",
-        "footer_about_text": "Open-source Windows app for building, splitting, and applying wallpapers across uneven monitor setups without cropping or distortion.",
+        "footer_about_text": "Open-source Windows app for building, splitting, and applying wallpapers across uneven monitor setups without cropping or distortion. Built as part of Archi-IT Labs.",
         "footer_resources_title": "Pages",
         "footer_source_title": "Project",
-        "footer_source_text": "The source code is public on GitHub, and the first packaged release is now available through GitHub Releases as v1.0.0 for Windows.",
-        "download_now": "Download v1.0.0 for Windows",
+        "footer_source_text": "The source code is public on GitHub, and the current packaged Windows release is now available through GitHub Releases as v2026.3.14.",
+        "footer_hub_label": "Open Archi-IT Labs",
+        "download_now": "Download v2026.3.14 for Windows",
         "view_source": "View on GitHub",
         "view_releases": "Open GitHub releases",
         "learn_more": "Learn how it works",
@@ -309,11 +316,12 @@ LANGS = {
             "mixed-monitor-wallpaper-setup": "Écrans mixtes",
         },
         "footer_about_title": "WallCraft Pro",
-        "footer_about_text": "Application Windows open source pour créer, découper et appliquer des fonds d'écran sur des configurations multi-écrans irrégulières, sans rognage ni déformation.",
+        "footer_about_text": "Application Windows open source pour creer, decouper et appliquer des fonds d'ecran sur des configurations multi-ecrans irregulieres, sans rognage ni deformation. Projet relie a Archi-IT Labs.",
         "footer_resources_title": "Pages",
         "footer_source_title": "Projet",
-        "footer_source_text": "Le code source est public sur GitHub, et la première release packagée est maintenant disponible via GitHub Releases en version v1.0.0 pour Windows.",
-        "download_now": "Télécharger v1.0.0 pour Windows",
+        "footer_source_text": "Le code source est public sur GitHub, et la release Windows packagée actuelle est maintenant disponible via GitHub Releases en version v2026.3.14.",
+        "footer_hub_label": "Voir Archi-IT Labs",
+        "download_now": "Télécharger v2026.3.14 pour Windows",
         "view_source": "Voir sur GitHub",
         "view_releases": "Ouvrir les releases GitHub",
         "learn_more": "Comprendre le fonctionnement",
@@ -341,11 +349,12 @@ LANGS = {
             "mixed-monitor-wallpaper-setup": "Monitores mixtos",
         },
         "footer_about_title": "WallCraft Pro",
-        "footer_about_text": "Aplicacion open source para Windows que crea, divide y aplica fondos en configuraciones con monitores desiguales, sin recortar ni deformar las imagenes.",
+        "footer_about_text": "Aplicacion open source para Windows que crea, divide y aplica fondos en configuraciones con monitores desiguales, sin recortar ni deformar las imagenes. Proyecto conectado a Archi-IT Labs.",
         "footer_resources_title": "Paginas",
         "footer_source_title": "Proyecto",
-        "footer_source_text": "El codigo fuente es publico en GitHub y la primera release empaquetada ya esta disponible en GitHub Releases como v1.0.0 para Windows.",
-        "download_now": "Descargar v1.0.0 para Windows",
+        "footer_source_text": "El codigo fuente es publico en GitHub y la release empaquetada actual para Windows ya esta disponible en GitHub Releases como v2026.3.14.",
+        "footer_hub_label": "Ver Archi-IT Labs",
+        "download_now": "Descargar v2026.3.14 para Windows",
         "view_source": "Ver en GitHub",
         "view_releases": "Abrir releases de GitHub",
         "learn_more": "Ver como funciona",
@@ -373,11 +382,12 @@ LANGS = {
             "mixed-monitor-wallpaper-setup": "Gemischte Monitore",
         },
         "footer_about_title": "WallCraft Pro",
-        "footer_about_text": "Open-Source-Windows-App zum Erstellen, Aufteilen und Anwenden von Wallpapern fur ungleichmassige Multi-Monitor-Setups, ohne Zuschnitt oder Verzerrung.",
+        "footer_about_text": "Open-Source-Windows-App zum Erstellen, Aufteilen und Anwenden von Wallpapern fur ungleichmassige Multi-Monitor-Setups, ohne Zuschnitt oder Verzerrung. Mit Archi-IT Labs verbunden.",
         "footer_resources_title": "Seiten",
         "footer_source_title": "Projekt",
-        "footer_source_text": "Der Quellcode ist auf GitHub offentlich, und die erste paketierte Release ist jetzt uber GitHub Releases als v1.0.0 fur Windows verfugbar.",
-        "download_now": "v1.0.0 fur Windows herunterladen",
+        "footer_source_text": "Der Quellcode ist auf GitHub offentlich, und die aktuelle paketierte Windows-Release ist jetzt uber GitHub Releases als v2026.3.14 verfugbar.",
+        "footer_hub_label": "Archi-IT Labs ansehen",
+        "download_now": "v2026.3.14 fur Windows herunterladen",
         "view_source": "Auf GitHub ansehen",
         "view_releases": "GitHub-Releases offnen",
         "learn_more": "So funktioniert es",
@@ -396,7 +406,7 @@ FAQ_ITEMS = {
         ("Can I export and split by screen?", "Yes. The app can export a large composition and split the result into per-monitor images mapped to your physical setup."),
         ("Can it apply wallpapers directly on Windows?", "Yes. The project uses the native Windows desktop wallpaper API when available, with a span fallback when needed."),
         ("Is it open source?", "Yes. The source code is public on GitHub, which helps with trust, inspection, and community contributions."),
-        ("Is there a versioned GitHub release already?", "Yes. The first public packaged release is now available as v1.0.0 on GitHub Releases, with a dedicated Windows executable."),
+        ("Is there a versioned GitHub release already?", "Yes. The current public packaged release is available as v2026.3.14 on GitHub Releases, with a dedicated Windows executable."),
     ],
     "fr": [
         ("WallCraft Pro rogne-t-il les images ?", "Non. L'outil suit une logique fit-inside: l'image originale reste visible. Il peut rester des marges, mais le rognage et la déformation sont évités."),
@@ -404,7 +414,7 @@ FAQ_ITEMS = {
         ("Peut-on exporter et découper par écran ?", "Oui. L'application peut exporter une grande composition puis la découper en images par moniteur selon ta disposition physique."),
         ("Peut-elle appliquer le fond d'écran directement sur Windows ?", "Oui. Le projet utilise l'API native de fond d'écran Windows quand elle est disponible, avec un mode panorama en secours."),
         ("Le projet est-il open source ?", "Oui. Le code source est public sur GitHub, ce qui aide pour la confiance, l'inspection et les contributions."),
-        ("Y a-t-il déjà une vraie GitHub Release versionnée ?", "Oui. La première release publique packagée est maintenant disponible en v1.0.0 sur GitHub Releases, avec un exécutable Windows dédié."),
+        ("Y a-t-il déjà une vraie GitHub Release versionnée ?", "Oui. La release publique packagée actuelle est disponible en v2026.3.14 sur GitHub Releases, avec un exécutable Windows dédié."),
     ],
     "es": [
         ("WallCraft Pro recorta las imagenes?", "No. La herramienta sigue una logica fit-inside para mantener visible la imagen original. Puede quedar espacio vacio, pero evita recortes y deformacion."),
@@ -412,7 +422,7 @@ FAQ_ITEMS = {
         ("Puedo exportar y dividir por pantalla?", "Si. La aplicacion puede exportar una composicion grande y dividir el resultado en imagenes por monitor."),
         ("Puede aplicar el fondo directamente en Windows?", "Si. El proyecto usa la API nativa de fondos de Windows cuando esta disponible, con modo panoramico como respaldo."),
         ("Es open source?", "Si. El codigo fuente es publico en GitHub, lo que mejora la confianza, la revision y las contribuciones."),
-        ("Ya existe una release versionada en GitHub?", "Si. La primera release publica empaquetada ya esta disponible como v1.0.0 en GitHub Releases, con un ejecutable dedicado para Windows."),
+        ("Ya existe una release versionada en GitHub?", "Si. La release publica empaquetada actual ya esta disponible como v2026.3.14 en GitHub Releases, con un ejecutable dedicado para Windows."),
     ],
     "de": [
         ("Schneidet WallCraft Pro Bilder zu?", "Nein. Das Tool arbeitet nach einem Fit-Inside-Prinzip, damit das Originalbild sichtbar bleibt. Leerraum ist moglich, Zuschnitt und Verzerrung aber nicht."),
@@ -420,7 +430,7 @@ FAQ_ITEMS = {
         ("Kann ich nach Monitor exportieren und aufteilen?", "Ja. Die App kann eine grosse Komposition exportieren und das Ergebnis passend zu deinem physischen Setup in Einzelbilder pro Monitor teilen."),
         ("Kann die App Wallpaper direkt unter Windows anwenden?", "Ja. Das Projekt nutzt die native Windows-Desktop-Wallpaper-API, wenn sie verfugbar ist, und wechselt sonst auf einen Span-Fallback."),
         ("Ist das Projekt Open Source?", "Ja. Der Quellcode ist auf GitHub offentlich, was Vertrauen, Prufbarkeit und Beitrage erleichtert."),
-        ("Gibt es schon eine versionierte GitHub-Release?", "Ja. Die erste offentliche paketierte Release ist jetzt als v1.0.0 in GitHub Releases verfugbar, mit einer eigenen Windows-EXE."),
+        ("Gibt es schon eine versionierte GitHub-Release?", "Ja. Die aktuelle offentliche paketierte Release ist jetzt als v2026.3.14 in GitHub Releases verfugbar, mit einer eigenen Windows-EXE."),
     ],
 }
 
@@ -1095,6 +1105,329 @@ PAGES = {
     },
 }
 
+SITE_REFRESH_EN = {
+    "home": {
+        "meta_title": f"WallCraft Pro {PRODUCT_VERSION} - Multi-Monitor Wallpaper Generator for Windows 10/11",
+        "meta_description": "WallCraft Pro 2026.3.14 adds a redesigned workspace, manual scale mode, layer ordering, new project reset, and a cleaner live output preview for multi-monitor wallpapers.",
+        "hero_badge": f"Product refresh {PRODUCT_VERSION}",
+        "hero_title": "Design wallpapers visually for real multi-monitor desks",
+        "hero_lead": "The 2026.3.14 update brings a cleaner workspace, manual proportional scaling, front/back layer control, new project reset, and a more realistic live output preview.",
+        "hero_points": [
+            "Move, scale, crop, and reorder images from one streamlined workspace.",
+            "Preview the result on realistic dark monitor frames before applying it.",
+            "Keep every image visible across dual, triple, and mixed-size setups."
+        ],
+        "hero_caption_title": f"WallCraft {PRODUCT_VERSION} workspace",
+        "hero_caption_text": "The refreshed interface focuses on composition, quick actions, and live monitor feedback.",
+        "sections": [
+            {"type": "cards", "title": f"What's new in {PRODUCT_VERSION}", "text": "The latest app refresh is focused on usability and visual editing speed.", "cards": [
+                {"title": "Redesigned workspace", "text": "A clearer top toolbar, a larger composition stage, and a more focused imported-images panel."},
+                {"title": "Manual scale mode", "text": "Enlarge or reduce a photo manually while preserving its aspect ratio."},
+                {"title": "Layer order controls", "text": "Push an image backward or bring it forward directly from the library."},
+                {"title": "New project reset", "text": "Start over instantly without manually clearing every imported asset."}
+            ]},
+            {"type": "shot", "title": "Modern live workspace", "text": "The latest build centers the composition stage and makes the editing workflow more obvious at a glance.", "image": SCREEN_1, "caption_title": "Redesigned 2026.3.14 interface", "caption_text": "Project actions, layout choice, language, and edit modes now sit in a more natural order."},
+            {"type": "shot", "title": "Cleaner output preview", "text": "The monitor preview now looks closer to a real desk setup, with darker frames and more breathing room between screens.", "image": SCREEN_2, "caption_title": "Realistic output preview", "caption_text": "Preview the wallpaper on simplified black displays before exporting or applying it."},
+            {"type": "steps", "title": "How the workflow feels now", "text": "The latest version keeps the product simple from import to desktop.", "steps": [
+                {"title": "Import images", "text": "Bring one or more photos into the project library."},
+                {"title": "Choose a layout", "text": "Use one of the built-in arrangements or auto-organize the scene."},
+                {"title": "Move, scale, crop", "text": "Adjust each image on the stage with dedicated edit modes."},
+                {"title": "Change layer order", "text": "Send an image backward or forward when overlaps matter."},
+                {"title": "Preview and apply", "text": "Check the live monitor view, then export, split, or apply on Windows."}
+            ]},
+            {"type": "cards", "title": "Keep exploring", "text": "The new UI sits on top of the same no-crop, mixed-monitor workflow.", "cards": [
+                {"title": "Dual monitor wallpaper on Windows 11", "text": "Fix the common dual-monitor wallpaper problem without forced cropping.", "page": "dual-monitor-wallpaper-windows-11"},
+                {"title": "No crop workflow", "text": "Keep every photo visible, even across uneven screens.", "page": "dual-monitor-wallpaper-without-cropping"},
+                {"title": "Mixed monitor sizes", "text": "Handle different resolutions, heights, and aspect ratios cleanly.", "page": "mixed-monitor-wallpaper-setup"}
+            ]},
+            {"type": "faq", "title": "Questions before download", "text": "Quick answers about the new editing workflow and the product itself.", "items": FAQ_ITEMS["en"][:4]},
+            {"type": "links", "title": "Learn more about WallCraft Pro", "text": "Explore the download page, workflow details, and use cases.", "links": ["download", "how-it-works", "use-cases", "faq", "compare"]}
+        ],
+    },
+    "download": {
+        "meta_title": f"Download WallCraft Pro for Windows 10/11 - {PRODUCT_VERSION} site update",
+        "meta_description": "Download WallCraft Pro for Windows 10/11 and see what changed in the 2026.3.14 site and interface refresh: redesigned workspace, manual scaling, layer order, and realistic output preview.",
+        "hero_badge": f"Website & UI refresh {PRODUCT_VERSION}",
+        "hero_title": "Download WallCraft Pro for Windows 10/11",
+        "hero_lead": "The website now reflects the 2026.3.14 product refresh. The Windows executable is distributed through GitHub Releases, with the latest screenshots and feature overview below.",
+        "sections": [
+            {"type": "cards", "title": "Choose your path", "text": "Download the Windows build, inspect the source code, or open GitHub Releases.", "cards": [
+                {"title": "Current Windows download", "text": "Get the packaged executable for Windows 10/11 from GitHub.", "url": DOWNLOAD_URL, "cta": "Download v2026.3.14 for Windows"},
+                {"title": "Source code", "text": "Inspect the repository, follow development, or build from source.", "url": REPO_URL, "cta": "View on GitHub"},
+                {"title": "GitHub Releases", "text": "Open the public release page and keep an eye on packaged updates.", "url": RELEASES_URL, "cta": "Open GitHub releases"}
+            ]},
+            {"type": "text", "title": f"What changed in {PRODUCT_VERSION}", "text": "This refresh is mostly about workflow quality and readability.", "body": [
+                "The interface now gives more space to the composition stage and removes the old inspector-heavy layout.",
+                "Editing is clearer with separate move, scale, and crop modes plus front/back layer controls."
+            ], "list": [
+                "Manual image scaling with preserved aspect ratio.",
+                "Front/back image ordering from the library.",
+                "New project reset button.",
+                "Cleaner and more realistic output preview."
+            ], "aside_title": "About the download", "aside_body": [
+                "The public Windows executable is hosted on GitHub Releases.",
+                "The website and screenshots have been updated to match the 2026.3.14 application refresh."
+            ]},
+            {"type": "shot", "title": "Current application workspace", "text": "See the refreshed interface before downloading it.", "image": SCREEN_1, "caption_title": "Full workspace view", "caption_text": "Project actions, layout selection, edit modes, composition stage, and output preview are now better organized."},
+            {"type": "shot", "title": "Live monitor preview", "text": "The output preview now sells the result more clearly and helps validate a composition before applying it.", "image": SCREEN_2, "caption_title": "Live output scene", "caption_text": "Dark monitor frames and wider spacing make the preview easier to read at a glance."},
+            {"type": "links", "title": "Other useful resources", "text": "Continue with the workflow guide, use cases, or FAQ.", "links": ["how-it-works", "use-cases", "faq", "compare"]}
+        ],
+    },
+    "how-it-works": {
+        "meta_title": f"How WallCraft Pro Works - {PRODUCT_VERSION} workflow refresh",
+        "meta_description": "See how WallCraft Pro 2026.3.14 imports images, scales them manually, changes layer order, previews mixed-monitor results, and applies wallpapers on Windows.",
+        "hero_badge": "Workflow walkthrough",
+        "hero_title": "How the refreshed WallCraft workflow works",
+        "hero_lead": "The 2026.3.14 interface is built around a simpler editing loop: import, arrange, scale, reorder, preview, and apply.",
+        "sections": [
+            {"type": "steps", "title": "Five steps from images to desktop", "text": "The current workflow is faster to understand and easier to control.", "steps": [
+                {"title": "Import your images", "text": "Load one or more photos into the project library."},
+                {"title": "Build the composition", "text": "Place the images inside the virtual desktop and choose a layout strategy."},
+                {"title": "Scale without distortion", "text": "Use the dedicated scale mode to resize a photo while preserving its ratio."},
+                {"title": "Adjust the visual stack", "text": "Send an image backward or bring it forward when elements overlap."},
+                {"title": "Preview on monitors and apply", "text": "Use the realistic output preview, then export, split, or apply on Windows."}
+            ]},
+            {"type": "shot", "title": "The current workspace", "text": "The new layout keeps the most important actions at the top and the stage in the center.", "image": SCREEN_1, "caption_title": "Workspace refresh", "caption_text": "The new project button, compact library, and edit modes make the tool easier to use from the first launch."},
+            {"type": "shot", "title": "Composition stage details", "text": "The editing stage is larger and clearer, with direct monitor feedback and obvious handles.", "image": SCREEN_3, "caption_title": "Stage and scaling handles", "caption_text": "Scale, crop, and move images directly on the virtual desktop while checking the real monitor map."},
+            {"type": "cards", "title": "Why the new workflow matters", "text": "The refresh makes WallCraft feel more like a focused design utility than a technical tool.", "cards": [
+                {"title": "Less clutter", "text": "The old inspector area is gone so the stage can breathe."},
+                {"title": "Better editing signals", "text": "Mode-specific controls and handles explain what will happen next."},
+                {"title": "Stronger visual proof", "text": "The output preview now communicates the result more clearly."}
+            ]},
+            {"type": "links", "title": "Continue your tour", "text": "Download the app or jump into specific desk setups.", "links": ["download", "use-cases", "dual-monitor-wallpaper-windows-11", "faq"]}
+        ],
+    },
+}
+
+SITE_REFRESH_FR = {
+    "home": {
+        "meta_title": f"WallCraft Pro {PRODUCT_VERSION} - Generateur de fond d'ecran multi-ecrans pour Windows 10/11",
+        "meta_description": "WallCraft Pro 2026.3.14 apporte un workspace repense, le redimensionnement manuel proportionnel, l'ordre avant/arriere, le reset de projet et un apercu de sortie plus realiste.",
+        "hero_badge": f"Mise a jour produit {PRODUCT_VERSION}",
+        "hero_title": "Composer un fond d'ecran visuellement pour de vrais bureaux multi-ecrans",
+        "hero_lead": "La mise a jour 2026.3.14 introduit un workspace plus clair, un mode de redimensionnement proportionnel, le controle des calques avant/arriere, un bouton nouveau projet et un apercu de sortie plus realiste.",
+        "hero_points": [
+            "Deplacer, redimensionner, rogner et reordonner les images depuis un seul workspace.",
+            "Verifier le rendu sur des ecrans noirs plus credibles avant d'appliquer.",
+            "Garder l'image visible sur des setups double ecran, triple ecran et multi-formats."
+        ],
+        "hero_caption_title": f"Workspace WallCraft {PRODUCT_VERSION}",
+        "hero_caption_text": "L'interface rafraichie donne la priorite a la composition, aux actions rapides et au retour visuel en direct.",
+        "sections": [
+            {"type": "cards", "title": f"Nouveautes de {PRODUCT_VERSION}", "text": "Cette mise a jour se concentre sur l'ergonomie et l'edition visuelle.", "cards": [
+                {"title": "Workspace repense", "text": "Une toolbar plus claire, une zone de composition plus grande et une colonne images plus compacte."},
+                {"title": "Mode redimensionner", "text": "Agrandir ou reduire une photo manuellement sans casser son ratio."},
+                {"title": "Ordre des calques", "text": "Passer une image en arriere ou en avant directement depuis la bibliotheque."},
+                {"title": "Nouveau projet", "text": "Repartir a zero en un clic sans vider chaque image a la main."}
+            ]},
+            {"type": "shot", "title": "Nouveau workspace moderne", "text": "La version actuelle recentre l'application sur la composition et rend le workflow beaucoup plus lisible.", "image": SCREEN_1, "caption_title": "Interface 2026.3.14", "caption_text": "La nouvelle toolbar regroupe projet, langue, layout, modes d'edition et application du fond dans un ordre plus naturel."},
+            {"type": "shot", "title": "Apercu de sortie redesigné", "text": "L'apercu de sortie est plus propre, plus sobre et plus proche d'un vrai setup de bureau.", "image": SCREEN_2, "caption_title": "Apercu multi-ecrans", "caption_text": "Des moniteurs noirs plus epures et mieux espaces rendent la verification plus rapide."},
+            {"type": "steps", "title": "Le workflow maintenant", "text": "La nouvelle version garde le produit simple du dossier photo jusqu'au bureau Windows.", "steps": [
+                {"title": "Importer les images", "text": "Charger une ou plusieurs photos dans la bibliotheque du projet."},
+                {"title": "Choisir un layout", "text": "Utiliser un agencement integre ou lancer l'auto-organisation."},
+                {"title": "Deplacer, redimensionner, rogner", "text": "Ajuster chaque image sur la scene avec des modes d'edition dedies."},
+                {"title": "Changer l'ordre visuel", "text": "Envoyer une image en arriere ou en avant quand des elements se chevauchent."},
+                {"title": "Previsualiser et appliquer", "text": "Verifier le rendu, puis exporter, decouper ou appliquer sur Windows."}
+            ]},
+            {"type": "cards", "title": "Continuer l'exploration", "text": "La mise a jour ergonomique repose toujours sur le meme moteur sans rognage pour les ecrans heterogenes.", "cards": [
+                {"title": "Fond d'ecran double ecran Windows 11", "text": "Resoudre le cas classique du double ecran sans crop force.", "page": "dual-monitor-wallpaper-windows-11"},
+                {"title": "Workflow sans rognage", "text": "Garder chaque photo visible, meme sur des ecrans irreguliers.", "page": "dual-monitor-wallpaper-without-cropping"},
+                {"title": "Moniteurs de tailles differentes", "text": "Gerer proprement resolutions, hauteurs et ratios differents.", "page": "mixed-monitor-wallpaper-setup"}
+            ]},
+            {"type": "faq", "title": "Questions avant telechargement", "text": "Reponses rapides sur le nouveau workflow et les fonctions essentielles.", "items": FAQ_ITEMS["fr"][:4]},
+            {"type": "links", "title": "Aller plus loin", "text": "Explorez le telechargement, le fonctionnement et les cas d'usage.", "links": ["download", "how-it-works", "use-cases", "faq", "compare"]}
+        ],
+    },
+    "download": {
+        "meta_title": f"Telecharger WallCraft Pro pour Windows 10/11 - mise a jour {PRODUCT_VERSION}",
+        "meta_description": "Telechargez WallCraft Pro pour Windows 10/11 et decouvrez la mise a jour 2026.3.14 du site et de l'interface: workspace repense, scale proportionnel, ordre des calques et nouvel apercu.",
+        "hero_badge": f"Rafraichissement site & UI {PRODUCT_VERSION}",
+        "hero_title": "Telecharger WallCraft Pro pour Windows 10/11",
+        "hero_lead": "Le site reflete maintenant la mise a jour 2026.3.14 du produit. L'executable Windows reste distribue via GitHub Releases, avec de nouvelles captures et un meilleur resume des fonctions.",
+        "sections": [
+            {"type": "cards", "title": "Choisissez votre acces", "text": "Telechargez le build Windows, consultez le code source ou ouvrez GitHub Releases.", "cards": [
+                {"title": "Telechargement Windows actuel", "text": "Recuperer l'executable package pour Windows 10/11 depuis GitHub.", "url": DOWNLOAD_URL, "cta": "Telecharger v2026.3.14 pour Windows"},
+                {"title": "Code source", "text": "Inspecter le depot, suivre le developpement ou compiler depuis la source.", "url": REPO_URL, "cta": "Voir sur GitHub"},
+                {"title": "GitHub Releases", "text": "Ouvrir la page publique des releases et suivre les builds packages.", "url": RELEASES_URL, "cta": "Ouvrir les releases GitHub"}
+            ]},
+            {"type": "text", "title": f"Ce qui change dans {PRODUCT_VERSION}", "text": "Cette mise a jour porte surtout sur le confort du workflow et la lisibilite.", "body": [
+                "L'interface donne plus de place a la scene de composition et supprime l'ancienne logique trop centree sur l'inspecteur.",
+                "L'edition est plus claire avec des modes separes pour deplacer, redimensionner et rogner, plus des controles de calques."
+            ], "list": [
+                "Redimensionnement manuel d'une image avec ratio conserve.",
+                "Ordre avant/arriere depuis la bibliotheque.",
+                "Bouton nouveau projet.",
+                "Apercu de sortie plus propre et plus realiste."
+            ], "aside_title": "A propos du telechargement", "aside_body": [
+                "L'executable Windows public reste heberge sur GitHub Releases.",
+                "Le site et les captures ont ete mis a jour pour correspondre a la refresh applicative 2026.3.14."
+            ]},
+            {"type": "shot", "title": "Workspace actuel", "text": "Consultez l'interface refaite avant de telecharger l'application.", "image": SCREEN_1, "caption_title": "Vue complete du workspace", "caption_text": "Projet, layouts, modes d'edition, scene de composition et apercu de sortie sont mieux organises."},
+            {"type": "shot", "title": "Apercu live des ecrans", "text": "Le nouvel apercu vend mieux le resultat final et aide a valider une composition avant application.", "image": SCREEN_2, "caption_title": "Scene de sortie live", "caption_text": "Des ecrans noirs plus sobes et plus espaces rendent la lecture plus immediate."},
+            {"type": "links", "title": "Autres ressources utiles", "text": "Continuez avec le guide de fonctionnement, les cas d'usage ou la FAQ.", "links": ["how-it-works", "use-cases", "faq", "compare"]}
+        ],
+    },
+    "how-it-works": {
+        "meta_title": f"Comment fonctionne WallCraft Pro - refresh workflow {PRODUCT_VERSION}",
+        "meta_description": "Decouvrez comment WallCraft Pro 2026.3.14 importe les images, les redimensionne, gere l'ordre des calques, previsualise le rendu multi-ecrans et applique le fond sous Windows.",
+        "hero_badge": "Visite du workflow",
+        "hero_title": "Comment fonctionne le workflow repense de WallCraft",
+        "hero_lead": "L'interface 2026.3.14 est construite autour d'une boucle plus simple: importer, arranger, redimensionner, reordonner, previsualiser et appliquer.",
+        "sections": [
+            {"type": "steps", "title": "Cinq etapes des images au bureau", "text": "Le workflow actuel est plus rapide a comprendre et plus simple a piloter.", "steps": [
+                {"title": "Importer les images", "text": "Charger une ou plusieurs photos dans la bibliotheque du projet."},
+                {"title": "Construire la composition", "text": "Placer les images dans le bureau virtuel et choisir une strategie de layout."},
+                {"title": "Redimensionner sans deformation", "text": "Utiliser le mode dedie pour changer la taille d'une photo tout en gardant son ratio."},
+                {"title": "Ajuster l'empilement", "text": "Envoyer une image en arriere ou en avant quand des elements se chevauchent."},
+                {"title": "Previsualiser et appliquer", "text": "Verifier le rendu multi-ecrans puis exporter, decouper ou appliquer sous Windows."}
+            ]},
+            {"type": "shot", "title": "Le workspace actuel", "text": "Le nouveau layout garde les actions importantes en haut et la scene au centre.", "image": SCREEN_1, "caption_title": "Workspace refresh", "caption_text": "Le bouton nouveau projet, les modes d'edition et la bibliotheque compacte rendent l'app plus immediate."},
+            {"type": "shot", "title": "Details de la scene", "text": "La scene de composition est plus grande, plus lisible et plus directe a manipuler.", "image": SCREEN_3, "caption_title": "Scene et poignees de scale", "caption_text": "Redimensionnez, rognez et deplacez les images directement sur la carte virtuelle des ecrans."},
+            {"type": "cards", "title": "Pourquoi ce refresh compte", "text": "La mise a jour fait davantage ressembler WallCraft a un vrai outil de composition qu'a une interface technique.", "cards": [
+                {"title": "Moins de bruit visuel", "text": "L'ancien panneau inspecteur a disparu au profit de la scene."},
+                {"title": "Edition plus explicite", "text": "Les modes et poignees rendent chaque action plus evidente."},
+                {"title": "Preuve visuelle plus forte", "text": "Le nouvel apercu de sortie communique mieux le resultat final."}
+            ]},
+            {"type": "links", "title": "Continuer la visite", "text": "Telechargez l'application ou explorez des setups plus precis.", "links": ["download", "use-cases", "dual-monitor-wallpaper-windows-11", "faq"]}
+        ],
+    },
+}
+
+SITE_REFRESH_ES = {
+    "home": {
+        "meta_title": f"WallCraft Pro {PRODUCT_VERSION} - Generador de fondos para varios monitores en Windows 10/11",
+        "meta_description": "WallCraft Pro 2026.3.14 trae un workspace renovado, escala manual proporcional, orden de capas, nuevo proyecto y una vista de salida mas limpia.",
+        "hero_badge": f"Actualizacion del producto {PRODUCT_VERSION}",
+        "hero_title": "Disenar fondos para escritorios multi-monitor reales",
+        "hero_lead": "La actualizacion 2026.3.14 anade una interfaz mas clara, escala manual con proporcion fija, control delante/detras y una vista previa de salida mas realista.",
+        "hero_points": [
+            "Mover, escalar, recortar y reordenar imagenes desde un solo workspace.",
+            "Previsualizar el resultado en monitores oscuros mas realistas.",
+            "Mantener la imagen visible en setups dobles, triples y mixtos."
+        ],
+        "hero_caption_title": f"Workspace de WallCraft {PRODUCT_VERSION}",
+        "hero_caption_text": "La interfaz renovada da prioridad a la composicion, a las acciones rapidas y a la vista previa en tiempo real.",
+        "sections": [
+            {"type": "cards", "title": f"Novedades de {PRODUCT_VERSION}", "text": "La actualizacion se centra en usabilidad y edicion visual.", "cards": [
+                {"title": "Workspace renovado", "text": "Toolbar mas clara, escenario mas grande y panel de imagenes mas compacto."},
+                {"title": "Modo escala", "text": "Agrandar o reducir una foto sin romper su proporcion."},
+                {"title": "Orden de capas", "text": "Enviar una imagen atras o delante desde la biblioteca."},
+                {"title": "Nuevo proyecto", "text": "Empezar desde cero con un solo clic."}
+            ]},
+            {"type": "shot", "title": "Workspace moderno", "text": "La version actual centra la aplicacion en la composicion y mejora la legibilidad.", "image": SCREEN_1, "caption_title": "Interfaz 2026.3.14", "caption_text": "La nueva toolbar organiza idioma, proyecto, layout, modos de edicion y aplicacion del fondo."},
+            {"type": "shot", "title": "Vista previa de salida", "text": "La nueva vista previa es mas sobria y mas cercana a un escritorio real.", "image": SCREEN_2, "caption_title": "Preview multi-monitor", "caption_text": "Monitores oscuros y mas separados facilitan la validacion visual."},
+            {"type": "links", "title": "Explorar mas", "text": "Descubre la descarga, el funcionamiento y los casos de uso.", "links": ["download", "how-it-works", "use-cases", "faq", "compare"]}
+        ],
+    },
+    "download": {
+        "meta_title": f"Descargar WallCraft Pro para Windows 10/11 - actualizacion {PRODUCT_VERSION}",
+        "meta_description": "Descarga WallCraft Pro para Windows 10/11 y descubre la actualizacion 2026.3.14 del sitio y de la interfaz.",
+        "hero_badge": f"Refresh del sitio y UI {PRODUCT_VERSION}",
+        "hero_title": "Descargar WallCraft Pro para Windows 10/11",
+        "hero_lead": "El sitio refleja ahora la actualizacion 2026.3.14 del producto. El ejecutable de Windows sigue disponible en GitHub Releases.",
+        "sections": [
+            {"type": "cards", "title": "Elige tu acceso", "text": "Descarga la build de Windows, abre el codigo fuente o revisa GitHub Releases.", "cards": [
+                {"title": "Descarga actual de Windows", "text": "Obtener el ejecutable empaquetado desde GitHub.", "url": DOWNLOAD_URL, "cta": "Descargar v2026.3.14 para Windows"},
+                {"title": "Codigo fuente", "text": "Inspeccionar el repositorio o compilar desde la fuente.", "url": REPO_URL, "cta": "Ver en GitHub"},
+                {"title": "GitHub Releases", "text": "Abrir la pagina publica de releases y seguir futuras versiones.", "url": RELEASES_URL, "cta": "Abrir GitHub releases"}
+            ]},
+            {"type": "shot", "title": "Workspace actual", "text": "Revisa la interfaz renovada antes de descargar la aplicacion.", "image": SCREEN_1, "caption_title": "Vista completa del workspace", "caption_text": "Proyecto, layout, modos de edicion, escenario y salida estan mejor organizados."},
+            {"type": "shot", "title": "Salida en vivo", "text": "La nueva vista previa ayuda a validar la composicion con mas rapidez.", "image": SCREEN_2, "caption_title": "Escena de salida", "caption_text": "Monitores oscuros y mejor espaciados hacen la lectura mas inmediata."},
+            {"type": "links", "title": "Recursos utiles", "text": "Continua con la guia de funcionamiento, los casos de uso o la FAQ.", "links": ["how-it-works", "use-cases", "faq", "compare"]}
+        ],
+    },
+    "how-it-works": {
+        "meta_title": f"Como funciona WallCraft Pro - refresh {PRODUCT_VERSION}",
+        "meta_description": "Descubre como WallCraft Pro 2026.3.14 importa imagenes, las escala manualmente y previsualiza el resultado multi-monitor antes de aplicarlo.",
+        "hero_badge": "Recorrido del workflow",
+        "hero_title": "Como funciona el workflow renovado de WallCraft",
+        "hero_lead": "La interfaz 2026.3.14 esta construida alrededor de un ciclo mas simple: importar, colocar, escalar, reordenar, previsualizar y aplicar.",
+        "sections": [
+            {"type": "steps", "title": "Cinco pasos desde las imagenes al escritorio", "text": "El workflow actual es mas facil de entender y controlar.", "steps": [
+                {"title": "Importar imagenes", "text": "Cargar una o varias fotos en la biblioteca del proyecto."},
+                {"title": "Construir la composicion", "text": "Colocar las imagenes dentro del escritorio virtual y elegir un layout."},
+                {"title": "Escalar sin distorsion", "text": "Usar el modo dedicado para cambiar el tamano respetando la proporcion."},
+                {"title": "Ajustar el orden visual", "text": "Enviar una imagen atras o delante cuando hay superposiciones."},
+                {"title": "Previsualizar y aplicar", "text": "Validar la vista multi-monitor y luego exportar o aplicar en Windows."}
+            ]},
+            {"type": "shot", "title": "Workspace actual", "text": "El nuevo layout mantiene las acciones importantes arriba y el escenario en el centro.", "image": SCREEN_1, "caption_title": "Workspace refresh", "caption_text": "Nuevo proyecto, modos de edicion y biblioteca compacta mejoran el primer uso."},
+            {"type": "shot", "title": "Escenario de composicion", "text": "El escenario es mas grande y mas claro para editar.", "image": SCREEN_3, "caption_title": "Escenario y controles", "caption_text": "Escala, recorta y mueve imagenes directamente sobre el mapa virtual de monitores."}
+        ],
+    },
+}
+
+SITE_REFRESH_DE = {
+    "home": {
+        "meta_title": f"WallCraft Pro {PRODUCT_VERSION} - Multi-Monitor-Wallpaper-Generator fur Windows 10/11",
+        "meta_description": "WallCraft Pro 2026.3.14 bringt einen erneuerten Workspace, manuellen Skalierungsmodus, Ebenen-Reihenfolge und eine sauberere Ausgabevorschau.",
+        "hero_badge": f"Produkt-Update {PRODUCT_VERSION}",
+        "hero_title": "Wallpaper visuell fur echte Multi-Monitor-Schreibtische gestalten",
+        "hero_lead": "Das Update 2026.3.14 bringt einen klareren Workspace, manuelle proportionale Skalierung, Vor/Zuruck fur Ebenen und eine realistischere Ausgabevorschau.",
+        "hero_points": [
+            "Bilder in einem Workspace bewegen, skalieren, zuschneiden und neu anordnen.",
+            "Das Ergebnis auf dunklen Monitorrahmen vor dem Anwenden prufen.",
+            "Das ganze Bild auf Dual-, Triple- und gemischten Setups sichtbar halten."
+        ],
+        "hero_caption_title": f"WallCraft {PRODUCT_VERSION} Workspace",
+        "hero_caption_text": "Die erneuerte Oberflache priorisiert Komposition, Schnellaktionen und visuelles Feedback.",
+        "sections": [
+            {"type": "cards", "title": f"Neu in {PRODUCT_VERSION}", "text": "Das Update konzentriert sich auf Ergonomie und visuelle Bearbeitung.", "cards": [
+                {"title": "Erneuerter Workspace", "text": "Klarere Toolbar, grossere Kompositionsflache und kompaktere Bildbibliothek."},
+                {"title": "Skalierungsmodus", "text": "Fotos vergroessern oder verkleinern, ohne das Seitenverhaltnis zu verlieren."},
+                {"title": "Ebenen-Reihenfolge", "text": "Bilder direkt aus der Bibliothek nach hinten oder vorne setzen."},
+                {"title": "Neues Projekt", "text": "Mit einem Klick komplett neu starten."}
+            ]},
+            {"type": "shot", "title": "Moderner Workspace", "text": "Die aktuelle Version richtet die App starker auf die Komposition aus.", "image": SCREEN_1, "caption_title": "Interface 2026.3.14", "caption_text": "Die neue Toolbar ordnet Sprache, Projekt, Layout, Bearbeitungsmodi und Anwendung logischer."},
+            {"type": "shot", "title": "Saubere Ausgabevorschau", "text": "Die Vorschau wirkt ruhiger, klarer und naher an einem echten Desk-Setup.", "image": SCREEN_2, "caption_title": "Multi-Monitor-Vorschau", "caption_text": "Dunkle Monitore und mehr Abstand machen das Ergebnis leichter lesbar."}
+        ],
+    },
+    "download": {
+        "meta_title": f"WallCraft Pro fur Windows 10/11 herunterladen - Update {PRODUCT_VERSION}",
+        "meta_description": "Laden Sie WallCraft Pro fur Windows 10/11 herunter und entdecken Sie das 2026.3.14-Update der Website und Benutzeroberflache.",
+        "hero_badge": f"Website- und UI-Refresh {PRODUCT_VERSION}",
+        "hero_title": "WallCraft Pro fur Windows 10/11 herunterladen",
+        "hero_lead": "Die Website zeigt jetzt das Produkt-Update 2026.3.14. Die Windows-Datei bleibt uber GitHub Releases verfugbar.",
+        "sections": [
+            {"type": "cards", "title": "Zugang wahlen", "text": "Windows-Build laden, Quellcode offnen oder GitHub Releases ansehen.", "cards": [
+                {"title": "Aktueller Windows-Download", "text": "Die gepackte EXE uber GitHub beziehen.", "url": DOWNLOAD_URL, "cta": "v2026.3.14 herunterladen"},
+                {"title": "Quellcode", "text": "Repository prufen oder selbst bauen.", "url": REPO_URL, "cta": "Auf GitHub ansehen"},
+                {"title": "GitHub Releases", "text": "Die offentliche Release-Seite fur Paket-Updates offnen.", "url": RELEASES_URL, "cta": "GitHub Releases offnen"}
+            ]},
+            {"type": "shot", "title": "Aktueller Workspace", "text": "Die erneuerte Oberflache vor dem Download ansehen.", "image": SCREEN_1, "caption_title": "Vollstandiger Workspace", "caption_text": "Projekt, Layout, Bearbeitungsmodi, Kompositionsflache und Ausgabe sind besser organisiert."},
+            {"type": "shot", "title": "Live-Ausgabevorschau", "text": "Die neue Vorschau hilft dabei, die Komposition schneller zu validieren.", "image": SCREEN_2, "caption_title": "Ausgabe-Szene", "caption_text": "Dunkle Monitore und mehr Abstand verbessern die Lesbarkeit."}
+        ],
+    },
+    "how-it-works": {
+        "meta_title": f"So funktioniert WallCraft Pro - Refresh {PRODUCT_VERSION}",
+        "meta_description": "Erfahren Sie, wie WallCraft Pro 2026.3.14 Bilder importiert, manuell skaliert und das Multi-Monitor-Ergebnis vor dem Anwenden anzeigt.",
+        "hero_badge": "Workflow-Tour",
+        "hero_title": "So funktioniert der erneuerte WallCraft-Workflow",
+        "hero_lead": "Die Oberflache 2026.3.14 basiert auf einem einfacheren Zyklus: importieren, platzieren, skalieren, ordnen, prufen und anwenden.",
+        "sections": [
+            {"type": "steps", "title": "Funf Schritte vom Bild zum Desktop", "text": "Der aktuelle Workflow ist leichter zu verstehen und zu steuern.", "steps": [
+                {"title": "Bilder importieren", "text": "Ein oder mehrere Fotos in die Projektbibliothek laden."},
+                {"title": "Komposition aufbauen", "text": "Bilder im virtuellen Desktop platzieren und ein Layout wahlen."},
+                {"title": "Ohne Verzerrung skalieren", "text": "Den Skalierungsmodus nutzen, um die Groesse mit festem Seitenverhaltnis zu andern."},
+                {"title": "Ebenen-Reihenfolge anpassen", "text": "Bilder nach hinten oder vorne setzen, wenn Inhalte uberlagern."},
+                {"title": "Vorschau und Anwenden", "text": "Multi-Monitor-Vorschau prufen und dann exportieren oder anwenden."}
+            ]},
+            {"type": "shot", "title": "Der aktuelle Workspace", "text": "Das neue Layout halt wichtige Aktionen oben und die Flache in der Mitte.", "image": SCREEN_1, "caption_title": "Workspace-Refresh", "caption_text": "Neues Projekt, Bearbeitungsmodi und kompakte Bibliothek verbessern den Einstieg."},
+            {"type": "shot", "title": "Kompositionsflache im Detail", "text": "Die Flache ist grosser und klarer zu bearbeiten.", "image": SCREEN_3, "caption_title": "Flache und Skalierungsgriffe", "caption_text": "Bilder direkt auf der virtuellen Monitor-Karte skalieren, zuschneiden und bewegen."}
+        ],
+    },
+}
+
+SITE_REFRESH = {
+    "en": SITE_REFRESH_EN,
+    "fr": SITE_REFRESH_FR,
+    "es": SITE_REFRESH_ES,
+    "de": SITE_REFRESH_DE,
+}
+
+for lang, updates in SITE_REFRESH.items():
+    for page_key, page_updates in updates.items():
+        PAGES[lang][page_key].update(page_updates)
+
 def page_label(lang, key):
     return LANGS[lang]["nav"][key]
 
@@ -1217,14 +1550,66 @@ def render_section(lang, current_key, prefix, section):
     return top + body + "</section>"
 
 
+def absolute_page_url(lang, key):
+    url = f"{BASE_URL}{lang}/"
+    if SLUGS[key]:
+        url += f"{SLUGS[key]}/"
+    return url
+
+
+def default_cluster_url(key):
+    return absolute_page_url("en", key)
+
+
+def build_json_ld(lang, key):
+    page = PAGES[lang][key]
+    canonical_url = absolute_page_url(lang, key)
+    website = {
+        "@type": "WebSite",
+        "name": "WallCraft Pro",
+        "url": BASE_URL,
+    }
+    if key in {"home", "download", "how-it-works"}:
+        return {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "WallCraft Pro",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Windows 10, Windows 11",
+            "softwareVersion": PRODUCT_VERSION,
+            "url": canonical_url,
+            "downloadUrl": DOWNLOAD_URL,
+            "image": f"{BASE_URL}{SCREEN_1}",
+            "inLanguage": lang,
+            "description": page["meta_description"],
+            "isAccessibleForFree": True,
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+            },
+            "publisher": website,
+        }
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": page["meta_title"],
+        "url": canonical_url,
+        "inLanguage": lang,
+        "description": page["meta_description"],
+        "isPartOf": website,
+    }
+
+
 def render_head(lang, current_key, prefix):
     page = PAGES[lang][current_key]
     hreflangs = []
     for l in LANG_ORDER:
-        url = f"{BASE_URL}{l}/"
-        if SLUGS[current_key]:
-            url += f"{SLUGS[current_key]}/"
-        hreflangs.append(f'<link rel="alternate" hreflang="{l}" href="{url}">')
+        hreflangs.append(f'<link rel="alternate" hreflang="{l}" href="{absolute_page_url(l, current_key)}">')
+    hreflangs.append(f'<link rel="alternate" hreflang="x-default" href="{default_cluster_url(current_key)}">')
+    canonical_url = absolute_page_url(lang, current_key)
+    verification_tag = f'\n    <meta name="google-site-verification" content="{escape(GOOGLE_SITE_VERIFICATION)}">' if GOOGLE_SITE_VERIFICATION else ""
+    json_ld = json.dumps(build_json_ld(lang, current_key), ensure_ascii=False)
     
     return f'''<!DOCTYPE html>
 <html lang="{lang}">
@@ -1233,7 +1618,11 @@ def render_head(lang, current_key, prefix):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{escape(page["meta_title"])}</title>
     <meta name="description" content="{escape(page["meta_description"])}">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="{canonical_url}">
     {" ".join(hreflangs)}
+    {verification_tag}
+    <script type="application/ld+json">{json_ld}</script>
     <link rel="stylesheet" href="{prefix}site.css">
 </head>
 <body>
@@ -1269,6 +1658,8 @@ def render_footer(lang, current_key, prefix):
                 <p>{source_text}</p>
                 <div style="margin-top: 16px;">
                     <a class="button secondary small" href="{REPO_URL}" target="_blank" rel="noopener noreferrer">{LANGS[lang]["view_source"]}</a>
+                    <a class="button secondary small" style="margin-left: 10px;" href="{ARCHI_IT_HOME_URL}" target="_blank" rel="noopener noreferrer">Archi-IT</a>
+                    <a class="button secondary small" style="margin-left: 10px;" href="{ARCHI_IT_URL}" target="_blank" rel="noopener noreferrer">{escape(LANGS[lang]["footer_hub_label"])}</a>
                 </div>
             </div>
         </div>
@@ -1375,22 +1766,121 @@ def build_site():
     
     print(f"Site built successfully in {HTML_ROOT}")
 
+
+def build_sitemap_xml():
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    ]
+    for key in PAGES["en"]:
+        for lang in LANG_ORDER:
+            lines.append("  <url>")
+            lines.append(f"    <loc>{absolute_page_url(lang, key)}</loc>")
+            lines.append(f"    <lastmod>{TODAY}</lastmod>")
+            for alt_lang in LANG_ORDER:
+                lines.append(f'    <xhtml:link rel="alternate" hreflang="{alt_lang}" href="{absolute_page_url(alt_lang, key)}" />')
+            lines.append(f'    <xhtml:link rel="alternate" hreflang="x-default" href="{default_cluster_url(key)}" />')
+            lines.append("  </url>")
+    lines.append("</urlset>")
+    return "\n".join(lines) + "\n"
+
+
+def build_robots_txt():
+    return f"""User-agent: *
+Allow: /
+
+Sitemap: {PROJECT_BASE_URL}sitemap.xml
+"""
+
+
+def build_search_console_guide():
+    return f"""# Google Search Console Setup
+
+## Recommended property
+- Preferred URL-prefix property: `{PROJECT_BASE_URL}`
+- Main multilingual site URL: `{BASE_URL}`
+- Sitemap to submit: `{PROJECT_BASE_URL}sitemap.xml`
+
+## What is included
+- `sitemap.xml` with all FR / EN / ES / DE pages
+- `hreflang` alternates on every generated page
+- `canonical` tags on every generated page
+- `robots.txt`
+- JSON-LD metadata for Google-rich understanding
+
+## Verification
+If Google gives you a meta-tag token, put it in `GOOGLE_SITE_VERIFICATION` inside `site_builder.py`, then rebuild the site.
+
+## Hosting note
+This project is designed for a GitHub Pages project site under a subpath. The sitemap is the most important file to submit manually in Search Console.
+If you later move to a custom domain, keep the same sitemap URL pattern and place `robots.txt` at the domain root.
+"""
+
 def build_router():
-    # Simple lang router for the root index.html
-    html = f'''<!DOCTYPE html>
-<html>
+    html_router = '''<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=./fr/index.html">
-    <script>window.location.href = "./fr/index.html";</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WallCraft Pro language router</title>
+    <meta name="robots" content="noindex,follow">
+    <script>
+        (function () {
+            const supported = ["fr", "en", "es", "de"];
+            const params = new URLSearchParams(window.location.search);
+            const saved = window.localStorage.getItem("wallcraft.lang");
+            const candidates = [params.get("lang"), saved].concat(navigator.languages || [navigator.language || ""]);
+            for (const value of candidates) {
+                if (!value) continue;
+                const normalized = String(value).toLowerCase().split("-")[0];
+                if (supported.includes(normalized)) {
+                    window.location.replace("./" + normalized + "/index.html");
+                    return;
+                }
+            }
+            window.location.replace("./en/index.html");
+        })();
+    </script>
 </head>
 <body>
-    <p>Redirecting to <a href="./fr/index.html">French version</a> / <a href="./en/index.html">English version</a></p>
+    <p>Select a language:</p>
+    <ul>
+        <li><a href="./fr/index.html">Français</a></li>
+        <li><a href="./en/index.html">English</a></li>
+        <li><a href="./es/index.html">Español</a></li>
+        <li><a href="./de/index.html">Deutsch</a></li>
+    </ul>
 </body>
 </html>'''
-    (ROOT / "index.html").write_text(html, encoding="utf-8")
-    (HTML_ROOT / "index.html").write_text(html, encoding="utf-8")
+    root_router = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,follow">
+    <title>WallCraft Pro</title>
+    <script>window.location.replace("./html/");</script>
+</head>
+<body>
+    <p>Open the site: <a href="./html/">WallCraft Pro website</a></p>
+</body>
+</html>'''
+    (ROOT / "index.html").write_text(root_router, encoding="utf-8")
+    (HTML_ROOT / "index.html").write_text(html_router, encoding="utf-8")
+
+
+def build_google_package():
+    sitemap = build_sitemap_xml()
+    robots = build_robots_txt()
+    guide = build_search_console_guide()
+
+    (ROOT / "sitemap.xml").write_text(sitemap, encoding="utf-8")
+    (HTML_ROOT / "sitemap.xml").write_text(sitemap, encoding="utf-8")
+    (ROOT / "robots.txt").write_text(robots, encoding="utf-8")
+    (HTML_ROOT / "robots.txt").write_text(robots, encoding="utf-8")
+    (ROOT / "GOOGLE_SEARCH_CONSOLE_SETUP.md").write_text(guide, encoding="utf-8")
 
 if __name__ == "__main__":
     build_site()
     build_router()
+    build_google_package()

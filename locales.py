@@ -175,15 +175,24 @@ _STRINGS = {
 def detect_os_language():
     """Detect default OS language, fallback to English."""
     try:
-        windll = ctypes.windll.kernel32
-        lang_id = windll.GetUserDefaultUILanguage()
-        primary_lang_id = lang_id & 0x3ff
-        # 0x09: English, 0x0C: French, 0x0A: Spanish, 0x07: German
-        if primary_lang_id == 0x0C: return "fr"
-        if primary_lang_id == 0x0A: return "es"
-        if primary_lang_id == 0x07: return "de"
+        kernel32 = ctypes.windll.kernel32
+        buffer = ctypes.create_unicode_buffer(85)
+        if kernel32.GetUserDefaultLocaleName(buffer, len(buffer)):
+            lang_code = buffer.value.split("-")[0].lower()
+            if lang_code in LANGUAGES:
+                return lang_code
     except Exception:
         pass
+
+    try:
+        lang_code, _encoding = locale.getdefaultlocale()
+        if lang_code:
+            lang_code = lang_code.split("_")[0].lower()
+            if lang_code in LANGUAGES:
+                return lang_code
+    except Exception:
+        pass
+
     return "en"
 
 def set_language(lang_code):
