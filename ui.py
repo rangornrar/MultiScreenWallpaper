@@ -909,16 +909,23 @@ class WallpaperApp:
             out_dir = wallpaper_output_dir()
             # Nom unique à chaque application : Windows ne garde pas en cache une ancienne version.
             stamp = time.strftime("%Y%m%d-%H%M%S")
-            for old in glob.glob(os.path.join(out_dir, "wallcraft_*")):
-                try:
-                    os.remove(old)
-                except OSError:
-                    pass
-            results = split_wallpaper_by_monitors(final, monitors, out_dir, f"wallcraft_{stamp}")
+            prefix = f"wallcraft_{stamp}"
+
+            def cleanup_previous():
+                # Après succès seulement : en cas d'échec, l'ancien fond reste intact.
+                for old in glob.glob(os.path.join(out_dir, "wallcraft_*")):
+                    if not os.path.basename(old).startswith(prefix):
+                        try:
+                            os.remove(old)
+                        except OSError:
+                            pass
+
+            results = split_wallpaper_by_monitors(final, monitors, out_dir, prefix)
             if not results:
                 return "no_monitors", []
             ok, errors, applied = set_multi_wallpaper_windows(results, bg)
             if ok:
+                cleanup_previous()
                 return "ok", []
             if applied > 0:
                 # Au moins un écran a reçu son image : on signale sans basculer en panorama.
@@ -926,6 +933,7 @@ class WallpaperApp:
             span_path = os.path.join(out_dir, f"wallcraft_{stamp}_span.png")
             final.save(span_path, "PNG")
             if set_wallpaper_span(span_path):
+                cleanup_previous()
                 return "span", errors
             return "failed", errors
 
