@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SOURCE = Path(r"C:\Users\user\Downloads\Gemini_Generated_Image_t1k5lut1k5lut1k5.png")
 OUTPUT = ROOT / "assets" / "wallcraft_app_redesign_concept.png"
 

@@ -1,0 +1,51 @@
+name: Release
+# Construit l'exécutable Windows depuis les sources du tag et le publie en GitHub Release,
+# avec son empreinte SHA-256. Déclenché par un tag du type v2026.11.7 ou Tag_v2026.11.7.
+on:
+  push:
+    tags: ['v*', 'Tag_v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - run: python -m pip install -r requirements.txt pyinstaller
+      - run: python -m unittest discover -s tests -v
+      - run: pyinstaller --noconfirm WallCraft.spec
+      - name: Nommer l'exécutable et calculer son empreinte
+        id: pack
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}" -replace '^(Tag_)?v', ''
+          if (-not $version -or "${{ github.ref_type }}" -ne "tag") { $version = "dev-${{ github.sha }}".Substring(0, 11) }
+          $name = "WallCraft-Pro-v$version-Windows.exe"
+          Move-Item dist/WallCraft.exe "dist/$name"
+          $hash = (Get-FileHash "dist/$name" -Algorithm SHA256).Hash.ToLower()
+          "$hash  $name" | Out-File -Encoding ascii "dist/$name.sha256"
+          "name=$name" >> $env:GITHUB_OUTPUT
+          "hash=$hash" >> $env:GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wallcraft-windows
+          path: dist/WallCraft-Pro-*
+      - name: Publier la release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/${{ steps.pack.outputs.name }}
+            dist/${{ steps.pack.outputs.name }}.sha256
+          append_body: true
+          body: |
+            SHA-256 de `${{ steps.pack.outputs.name }}` :
+            `${{ steps.pack.outputs.hash }}`
+
+            Construit par GitHub Actions depuis le commit ${{ github.sha }}.

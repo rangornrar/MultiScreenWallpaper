@@ -5,12 +5,18 @@ on:
 permissions:
   contents: read
 jobs:
-  image-tools:
-    runs-on: ubuntu-latest
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11', '3.14']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
-      - run: python -m pip install -r requirements.txt
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -r requirements.txt pyflakes
+      - run: python -m pyflakes main.py ui.py image_tools.py screen_splitter.py locales.py tests
       - run: python -m unittest discover -s tests -v

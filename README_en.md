@@ -21,7 +21,7 @@ It completely solves the issue of disparate monitor resolutions and borders thro
 
 ### 📐 The Absolute Visibility Engine (Fit Inside)
 The program adheres to the 100% rule:
-- **0 Cropping**: No uploaded image will have its edges cut off.
+- **0 Cropping**: automatic layouts never cut an image's edges; cropping is a manual choice (*Crop* mode).
 - **0 Overlap**: No photo covers another photo.
 - **0 Overflow**: Images will never spill off the screen edges.
 - **0 Distortion**: The original aspect ratio is mathematically preserved.
@@ -45,7 +45,7 @@ The program adheres to the 100% rule:
 ## 📦 Installation
 
 ### Prerequisites
-- Python 3.8 or higher.
+- Python 3.10 or higher.
 - Windows 10/11 (Required for the desktop wallpaper API).
 
 ### Dependencies
@@ -53,16 +53,19 @@ The program adheres to the 100% rule:
 pip install pillow screeninfo
 ```
 
+## 📥 Download
+The Windows executable is published on the [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest) page. Its SHA-256 checksum is listed in each release's notes.
+
 ## 🛠️ Usage
-1. Launch the app: `python main.py`
-2. **Add Images**: Click the button or drag and drop files.
-3. **Language Menu**: Choose EN/FR/ES/DE dynamically directly from the UI.
-4. **Choose a Layout**: Select one of the 6 modes ("Maximum Optimization" is recommended for limiting global black bars).
-5. **Auto-Arrange**: Click the "🎲" button and let the mathematical engine do the rest.
-6. **Apply**:
-    * 💾 Export: Save a large composite mockup.
-    * ✂ Split: Divide the composition into images mapped to your physical screens.
-    * 🖥️ Apply: Actively modify your Windows desktop background.
+1. Launch the app: `python main.py` (or the executable from the [latest release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
+2. **Add images**: "+ Add Images" button or the *File* menu. Smartphone photos are automatically turned upright.
+3. **Language**: choose EN/FR/ES/DE directly from the UI.
+4. **Choose a layout**: select one of the 6 modes ("Maximum Optimization" is recommended to limit black bars).
+5. **Auto-Arrange**, then fine-tune by hand: *Move*, *Scale* and *Crop* modes, layer forward/back, *Rotate 90°* and *Adjust…* (brightness, contrast, saturation, blur).
+6. **File menu**:
+    * Save / open a project (`Ctrl+S` / `Ctrl+O`).
+    * Export the full image (`Ctrl+E`) or one image per screen.
+    * 🖥️ Apply wallpaper: updates your Windows desktop, screen by screen.
 
 ## 📂 Project Structure
 * `main.py`: Entry point, hooks High-DPI Windows settings.
@@ -75,6 +78,9 @@ pip install pillow screeninfo
 * **Is the application blurry?** Run it via the standard Windows terminal (cmd/powershell) rather than an IDE terminal to ensure Windows High-DPI handling is engaged.
 * **Are black bars visible on the edges?** This is expected behavior. Because the application refuses to ever crop by design, the geometry boxes display a black bar to keep the image 100% visible. The "Maximum Optimization" option allows you to compress these black bars to the absolute possible minimum mathematically.
 
+
+## 📄 License
+Released under the [MIT License](LICENSE).
 
 ## Architecture & validation
 

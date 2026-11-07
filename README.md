@@ -21,7 +21,7 @@ Elle résout le problème des résolutions et des bordures de moniteurs disparat
 
 ### 📐 Le Moteur de Visibilité Absolue (Fit Inside)
 Le programme garantit la règle du 100% :
-- **0 Rognage (Crop)** : Aucune image uploadée ne verra ses bords coupés.
+- **0 Rognage (Crop)** : les modes automatiques ne coupent jamais les bords d'une image ; le rognage reste un choix manuel (mode *Rogner*).
 - **0 Superposition** : Aucune photo ne couvre une autre photo.
 - **0 Dépassement** : Les images ne déborderont jamais de l'écran.
 - **0 Déformation** : Le ratio original est mathématiquement préservé.
@@ -45,7 +45,7 @@ Le programme garantit la règle du 100% :
 ## 📦 Installation
 
 ### Prérequis
-- Python 3.8 ou supérieur.
+- Python 3.10 ou supérieur.
 - Windows 10/11 (requis en raison de l'API de fond d'écran).
 
 ### Dépendances
@@ -53,16 +53,19 @@ Le programme garantit la règle du 100% :
 python -m pip install -r requirements.txt
 ```
 
+## 📥 Télécharger
+L'exécutable Windows est publié sur la page [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest). Son empreinte SHA-256 figure dans les notes de chaque version.
+
 ## 🛠️ Utilisation
-1. Lancer l'application : `python main.py`
-2. **Ajouter des images** : Cliquez sur le bouton ou glissez des fichiers.
-3. **Menu Langue** : Choisissez EN/FR/ES/DE directement depuis l'interface.
-4. **Choisir un Layout** : Sélectionnez l'un des 6 modes ("Optimisation Maximale" recommandé pour limiter les bandes noires).
-5. **Auto-Organiser** : Appuyez sur le bouton "🎲" et laissez le moteur mathématique faire le reste.
-6. **Appliquer** :
-    * 💾 Export : Sauvegarde une grande maquette.
-    * ✂ Split : Divise la composition en images respectant les écrans physiques.
-    * 🖥️ Appliquer : Modifie activement votre bureau Windows.
+1. Lancer l'application : `python main.py` (ou l'exécutable de la [dernière release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
+2. **Ajouter des images** : bouton « + Ajouter des images » ou menu *Fichier*. Les photos de smartphone sont automatiquement remises dans le bon sens.
+3. **Langue** : choisissez EN/FR/ES/DE directement depuis l'interface.
+4. **Choisir une disposition** : sélectionnez l'un des 6 modes (« Optimisation Maximale » recommandé pour limiter les bandes noires).
+5. **Auto-Organiser**, puis ajustez à la main : modes *Déplacer*, *Redimensionner* et *Rogner*, calques avant/arrière, *Pivoter 90°* et *Retouches…* (luminosité, contraste, saturation, flou).
+6. **Menu Fichier** :
+    * Enregistrer / ouvrir un projet (`Ctrl+S` / `Ctrl+O`).
+    * Exporter l'image complète (`Ctrl+E`) ou une image par écran.
+    * 🖥️ Appliquer en fond : modifie votre bureau Windows, écran par écran.
 
 ## 📂 Structure du Projet
 * `main.py` : Point d'entrée, gestion High-DPI Windows.
@@ -74,6 +77,9 @@ python -m pip install -r requirements.txt
 ## 🐛 Dépannage
 * **L'application est floue ?** Lancez via le terminal Windows classique (cmd/powershell) plutôt que via l'IDE pour assurer la gestion High-DPI de Windows.
 * **Bandes noires visibles ?** C'est le comportement attendu. L'application refusant tout rognage par conception, les espaces non remplis des boîtes géométriques affichent une bande noire pour conserver l'image 100% visible. L'option "Optimisation Maximale" permet justement de compresser cela.
+
+## 📄 Licence
+Distribué sous licence [MIT](LICENSE).
 
 ## Architecture & validation
 
