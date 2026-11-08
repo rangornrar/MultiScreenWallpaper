@@ -18,16 +18,19 @@ Resuelve completamente el problema de las resoluciones de monitores dispares med
 - **Detección automática** de la disposición física de sus pantallas (izquierda/derecha, altura).
 - **Implementación Nativa**: Aplica un fondo de pantalla diferente por monitor (a través de la API `IDesktopWallpaper` de Windows).
 - **Modo de Respaldo**: Cambia automáticamente al modo "Panorámica" si la API nativa no es compatible.
+- **Tamaño real de las pantallas** (menú *Pantallas*): cada pantalla se coloca según su tamaño físico (leído del EDID, modificable) y el espacio entre paneles; un horizonte sigue recto entre un monitor de 27″ y otro de 24″.
+- **Fondo automático**: un fondo guardado por configuración de pantallas, aplicado de nuevo cuando cambian las pantallas (base de conexión) o Windows restaura un tema; rotación de imágenes de una carpeta; icono en el área de notificación e inicio con Windows.
 
 ### 📐 El Motor de Visibilidad Absoluta
 El programa se adhiere a la regla del 100%:
-- **0 Recortes (Crop)**: los modos automáticos nunca cortan los bordes de una imagen; el recorte es una elección manual (modo *Recortar*).
+- **0 Recortes (Crop)**: en modo *Ajustar*, los modos automáticos nunca cortan los bordes de una imagen; el recorte es una elección manual (modo *Recortar*).
 - **0 Superposición**: Ninguna foto cubre a otra foto.
 - **0 Desbordamiento**: Las imágenes nunca superarán los bordes de la pantalla.
 - **0 Distorsión**: La relación de aspecto original se conserva matemáticamente.
+- **Modo Rellenar (opcional)**: cubre todas las pantallas; cada foto se recorta alrededor de las caras detectadas (OpenCV) o de su zona con más detalle. Nunca se deforma.
 
 ### 🧩 6 Algoritmos de Disposición (Auto-Layout)
-- ⭐ **Optimización Máxima (Lento)**: La joya de la corona. Simula cientos de miles de permutaciones geométricas mediante un árbol binario matemático ("Slicing Floorplan") para anidar sus imágenes sin dejar espacio vacío interno, formando un bloque colosal que estadísticamente reduce las bandas negras a casi cero.
+- ⭐ **Optimización Máxima**: búsqueda en árboles de corte binarios con un número de intentos y una semilla fijos: mismas imágenes, mismo resultado. El botón *Variantes…* muestra 4 disposiciones lado a lado. Heurística: sin garantía de óptimo global.
 - **Mosaico Perfecto**: Un arreglo aleatorio tipo patchwork (Técnica BSP).
 - **Líneas Justificadas**: Alineación similar a Flickr o Google Images.
 - **Cuadrícula Regular**: Una cuadrícula matemáticamente uniforme.
@@ -76,7 +79,7 @@ El ejecutable de Windows se publica en la página [GitHub Releases](https://gith
 
 ## 🐛 Solución de Problemas
 * **¿La aplicación se ve borrosa?** Ejecútela a través de la terminal estándar (cmd/powershell) en lugar de la IDE para garantizar que Windows utilice la alta fidelidad visual nativa.
-* **¿Bordos o bandas negras muy prominentes?** Al no recortar NINGUNA imagen, el espacio restante debe ser llenado. Use "Optimización Máxima" para forzar mejores encajes de rompecabezas.
+* **¿Bandas negras visibles?** En modo *Ajustar* es lo esperado: ninguna imagen se recorta y el espacio restante queda negro. Elija *Rellenar* para cubrir las pantallas, u «Optimización Máxima» para reducir las bandas.
 
 
 ## 📄 Licencia

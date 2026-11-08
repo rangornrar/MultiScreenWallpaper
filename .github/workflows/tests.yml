@@ -18,5 +18,5 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install -r requirements.txt pyflakes
-      - run: python -m pyflakes main.py ui.py image_tools.py screen_splitter.py locales.py tests
+      - run: python -m pyflakes main.py ui.py ui_text.py dialogs.py services.py display_geometry.py facefocus.py image_tools.py screen_splitter.py locales.py tests
       - run: python -m unittest discover -s tests -v

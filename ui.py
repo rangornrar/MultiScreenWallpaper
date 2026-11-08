@@ -1,12 +1,12 @@
 # ui.py
+"""Fenêtre principale de WallCraft : bibliothèque, barre d'outils, édition et commandes."""
 import tkinter as tk
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename, askopenfilenames, asksaveasfilename, askdirectory
 import tkinter.ttk as ttk
-import glob
 import os
+import queue
 import threading
-import time
 import webbrowser
 from PIL import ImageTk, Image
 
@@ -14,26 +14,18 @@ from image_tools import (
     load_images_from_paths, AutoLayoutStrategy, compose_wallpaper_contain,
     image_to_project_entry, save_project_json, load_project_json,
 )
-from screen_splitter import (
-    get_monitor_layout, split_wallpaper_by_monitors,
-    virtual_desktop_bbox, set_multi_wallpaper_windows, set_wallpaper_span,
-)
+from screen_splitter import split_wallpaper_by_monitors
+from display_geometry import PhysicalSettings, load_settings
+from services import ConfigStore, render_and_apply
+from dialogs import AdjustDialog, VariantsDialog
+from ui_automation import AutomationMixin
+from ui_views import ViewsMixin
 import locales
 from locales import tr
+from ui_text import UI_TEXT
 
 SNAP_DIST = 25
 MIN_CROP = 0.05
-
-
-def wallpaper_output_dir():
-    """
-    Dossier durable pour les fonds appliqués (%LOCALAPPDATA%\\WallCraft\\wallpapers).
-    Windows relit ces fichiers : un dossier temporaire nettoyé ferait disparaître le fond.
-    """
-    base = os.environ.get("LOCALAPPDATA") or os.path.join(os.path.expanduser("~"), ".local", "share")
-    path = os.path.join(base, "WallCraft", "wallpapers")
-    os.makedirs(path, exist_ok=True)
-    return path
 
 
 def _format_errors(errors, limit=8):
@@ -42,141 +34,21 @@ def _format_errors(errors, limit=8):
         lines.append(f"• … (+{len(errors) - limit})")
     return "\n".join(lines)
 
-UI_TEXT = {
-    "library_title": {"en": "Imported images", "fr": "Images importées", "es": "Imágenes importadas", "de": "Importierte Bilder"},
-    "library_empty": {
-        "en": "Add images to start composing a wallpaper.",
-        "fr": "Ajoutez des images pour commencer une composition.",
-        "es": "Añade imágenes para empezar una composición.",
-        "de": "Füge Bilder hinzu, um die Komposition zu starten.",
-    },
-    "library_count": {"en": "{} image(s)", "fr": "{} image(s)", "es": "{} imagen(es)", "de": "{} Bild(er)"},
-    "project_actions": {"en": "Project", "fr": "Projet", "es": "Proyecto", "de": "Projekt"},
-    "edit_mode": {"en": "Edit mode", "fr": "Mode édition", "es": "Modo de edición", "de": "Bearbeitungsmodus"},
-    "btn_new_project": {"en": "New project", "fr": "Nouveau projet", "es": "Nuevo proyecto", "de": "Neues Projekt"},
-    "stage_title": {"en": "Composition stage", "fr": "Zone de composition", "es": "Zona de composición", "de": "Kompositionsfläche"},
-    "stage_subtitle": {
-        "en": "Move, scale, crop and arrange images inside the virtual desktop.",
-        "fr": "Déplacez, redimensionnez, rognez et organisez les images dans le bureau virtuel.",
-        "es": "Mueve, escala, recorta y organiza las imágenes dentro del escritorio virtual.",
-        "de": "Bilder im virtuellen Desktop bewegen, skalieren, zuschneiden und anordnen.",
-    },
-    "output_title": {"en": "Output preview", "fr": "Aperçu de sortie", "es": "Vista de salida", "de": "Ausgabevorschau"},
-    "output_subtitle": {
-        "en": "Live monitor result based on your current layout.",
-        "fr": "Résultat sur les écrans en direct, selon votre disposition actuelle.",
-        "es": "Resultado en los monitores según la disposición actual.",
-        "de": "Live-Ergebnis auf den Monitoren basierend auf dem aktuellen Layout.",
-    },
-    "position": {"en": "Position", "fr": "Position", "es": "Posición", "de": "Position"},
-    "crop": {"en": "Visible area", "fr": "Zone visible", "es": "Zona visible", "de": "Sichtbarer Bereich"},
-    "mode_move": {"en": "Move", "fr": "Déplacer", "es": "Mover", "de": "Bewegen"},
-    "mode_scale": {"en": "Scale", "fr": "Redimensionner", "es": "Escalar", "de": "Skalieren"},
-    "mode_crop": {"en": "Crop", "fr": "Rogner", "es": "Recortar", "de": "Zuschneiden"},
-    "btn_layer_back": {"en": "Back", "fr": "Arrière", "es": "Atrás", "de": "Zurück"},
-    "btn_layer_front": {"en": "Forward", "fr": "Avant", "es": "Adelante", "de": "Nach vorn"},
-    "btn_rotate": {"en": "Rotate 90°", "fr": "Pivoter 90°", "es": "Girar 90°", "de": "90° drehen"},
-    "btn_adjust": {"en": "Adjust…", "fr": "Retouches…", "es": "Ajustes…", "de": "Anpassen…"},
-    "images_count": {"en": "{} loaded image(s)", "fr": "{} image(s) chargée(s)", "es": "{} imagen(es) cargada(s)", "de": "{} Bild(er) geladen"},
-    "library_selected": {"en": "Selected", "fr": "Sélectionnée", "es": "Seleccionada", "de": "Ausgewählt"},
-    "library_ready": {"en": "Ready", "fr": "Prête", "es": "Lista", "de": "Bereit"},
-    "canvas_empty": {
-        "en": "Add images, choose a layout, then start composing.",
-        "fr": "Ajoutez des images, choisissez une disposition, puis composez.",
-        "es": "Añade imágenes, elige una disposición y empieza a componer.",
-        "de": "Bilder hinzufügen, Layout wählen und dann komponieren.",
-    },
-    "selection_empty": {"en": "No selection", "fr": "Aucune sélection", "es": "Sin selección", "de": "Keine Auswahl"},
-    "selection_hint": {
-        "en": "Select an image, then move, scale or crop it on the stage.",
-        "fr": "Sélectionnez une image, puis déplacez-la, redimensionnez-la ou rognez-la sur la scène.",
-        "es": "Selecciona una imagen y luego muévela, escálala o recórtala en la escena.",
-        "de": "Bild auswählen und dann auf der Fläche bewegen, skalieren oder zuschneiden.",
-    },
-    "selection_summary": {
-        "en": "{}  •  {} x {}  •  layer {}/{}",
-        "fr": "{}  •  {} x {}  •  calque {}/{}",
-        "es": "{}  •  {} x {}  •  capa {}/{}",
-        "de": "{}  •  {} x {}  •  Ebene {}/{}",
-    },
-    "output_summary": {
-        "en": "{} monitor(s)  •  {}  •  {}%",
-        "fr": "{} écran(s)  •  {}  •  {}%",
-        "es": "{} monitor(es)  •  {}  •  {}%",
-        "de": "{} Monitor(e)  •  {}  •  {}%",
-    },
-    "project_reset_status": {"en": "New project ready", "fr": "Nouveau projet prêt", "es": "Nuevo proyecto listo", "de": "Neues Projekt bereit"},
-    "new_project_confirm": {
-        "en": "Start a new project and remove all imported images?",
-        "fr": "Démarrer un nouveau projet et supprimer toutes les images importées ?",
-        "es": "¿Iniciar un nuevo proyecto y eliminar todas las imágenes importadas?",
-        "de": "Neues Projekt starten und alle importierten Bilder entfernen?",
-    },
-    # Menus
-    "menu_file": {"en": "File", "fr": "Fichier", "es": "Archivo", "de": "Datei"},
-    "menu_image": {"en": "Image", "fr": "Image", "es": "Imagen", "de": "Bild"},
-    "menu_open": {"en": "Open project…", "fr": "Ouvrir un projet…", "es": "Abrir proyecto…", "de": "Projekt öffnen…"},
-    "menu_save": {"en": "Save project…", "fr": "Enregistrer le projet…", "es": "Guardar proyecto…", "de": "Projekt speichern…"},
-    "menu_export": {"en": "Export full image…", "fr": "Exporter l'image complète…", "es": "Exportar imagen completa…", "de": "Gesamtbild exportieren…"},
-    "menu_split": {"en": "Export one image per screen…", "fr": "Exporter une image par écran…", "es": "Exportar una imagen por pantalla…", "de": "Ein Bild pro Bildschirm exportieren…"},
-    "menu_quit": {"en": "Quit", "fr": "Quitter", "es": "Salir", "de": "Beenden"},
-    "filetype_project": {"en": "WallCraft project", "fr": "Projet WallCraft", "es": "Proyecto WallCraft", "de": "WallCraft-Projekt"},
-    "filetype_png": {"en": "PNG image", "fr": "Image PNG", "es": "Imagen PNG", "de": "PNG-Bild"},
-    # Retouches
-    "adjust_title": {"en": "Adjust image", "fr": "Retouches de l'image", "es": "Ajustes de imagen", "de": "Bild anpassen"},
-    "adjust_brightness": {"en": "Brightness", "fr": "Luminosité", "es": "Brillo", "de": "Helligkeit"},
-    "adjust_contrast": {"en": "Contrast", "fr": "Contraste", "es": "Contraste", "de": "Kontrast"},
-    "adjust_saturation": {"en": "Saturation", "fr": "Saturation", "es": "Saturación", "de": "Sättigung"},
-    "adjust_blur": {"en": "Blur", "fr": "Flou", "es": "Desenfoque", "de": "Unschärfe"},
-    "adjust_reset": {"en": "Reset", "fr": "Réinitialiser", "es": "Restablecer", "de": "Zurücksetzen"},
-    "adjust_close": {"en": "Close", "fr": "Fermer", "es": "Cerrar", "de": "Schließen"},
-    # Messages
-    "msg_saved": {"en": "Project saved: {}", "fr": "Projet enregistré : {}", "es": "Proyecto guardado: {}", "de": "Projekt gespeichert: {}"},
-    "msg_exported": {"en": "Exported: {}", "fr": "Exporté : {}", "es": "Exportado: {}", "de": "Exportiert: {}"},
-    "msg_split_done": {"en": "{} image(s) written to {}", "fr": "{} image(s) écrite(s) dans {}", "es": "{} imagen(es) escrita(s) en {}", "de": "{} Bild(er) gespeichert in {}"},
-    "msg_load_errors": {
-        "en": "Some images could not be loaded:\n\n{}",
-        "fr": "Certaines images n'ont pas pu être chargées :\n\n{}",
-        "es": "Algunas imágenes no se pudieron cargar:\n\n{}",
-        "de": "Einige Bilder konnten nicht geladen werden:\n\n{}",
-    },
-    "msg_apply_partial": {
-        "en": "The wallpaper was applied with warnings:\n\n{}",
-        "fr": "Le fond d'écran a été appliqué avec des avertissements :\n\n{}",
-        "es": "El fondo se aplicó con advertencias:\n\n{}",
-        "de": "Das Hintergrundbild wurde mit Warnungen angewendet:\n\n{}",
-    },
-    "msg_span_fallback": {
-        "en": "Per-screen mode failed:\n\n{}\n\nThe image was applied in Windows \"Span\" mode instead.",
-        "fr": "Le mode par écran a échoué :\n\n{}\n\nL'image a été appliquée en mode « Étendre » de Windows à la place.",
-        "es": "El modo por pantalla falló:\n\n{}\n\nLa imagen se aplicó en el modo «Extender» de Windows.",
-        "de": "Der Modus pro Bildschirm ist fehlgeschlagen:\n\n{}\n\nDas Bild wurde stattdessen im Windows-Modus „Strecken“ angewendet.",
-    },
-    "msg_no_images": {
-        "en": "Add at least one image first.",
-        "fr": "Ajoutez d'abord au moins une image.",
-        "es": "Añade primero al menos una imagen.",
-        "de": "Füge zuerst mindestens ein Bild hinzu.",
-    },
-}
-
-
-class WallpaperApp:
-    def __init__(self, root):
+class WallpaperApp(ViewsMixin, AutomationMixin):
+    def __init__(self, root, start_hidden=False):
         self.root = root
         self.root.title(tr("app_title"))
         
         # Démarrage centré (80% taille écran)
         self._center_window()
 
-        self.monitor_layout = get_monitor_layout()
-        if self.monitor_layout:
-            x0, y0, x1, y1 = virtual_desktop_bbox(self.monitor_layout)
-            self.target_w = x1 - x0
-            self.target_h = y1 - y0
-        else:
-            self.target_w = 1920
-            self.target_h = 1080
+        self.settings = load_settings()
+        self.physical = PhysicalSettings.from_dict(self.settings.get("physical"))
+        self.store = ConfigStore()
+        self.monitor_layout = []
+        self.target_w, self.target_h = 1920, 1080
+        self._layout_sig = None
+        self._load_monitors()
 
         self.bg_color = (0, 0, 0)
         self.images = []; self.active_idx = None
@@ -194,6 +66,11 @@ class WallpaperApp:
         self._library_thumbs = []
         self._busy = False
         self._adjust_window = None
+        self._actions = queue.Queue()  # actions venant de l'icône de notification (autre thread)
+        self.tray = None
+        self._last_rotation = []
+        self._next_rotation_at = None
+        self._last_keep_check = 0.0
 
         self.colors = {
             "bg": "#0b1120",
@@ -230,6 +107,8 @@ class WallpaperApp:
         self.root.bind("<Control-e>", lambda e: self.cmd_export_image())
         self.root.bind("<Control-r>", lambda e: self.cmd_rotate())
         self.root.bind("<Delete>", self._on_delete_key)
+        self.root.protocol("WM_DELETE_WINDOW", self._on_close)
+        self._start_services(start_hidden)
 
     def _on_delete_key(self, event):
         # Ne pas supprimer une image pendant la saisie dans un champ
@@ -241,14 +120,23 @@ class WallpaperApp:
         menubar = tk.Menu(self.root, tearoff=False)
         self.menu_file = tk.Menu(menubar, tearoff=False)
         self.menu_image = tk.Menu(menubar, tearoff=False)
+        self.menu_screens = tk.Menu(menubar, tearoff=False)
         menubar.add_cascade(menu=self.menu_file, label="")
         menubar.add_cascade(menu=self.menu_image, label="")
+        menubar.add_cascade(menu=self.menu_screens, label="")
         self.menubar = menubar
         self.root.config(menu=menubar)
 
     def _refresh_menu(self):
         self.menubar.entryconfigure(0, label=self._u("menu_file"))
         self.menubar.entryconfigure(1, label=self._u("menu_image"))
+        self.menubar.entryconfigure(2, label=self._u("menu_screens"))
+        sc = self.menu_screens
+        sc.delete(0, tk.END)
+        sc.add_command(label=self._u("menu_physical"), command=self.cmd_physical)
+        sc.add_command(label=self._u("menu_prefs"), command=self.cmd_auto_prefs)
+        sc.add_separator()
+        sc.add_command(label=self._u("menu_reload_screens"), command=lambda: self._on_monitors_changed(force=True))
         f = self.menu_file
         f.delete(0, tk.END)
         f.add_command(label=self._u("btn_new_project"), command=self.cmd_new_project)
@@ -261,7 +149,7 @@ class WallpaperApp:
         f.add_command(label=self._u("menu_split"), command=self.cmd_export_split)
         f.add_command(label=tr("btn_apply"), command=self.cmd_apply_wallpaper)
         f.add_separator()
-        f.add_command(label=self._u("menu_quit"), command=self.root.destroy)
+        f.add_command(label=self._u("menu_quit"), command=self.quit_app)
         m = self.menu_image
         m.delete(0, tk.END)
         m.add_command(label=self._u("btn_rotate"), accelerator="Ctrl+R", command=self.cmd_rotate)
@@ -458,6 +346,14 @@ class WallpaperApp:
         self.lbl_layout_tag.pack(anchor="w")
         self.combo_layout = ttk.Combobox(layout_inner, state="readonly", width=20, style="WallCraft.TCombobox")
         self.combo_layout.pack(fill=tk.X, pady=(6, 0))
+        layout_options = tk.Frame(layout_inner, bg=self.colors["panel_alt"])
+        layout_options.pack(fill=tk.X, pady=(6, 0))
+        self.combo_fill = ttk.Combobox(layout_options, state="readonly", width=9, style="WallCraft.TCombobox")
+        self.combo_fill.pack(side=tk.LEFT)
+        self.combo_fill.bind("<<ComboboxSelected>>", self._on_fill_changed)
+        self.btn_variants = tk.Button(layout_options, command=self.cmd_variants, font=("Segoe UI Semibold", 9),
+                                      padx=8, pady=3, relief="flat", bd=0, cursor="hand2")
+        self.btn_variants.pack(side=tk.LEFT, padx=(6, 0))
 
         mode_group_card = self._make_card(toolbar, "panel_alt", "border_soft")
         mode_group_card.pack(side=tk.LEFT, padx=(0, 10))
@@ -511,7 +407,6 @@ class WallpaperApp:
         self.lbl_library_count.pack(anchor="w", pady=(4, 0))
 
         library_body = tk.Frame(library_card, bg=self.colors["panel"])
-        library_body.pack(fill=tk.BOTH, expand=True, padx=12)
         self.library_canvas = tk.Canvas(library_body, bg=self.colors["panel"], bd=0, highlightthickness=0, yscrollincrement=18)
         library_scroll = tk.Scrollbar(
             library_body,
@@ -533,7 +428,9 @@ class WallpaperApp:
         self.library_canvas.bind("<Configure>", self._on_library_canvas_configure)
 
         lib_footer = tk.Frame(library_card, bg=self.colors["panel"])
-        lib_footer.pack(fill=tk.X, padx=18, pady=(12, 16))
+        # Pied packé avant la liste : quand la fenêtre est basse, c'est la liste qui rétrécit, pas les boutons.
+        lib_footer.pack(side=tk.BOTTOM, fill=tk.X, padx=18, pady=(12, 16))
+        library_body.pack(fill=tk.BOTH, expand=True, padx=12)
         action_row = tk.Frame(lib_footer, bg=self.colors["panel"])
         action_row.pack(fill=tk.X)
         self.btn_rem = tk.Button(action_row, command=self.cmd_remove_img, **outlined_button)
@@ -618,7 +515,7 @@ class WallpaperApp:
         self.sim_canvas = tk.Canvas(sim_shell, bg=self.colors["panel_soft"], highlightthickness=0)
         self.sim_canvas.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        for button in (self.btn_new, self.btn_add, self.btn_auto, self.btn_rem):
+        for button in (self.btn_new, self.btn_add, self.btn_auto, self.btn_rem, self.btn_variants):
             self._style_button(button, "outlined")
         for button in (self.btn_mode_move, self.btn_mode_scale, self.btn_mode_crop, self.btn_layer_back, self.btn_layer_front,
                        self.btn_rotate, self.btn_adjust):
@@ -676,6 +573,9 @@ class WallpaperApp:
         self.btn_new.config(text=self._u("btn_new_project"))
         self.btn_add.config(text=tr("btn_add_images"))
         self.btn_auto.config(text=tr("btn_auto_arrange"))
+        self.btn_variants.config(text=self._u("btn_variants"))
+        self.combo_fill.config(values=[self._u("fill_fit"), self._u("fill_fill")])
+        self.combo_fill.current(1 if self.settings.get("fill") else 0)
         self.btn_rem.config(text=tr("btn_remove"))
         self.btn_layer_back.config(text=self._u("btn_layer_back"))
         self.btn_layer_front.config(text=self._u("btn_layer_front"))
@@ -723,7 +623,9 @@ class WallpaperApp:
     def _refresh_header_summary(self):
         screen_count = len(self.monitor_layout) if self.monitor_layout else 0
         self.lbl_sub.config(
-            text=f"{self.target_w} x {self.target_h}  •  {tr('monitors_count', screen_count)}  •  {self._u('images_count', len(self.images))}"
+            text=f"{self.target_w} x {self.target_h}  •  {tr('monitors_count', screen_count)}"
+                 + (f" ({self._u('physical_badge')})" if self.physical.enabled else "")
+                 + f"  •  {self._u('images_count', len(self.images))}"
         )
 
     def _refresh_library_panel(self):
@@ -858,13 +760,14 @@ class WallpaperApp:
 
     # --- Traitements longs (rendu HD) hors du thread Tk ---
 
-    def _run_in_background(self, work, on_done):
+    def _run_in_background(self, work, on_done, quiet=False):
         """Exécute `work()` dans un thread ; `on_done(résultat, exception)` revient sur le thread Tk."""
         if self._busy:
             return
         self._busy = True
-        self.status_var.set(tr("status_processing"))
-        self.root.config(cursor="watch")
+        if not quiet:  # les tâches de fond (surveillance, rotation) ne changent pas le curseur
+            self.status_var.set(tr("status_processing"))
+            self.root.config(cursor="watch")
         self._refresh_action_states()
         snapshot = [i.clone() for i in self.images]
         outcome = {}
@@ -881,8 +784,9 @@ class WallpaperApp:
                 self.root.after(50, poll)
                 return
             self._busy = False
-            self.root.config(cursor="")
-            self.status_var.set(tr("status_ready"))
+            if not quiet:
+                self.root.config(cursor="")
+                self.status_var.set(tr("status_ready"))
             self._refresh_action_states()
             on_done(outcome.get("result"), outcome.get("error"))
 
@@ -904,44 +808,16 @@ class WallpaperApp:
             return
         size, monitors, bg = (self.target_w, self.target_h), self.monitor_layout, self.bg_color
 
+        store = self.store
+
         def work(images):
-            final = compose_wallpaper_contain(size, images, bg)
-            out_dir = wallpaper_output_dir()
-            # Nom unique à chaque application : Windows ne garde pas en cache une ancienne version.
-            stamp = time.strftime("%Y%m%d-%H%M%S")
-            prefix = f"wallcraft_{stamp}"
-
-            def cleanup_previous():
-                # Après succès seulement : en cas d'échec, l'ancien fond reste intact.
-                for old in glob.glob(os.path.join(out_dir, "wallcraft_*")):
-                    if not os.path.basename(old).startswith(prefix):
-                        try:
-                            os.remove(old)
-                        except OSError:
-                            pass
-
-            results = split_wallpaper_by_monitors(final, monitors, out_dir, prefix)
-            if not results:
-                return "no_monitors", []
-            ok, errors, applied = set_multi_wallpaper_windows(results, bg)
-            if ok:
-                cleanup_previous()
-                return "ok", []
-            if applied > 0:
-                # Au moins un écran a reçu son image : on signale sans basculer en panorama.
-                return "partial", errors
-            span_path = os.path.join(out_dir, f"wallcraft_{stamp}_span.png")
-            final.save(span_path, "PNG")
-            if set_wallpaper_span(span_path):
-                cleanup_previous()
-                return "span", errors
-            return "failed", errors
+            return render_and_apply(images, size, monitors, bg, store)
 
         def done(result, error):
             if error is not None:
                 messagebox.showerror(tr("error_title"), str(error))
                 return
-            status, errors = result
+            status, errors, _results = result
             if status == "ok":
                 messagebox.showinfo(tr("info_title"), tr("msg_apply_ok"))
             elif status == "partial":
@@ -1014,6 +890,8 @@ class WallpaperApp:
             "meta": {
                 "target": [self.target_w, self.target_h],
                 "layout": self._layout_ids[idx] if idx >= 0 else None,
+                "fill": self._fill_enabled(),
+                "physical": self.physical.enabled,
                 "monitors": self.monitor_layout,
             },
             "images": [image_to_project_entry(img) for img in self.images],
@@ -1044,6 +922,8 @@ class WallpaperApp:
         layout = meta.get("layout")
         if layout in self._layout_ids:
             self.combo_layout.current(self._layout_ids.index(layout))
+        if "fill" in meta:
+            self.combo_fill.current(1 if meta.get("fill") else 0)
         self.history = []
         self.history_idx = -1
         self._save_state("Open")
@@ -1079,74 +959,17 @@ class WallpaperApp:
         img = self._selected()
         if img is None:
             return
-        if self._adjust_window is not None and self._adjust_window.winfo_exists():
-            self._adjust_window.destroy()
-
-        win = tk.Toplevel(self.root)
-        self._adjust_window = win
-        win.title(self._u("adjust_title"))
-        win.configure(bg=self.colors["panel"])
-        win.transient(self.root)
-        win.resizable(False, False)
-
-        specs = (
-            ("brightness", "adjust_brightness", 0.2, 2.0, 0.05),
-            ("contrast", "adjust_contrast", 0.2, 2.0, 0.05),
-            ("saturation", "adjust_saturation", 0.0, 2.0, 0.05),
-            ("blur", "adjust_blur", 0.0, 20.0, 0.5),
-        )
-        defaults = {"brightness": 1.0, "contrast": 1.0, "saturation": 1.0, "blur": 0.0}
-        variables = {}
-        pending = {"id": None}
-
-        def apply_now():
-            pending["id"] = None
-            for attr, var in variables.items():
-                setattr(img, attr, float(var.get()))
-            img.apply_filters(high_quality=False)
-            self._refresh_canvas()
-
-        def on_change(_value=None):
-            if pending["id"] is None:
-                pending["id"] = self.root.after(80, apply_now)
-
-        for row, (attr, label_key, lo, hi, step) in enumerate(specs):
-            tk.Label(win, text=self._u(label_key), bg=self.colors["panel"], fg=self.colors["text"],
-                     font=("Segoe UI", 10)).grid(row=row, column=0, sticky="w", padx=(16, 8), pady=6)
-            var = tk.DoubleVar(value=getattr(img, attr))
-            variables[attr] = var
-            tk.Scale(win, from_=lo, to=hi, resolution=step, orient=tk.HORIZONTAL, length=260, variable=var,
-                     command=on_change, bg=self.colors["panel"], fg=self.colors["text"],
-                     troughcolor=self.colors["panel_alt"], highlightthickness=0).grid(row=row, column=1, padx=(0, 16), pady=6)
-
-        def reset():
-            for attr, var in variables.items():
-                var.set(defaults[attr])
-            apply_now()
-
-        def close():
-            if pending["id"] is not None:
-                self.root.after_cancel(pending["id"])
-                apply_now()
-            self._save_state("Adjust")
-            self._refresh_library_panel()
-            win.destroy()
-
-        buttons = tk.Frame(win, bg=self.colors["panel"])
-        buttons.grid(row=len(specs), column=0, columnspan=2, sticky="e", padx=16, pady=(6, 14))
-        for text, command in ((self._u("adjust_reset"), reset), (self._u("adjust_close"), close)):
-            b = tk.Button(buttons, text=text, command=command, font=("Segoe UI Semibold", 9), padx=14, pady=6)
-            self._style_button(b, "outlined")
-            b.pack(side=tk.LEFT, padx=(8, 0))
-        win.protocol("WM_DELETE_WINDOW", close)
+        if self._adjust_window is not None and self._adjust_window.win.winfo_exists():
+            self._adjust_window.win.destroy()
+        self._adjust_window = AdjustDialog(self, img)
 
     def cmd_new_project(self):
         if self._busy:
             return
         if self.images and not messagebox.askyesno(tr("app_title"), self._u("new_project_confirm")):
             return
-        if self._adjust_window is not None and self._adjust_window.winfo_exists():
-            self._adjust_window.destroy()
+        if self._adjust_window is not None and self._adjust_window.win.winfo_exists():
+            self._adjust_window.win.destroy()
 
         self.images = []
         self.active_idx = None
@@ -1205,213 +1028,9 @@ class WallpaperApp:
         self._sim_after_id = None
         self._refresh_sim_view()
 
-    def _refresh_main_canvas(self):
-        self.canvas.delete("all")
-        cw, ch = self.canvas.winfo_width(), self.canvas.winfo_height()
-        if cw < 10 or ch < 10:
-            return
 
-        self.canvas.create_rectangle(0, 0, cw, ch, fill=self.colors["canvas_bg"], outline="")
 
-        bx, by = self.logic_to_screen(0, 0)
-        bw, bh = self.target_w * self.zoom, self.target_h * self.zoom
-        shadow_pad = 18
-        self.canvas.create_rectangle(
-            bx - shadow_pad,
-            by - shadow_pad,
-            bx + bw + shadow_pad,
-            by + bh + shadow_pad,
-            fill="#0c1422",
-            outline="",
-            stipple="gray25",
-        )
-        self.canvas.create_rectangle(bx, by, bx + bw, by + bh, fill="#0d1626", outline="")
-
-        grid_step = max(26, int(220 * self.zoom))
-        x = int(bx - (bx % grid_step))
-        while x < bx + bw:
-            self.canvas.create_line(x, max(0, by), x, min(ch, by + bh), fill="#1b2536")
-            x += grid_step
-
-        y = int(by - (by % grid_step))
-        while y < by + bh:
-            self.canvas.create_line(max(0, bx), y, min(cw, bx + bw), y, fill="#1b2536")
-            y += grid_step
-
-        self.canvas.create_rectangle(bx, by, bx + bw, by + bh, fill="", outline=self.colors["border"], width=2)
-        self.canvas.create_text(
-            bx + 16,
-            by + 14,
-            text="STAGE",
-            fill=self.colors["text_muted"],
-            anchor="nw",
-            font=("Segoe UI", 9, "bold"),
-        )
-
-        cw, ch = self.canvas.winfo_width(), self.canvas.winfo_height()
-        for idx, img in sorted(enumerate(self.images), key=lambda x:x[1].z_index):
-            sw, sh = int(img.w*self.zoom), int(img.h*self.zoom)
-            sx, sy = self.logic_to_screen(img.x, img.y)
-            if sx>cw or sy>ch or sx+sw<0 or sy+sh<0: continue
-            tk_img = img.get_tk_image(sw, sh)
-            if tk_img:
-                self.canvas.create_rectangle(sx + 4, sy + 6, sx + sw + 4, sy + sh + 6, fill="#04070d", outline="", stipple="gray50")
-                self.canvas.create_image(sx, sy, image=tk_img, anchor="nw")
-                if idx==self.active_idx:
-                    self.canvas.create_rectangle(sx - 3, sy - 3, sx + sw + 3, sy + sh + 3, outline=self.colors["accent_line"], width=1)
-                    self.canvas.create_rectangle(sx, sy, sx+sw, sy+sh, outline=self.colors["accent"], width=2)
-                    if self.mode in ("crop", "scale"):
-                        self._draw_handles(sx, sy, sw, sh)
-
-        if self.show_monitors.get() and self.monitor_layout:
-            vx, vy, _, _ = virtual_desktop_bbox(self.monitor_layout)
-            for m in self.monitor_layout:
-                mx, my = self.logic_to_screen(m["x"]-vx, m["y"]-vy)
-                mw, mh = m["width"]*self.zoom, m["height"]*self.zoom
-                self.canvas.create_rectangle(mx, my, mx+mw, my+mh, outline=self.colors["monitor"], dash=(6, 4), width=2)
-                self.canvas.create_rectangle(mx + 10, my + 10, mx + 110, my + 30, fill="#0e2236", outline="")
-                self.canvas.create_text(mx+16, my+20, text=m.get("name",""), fill=self.colors["monitor"], anchor="w", font=("Segoe UI", 8, "bold"))
-
-        if not self.images:
-            self.canvas.create_text(
-                cw / 2,
-                ch / 2,
-                text=self._u("canvas_empty"),
-                fill=self.colors["text_muted"],
-                font=("Segoe UI", 12),
-                width=max(260, cw - 160),
-            )
-
-    def _auto_fit(self):
-        """Automatically adjusts zoom and offset to fit the virtual desktop in the canvas."""
-        self.root.update_idletasks()
-        cw = self.canvas.winfo_width()
-        ch = self.canvas.winfo_height()
-        if cw < 50 or ch < 50: return # Too small/not rendered yet
-
-        vw, vh = self.target_w, self.target_h
-        
-        # Fit with tighter padding to make the stage more prominent.
-        scale = min((cw * 0.95) / vw, (ch * 0.94) / vh)
-        self.zoom = scale
-        
-        # Center
-        self.pan_x = (cw - vw * scale) / 2
-        self.pan_y = (ch - vh * scale) / 2
-        self._refresh_canvas()
-
-    def _refresh_sim_view(self):
-        self.sim_canvas.delete("all")
-        self._sim_images = []
-        if not self.monitor_layout:
-            return
-
-        cw, ch = self.sim_canvas.winfo_width(), self.sim_canvas.winfo_height()
-        if cw < 10 or ch < 10:
-            return
-
-        desk_y = ch * 0.8
-        self.sim_canvas.create_image(0, 0, image=self._sim_backdrop_image(cw, ch, desk_y), anchor="nw")
-
-        self.sim_canvas.create_line(0, desk_y, cw, desk_y, fill="#485262", width=1)
-        self.sim_canvas.create_rectangle(0, desk_y, cw, ch, fill="#121821", outline="")
-        self.sim_canvas.create_line(0, desk_y + 1, cw, desk_y + 1, fill="#2c3748", width=1)
-        self.sim_canvas.create_line(0, desk_y + 36, cw, desk_y + 36, fill="#0c1118", width=1)
-
-        vx0, vy0, vx1, vy1 = virtual_desktop_bbox(self.monitor_layout)
-        vw, vh = vx1 - vx0, vy1 - vy0
-
-        gap_units = 180
-        sorted_monitors = sorted(self.monitor_layout, key=lambda m: (m["x"], m["y"]))
-        rank_by_id = {id(m): idx for idx, m in enumerate(sorted_monitors)}
-        preview_span = vw + max(0, len(self.monitor_layout) - 1) * gap_units
-
-        padding_x = 28
-        padding_top = 16
-        usable_h = max(80, desk_y - padding_top - 26)
-        scale = min((cw - padding_x * 2) / max(1, preview_span), usable_h / max(1, vh))
-        ox = (cw - preview_span * scale) / 2
-        oy = padding_top + (usable_h - vh * scale) / 2
-
-        for m in self.monitor_layout:
-            gap_offset = rank_by_id[id(m)] * gap_units
-            mx = ((m["x"] - vx0) + gap_offset) * scale + ox
-            my = (m["y"] - vy0) * scale + oy
-            mw = m["width"] * scale
-            mh = m["height"] * scale
-
-            self.sim_canvas.create_rectangle(mx + 7, my + 10, mx + mw + 7, my + mh + 12, fill="#05070b", outline="", stipple="gray50")
-            self.sim_canvas.create_rectangle(mx - 6, my - 6, mx + mw + 6, my + mh + 6, fill="#151920", outline="#262d37", width=1)
-            self.sim_canvas.create_rectangle(mx - 2, my - 2, mx + mw + 2, my + mh + 2, fill="#1e242d", outline="#3a4554", width=1)
-
-            sx0, sy0 = mx + 4, my + 4
-            sx1, sy1 = mx + mw - 4, my + mh - 4
-            self.sim_canvas.create_rectangle(sx0, sy0, sx1, sy1, fill="#030405", outline="")
-
-            for img in sorted(self.images, key=lambda x: x.z_index):
-                ix0, iy0 = img.x, img.y
-                ix1, iy1 = img.x + img.w, img.y + img.h
-                mx0, my0 = m["x"] - vx0, m["y"] - vy0
-                mx1, my1 = mx0 + m["width"], my0 + m["height"]
-
-                if ix0 < mx1 and ix1 > mx0 and iy0 < my1 and iy1 > my0:
-                    cx0 = max(0, mx0 - ix0)
-                    cy0 = max(0, my0 - iy0)
-                    cx1 = min(img.w, mx1 - ix0)
-                    cy1 = min(img.h, my1 - iy0)
-
-                    tx = sx0 + max(0, ix0 - mx0) * scale
-                    ty = sy0 + max(0, iy0 - my0) * scale
-                    tw = (cx1 - cx0) * scale
-                    th = (cy1 - cy0) * scale
-
-                    tk_slice = img.get_tk_image_slice(cx0, cy0, cx1, cy1, int(tw), int(th))
-                    if tk_slice:
-                        self.sim_canvas.create_image(tx, ty, image=tk_slice, anchor="nw")
-                        self._sim_images.append(tk_slice)
-
-            self.sim_canvas.create_line(sx0, sy0 + 1, sx1, sy0 + 1, fill="#5f6979")
-            self.sim_canvas.create_rectangle(sx0, sy0, sx1, sy1, outline="#0b0e13", width=1)
-
-            chip_w = min(120, max(74, mw * 0.32))
-            self.sim_canvas.create_rectangle(mx + 12, my + 12, mx + 12 + chip_w, my + 30, fill="#232b36", outline="")
-            self.sim_canvas.create_text(mx + 18, my + 21, text=m.get("name", ""), fill="#cfd6e0", anchor="w", font=("Segoe UI", 8, "bold"))
-
-            stand_x = mx + mw / 2
-            self.sim_canvas.create_rectangle(stand_x - 7, sy1 + 4, stand_x + 7, desk_y - 7, fill="#171b22", outline="#0c0f14")
-            self.sim_canvas.create_rectangle(stand_x - 30, desk_y - 7, stand_x + 30, desk_y + 5, fill="#11151b", outline="#2a313c")
-            self.sim_canvas.create_rectangle(mx + mw * 0.16, desk_y + 10, mx + mw * 0.84, desk_y + 22, fill="#090c11", outline="", stipple="gray50")
             
-    def _sim_backdrop_image(self, cw, ch, desk_y):
-        """Dégradé mur/bureau rendu une fois par taille de canevas, au lieu d'une ligne Tk par pixel."""
-        key = (cw, ch)
-        if self._sim_backdrop_key != key:
-            column = Image.new("RGB", (1, ch))
-            for y in range(ch):
-                if y < desk_y:
-                    mix = y / max(1, desk_y)
-                    rgb = (int(8 + 10 * mix), int(14 + 14 * mix), int(28 + 20 * mix))
-                else:
-                    mix = (y - desk_y) / max(1, ch - desk_y)
-                    rgb = (int(20 - 10 * mix), int(24 - 12 * mix), int(32 - 16 * mix))
-                column.putpixel((0, y), rgb)
-            self._sim_backdrop = ImageTk.PhotoImage(column.resize((cw, ch), Image.Resampling.NEAREST))
-            self._sim_backdrop_key = key
-        return self._sim_backdrop
-
-    def _draw_handles(self, x, y, w, h):
-        s = 10
-        pts = [(x, y), (x + w, y), (x + w, y + h), (x, y + h)]
-        for px, py in pts:
-            self.canvas.create_oval(
-                px - s / 2,
-                py - s / 2,
-                px + s / 2,
-                py + s / 2,
-                fill=self.colors["accent"],
-                outline=self.colors["accent_line"],
-                width=2,
-            )
 
     def on_zoom(self, e):
         f = 1.1 if (e.num==4 or e.delta>0) else 0.9
@@ -1569,27 +1188,66 @@ class WallpaperApp:
             self._refresh_library_panel()
             self._refresh_canvas()
             
-    def cmd_autofill(self):
+    def _layout_id(self):
         idx = self.combo_layout.current()
-        if idx == -1 or not self.images: return
-        layout_id = self._layout_ids[idx]
+        return self._layout_ids[idx] if idx >= 0 else self._layout_ids[0]
 
-        # Mosaïque avec au plus une image par écran : chaque image va sur son écran
+    def _fill_enabled(self):
+        return self.combo_fill.current() == 1
+
+    def _on_fill_changed(self, _event=None):
+        self.settings["fill"] = self._fill_enabled()
+        self._persist_settings()
+        if self.images:
+            self.cmd_autofill()
+
+    def _apply_auto_layout(self, images, layout_id, fill, variant=0):
+        """Mise en page sans toucher à l'interface (utilisée aussi par la rotation automatique)."""
         monitors = self.monitor_layout
-        if layout_id == "layout_mosaic" and monitors and len(self.images) <= len(monitors):
-            vx, vy, _, _ = virtual_desktop_bbox(monitors)
-            for i, img in enumerate(self.images):
-                m = monitors[i]
-                AutoLayoutStrategy._apply_fit_inside(img, m["x"] - vx, m["y"] - vy, m["width"], m["height"])
+        if layout_id == "layout_mosaic" and monitors and len(images) <= len(monitors):
+            # Mosaïque avec au plus une image par écran : chaque image va sur son écran
+            rects = [m["canvas"] for m in sorted(monitors, key=lambda m: (m["canvas"][0], m["canvas"][1]))]
+            AutoLayoutStrategy.place_on_screens(images, rects, fill=fill)
         else:
-            AutoLayoutStrategy.apply(layout_id, self.target_w, self.target_h, self.images)
+            AutoLayoutStrategy.apply(layout_id, self.target_w, self.target_h, images, fill=fill, variant=variant)
 
+    def cmd_autofill(self):
+        if not self.images: return
+        self._apply_auto_layout(self.images, self._layout_id(), self._fill_enabled())
         self._sync_z_indices()
         # Sauvegarde APRÈS la mise en page : Ctrl+Z revient à l'état précédent, Ctrl+Y la refait.
         self._save_state("Auto")
         self._refresh_library_panel()
         self._refresh_canvas()
-        
+
+    def cmd_variants(self):
+        """Calcule 4 variantes de la disposition choisie et les montre côte à côte."""
+        if self._busy or not self._require_images():
+            return
+        layout_id, fill = self._layout_id(), self._fill_enabled()
+        if layout_id == "layout_mosaic" and len(self.images) <= len(self.monitor_layout):
+            layout_id = "layout_optimal"  # une image par écran n'a qu'une variante
+        size = (self.target_w, self.target_h)
+        self.status_var.set(self._u("variants_computing"))
+
+        def work(images):
+            return AutoLayoutStrategy.variants(layout_id, size[0], size[1], images, fill=fill)
+
+        def done(result, error):
+            if error is not None:
+                messagebox.showerror(tr("error_title"), str(error))
+                return
+            VariantsDialog(self, result, self._apply_variant)
+
+        self._run_in_background(work, done)
+
+    def _apply_variant(self, placement):
+        AutoLayoutStrategy.apply_placement(self.images, placement)
+        self._sync_z_indices()
+        self._save_state("Variant")
+        self._refresh_library_panel()
+        self._refresh_canvas()
+
     def cmd_remove_img(self): 
         if self.active_idx is not None: 
             del self.images[self.active_idx]
@@ -1620,3 +1278,28 @@ class WallpaperApp:
         self._save_state("LayerFront")
         self._refresh_library_panel()
         self._refresh_canvas()
+
+    # --- Écrans : détection, taille réelle ---
+
+
+
+
+
+
+    # --- Fond automatique, rotation, zone de notification ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -18,16 +18,19 @@ It completely solves the issue of disparate monitor resolutions and borders thro
 - **Automatic detection** of your screens' physical layout (left/right, height).
 - **Native Implementation**: Applies a different wallpaper per monitor (via the Windows `IDesktopWallpaper` API).
 - **Fallback Mode**: Automatically switches to "Span" mode if the API is unsupported.
+- **Real screen size** (*Screens* menu): each screen is placed by its physical size (read from EDID, editable) and the gap between panels, so a horizon stays straight across a 27″ and a 24″ display.
+- **Automatic wallpaper**: one wallpaper remembered per screen setup, reapplied when screens change (docking) or when Windows restores a theme; image rotation from a folder; notification-area icon and start with Windows.
 
 ### 📐 The Absolute Visibility Engine (Fit Inside)
 The program adheres to the 100% rule:
-- **0 Cropping**: automatic layouts never cut an image's edges; cropping is a manual choice (*Crop* mode).
+- **0 Cropping**: in *Fit* mode, automatic layouts never cut an image's edges; cropping is a manual choice (*Crop* mode).
 - **0 Overlap**: No photo covers another photo.
 - **0 Overflow**: Images will never spill off the screen edges.
 - **0 Distortion**: The original aspect ratio is mathematically preserved.
+- **Fill mode (optional)**: covers every screen; each photo is cropped around detected faces (OpenCV), otherwise around its most detailed area. Never distorted.
 
 ### 🧩 6 Layout Algorithms (Auto-Layout)
-- ⭐ **Maximum Optimization (Slow)**: The crown jewel of the app. It simulates hundreds of thousands of geometric permutations via a binary "Slicing Floorplan" tree to nest your images with zero internal empty space, forming a colossal block that statistically reduces black bars to near-zero.
+- ⭐ **Maximum Optimization**: searches binary slicing-floorplan trees with a fixed number of tries and a fixed seed: same images, same result. The *Variants…* button shows 4 layouts side by side. Heuristic: no guarantee of a global optimum.
 - **Perfect Mosaic**: A randomized patchwork arrangement (BSP technique).
 - **Justified Lines**: Alignment similar to Flickr/Google Images.
 - **Regular Grid**: A mathematically uniform grid.
@@ -76,7 +79,7 @@ The Windows executable is published on the [GitHub Releases](https://github.com/
 
 ## 🐛 Troubleshooting
 * **Is the application blurry?** Run it via the standard Windows terminal (cmd/powershell) rather than an IDE terminal to ensure Windows High-DPI handling is engaged.
-* **Are black bars visible on the edges?** This is expected behavior. Because the application refuses to ever crop by design, the geometry boxes display a black bar to keep the image 100% visible. The "Maximum Optimization" option allows you to compress these black bars to the absolute possible minimum mathematically.
+* **Are black bars visible on the edges?** In *Fit* mode this is expected: no image is cropped, so the remaining space stays black. Choose *Fill* to cover the screens, or "Maximum Optimization" to reduce the bars.
 
 
 ## 📄 License

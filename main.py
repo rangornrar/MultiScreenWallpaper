@@ -1,5 +1,6 @@
 # main.py
 import ctypes
+import sys
 import tkinter as tk
 
 from ui import WallpaperApp
@@ -23,7 +24,8 @@ def enable_dpi_awareness():
 def main():
     enable_dpi_awareness()
     root = tk.Tk()
-    WallpaperApp(root)
+    # --tray : lancement au démarrage de Windows, directement dans la zone de notification
+    WallpaperApp(root, start_hidden="--tray" in sys.argv)
     root.mainloop()
 
 
