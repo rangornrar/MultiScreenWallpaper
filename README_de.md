@@ -18,16 +18,19 @@ Sie löst das Problem unterschiedlicher Monitorauflösungen und Bildschirmrände
 - **Automatische Erkennung** der physischen Anordnung Ihrer Bildschirme (links/rechts, Höhe).
 - **Native Implementierung**: Setzt pro Monitor ein anderes Hintergrundbild (über die Windows `IDesktopWallpaper`-API).
 - **Fallback-Modus**: Wechselt automatisch in den "Panorama"-Modus (Span), falls die native API nicht unterstützt wird.
+- **Reale Bildschirmgröße** (Menü *Bildschirme*): Jeder Bildschirm wird nach seiner physischen Größe (aus der EDID, anpassbar) und dem Abstand zwischen den Panels platziert; ein Horizont bleibt zwischen einem 27″- und einem 24″-Monitor gerade.
+- **Automatisches Hintergrundbild**: ein gespeichertes Hintergrundbild pro Bildschirmkonfiguration, erneut angewendet, wenn sich die Bildschirme ändern (Dockingstation) oder Windows ein Design wiederherstellt; Bildwechsel aus einem Ordner; Symbol im Infobereich und Start mit Windows.
 
 ### 📐 Die Absolute "Fit Inside" Engine
 Das Programm hält sich strikt an die 100 % Regel:
-- **0 Zuschnitt (Crop)**: Die automatischen Layouts schneiden nie Bildränder ab; Zuschneiden ist eine manuelle Entscheidung (Modus *Zuschneiden*).
+- **0 Zuschnitt (Crop)**: Im Modus *Einpassen* schneiden die automatischen Layouts nie Bildränder ab; Zuschneiden ist eine manuelle Entscheidung (Modus *Zuschneiden*).
 - **0 Überlappung**: Kein Foto verdeckt ein anderes Foto.
 - **0 Überstand**: Bilder ragen niemals über die Bildschirmränder hinaus.
 - **0 Verzerrung**: Das ursprüngliche Seitenverhältnis bleibt mathematisch gewahrt.
+- **Modus Füllen (optional)**: bedeckt alle Bildschirme; jedes Foto wird um erkannte Gesichter (OpenCV) zugeschnitten, sonst um seinen detailreichsten Bereich. Nie verzerrt.
 
 ### 🧩 6 Layout-Algorithmen (Auto-Layout)
-- ⭐ **Maximale Optimierung (Langsam)**: Das Herzstück der Anwendung. Es simuliert Hunderttausende geometrischer Permutationen über einen binären "Slicing Floorplan"-Baum, um Ihre Bilder lückenlos ineinander zu verschachteln und so einen riesigen Block zu formen, der schwarze Balken statistisch auf ein Minimum reduziert.
+- ⭐ **Maximale Optimierung**: Suche über binäre Slicing-Floorplan-Bäume mit fester Anzahl an Versuchen und festem Startwert: gleiche Bilder, gleiches Ergebnis. Die Schaltfläche *Varianten…* zeigt 4 Layouts nebeneinander. Heuristik: kein garantiertes globales Optimum.
 - **Perfektes Mosaik**: Eine randomisierte Patchwork-Anordnung (BSP-Technik).
 - **Ausgerichtete Linien**: Ausrichtung ähnlich wie bei Flickr/Google Bilder.
 - **Regelmäßiges Raster**: Ein mathematisch gleichmäßiges Raster.
@@ -76,7 +79,7 @@ Die Windows-EXE wird auf der Seite [GitHub Releases](https://github.com/rangornr
 
 ## 🐛 Fehlerbehebung
 * **Ist die Anwendung unscharf?** Führen Sie sie über das Standard-Terminal von Windows (cmd/powershell) und nicht über eine Entwicklungsumgebung (IDE) aus. 
-* **Sind schwarze Balken sichtbar?** Dies ist das erwartete Verhalten. Da die Anwendung Bilder absichtlich nicht zuschneidet ("No Crop"), wird der verbleibende Platz durch schwarze Balken gefüllt ("Fit Inside"). Verwenden Sie "Maximale Optimierung", um dies zu verringern.
+* **Sind schwarze Balken sichtbar?** Im Modus *Einpassen* ist das erwartet: kein Bild wird zugeschnitten, der restliche Platz bleibt schwarz. Wählen Sie *Füllen*, um die Bildschirme zu bedecken, oder „Maximale Optimierung“, um die Balken zu verringern.
 
 
 ## 📄 Lizenz

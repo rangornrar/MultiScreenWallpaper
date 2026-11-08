@@ -18,16 +18,19 @@ Elle résout le problème des résolutions et des bordures de moniteurs disparat
 - **Détection automatique** de la disposition physique de vos écrans (gauche/droite, hauteur).
 - **Application native** : Applique un fond d'écran différent par moniteur (via l'API Windows `IDesktopWallpaper`).
 - **Mode Secours** : Bascule en mode "Panorama" (Span) si l'API n'est pas supportée.
+- **Taille réelle des écrans** (menu *Écrans*) : chaque écran est placé selon sa taille physique (lue dans l'EDID, modifiable) et l'espace entre les dalles ; une ligne d'horizon reste droite entre un 27″ et un 24″.
+- **Fond automatique** : un fond mémorisé par configuration d'écrans, réappliqué quand les écrans changent (station d'accueil) ou quand Windows remet un thème ; rotation d'images depuis un dossier ; icône dans la zone de notification et lancement au démarrage.
 
 ### 📐 Le Moteur de Visibilité Absolue (Fit Inside)
 Le programme garantit la règle du 100% :
-- **0 Rognage (Crop)** : les modes automatiques ne coupent jamais les bords d'une image ; le rognage reste un choix manuel (mode *Rogner*).
+- **0 Rognage (Crop)** : en mode *Ajuster*, les modes automatiques ne coupent jamais les bords d'une image ; le rognage reste un choix manuel (mode *Rogner*).
 - **0 Superposition** : Aucune photo ne couvre une autre photo.
 - **0 Dépassement** : Les images ne déborderont jamais de l'écran.
 - **0 Déformation** : Le ratio original est mathématiquement préservé.
+- **Mode Remplir (au choix)** : couvre tous les écrans ; chaque photo est recadrée autour des visages détectés (OpenCV), sinon autour de sa zone la plus détaillée. Jamais de déformation.
 
 ### 🧩 6 Algorithmes d'Organisation (Auto-Layout)
-- ⭐ **Optimisation Maximale (Lent)** : Recherche heuristique bornée à environ 0,85 seconde, utilisant des arbres de découpage binaires. Elle cherche à réduire les espaces libres ; le résultat dépend des images et ne garantit pas un optimum global.
+- ⭐ **Optimisation Maximale** : recherche sur des arbres de découpage binaires, avec un nombre d'essais et une graine fixes : mêmes images, même résultat. Le bouton *Variantes…* propose 4 dispositions côte à côte. Heuristique : pas de garantie d'optimum global.
 - **Mosaïque Parfaite** : Un arrangement aléatoire de type patchwork (technique BSP).
 - **Lignes Justifiées** : Alignement type Flickr/Google Images.
 - **Grille Régulière** : Quadrillage mathématique et étendu.
@@ -76,7 +79,7 @@ L'exécutable Windows est publié sur la page [GitHub Releases](https://github.c
 
 ## 🐛 Dépannage
 * **L'application est floue ?** Lancez via le terminal Windows classique (cmd/powershell) plutôt que via l'IDE pour assurer la gestion High-DPI de Windows.
-* **Bandes noires visibles ?** C'est le comportement attendu. L'application refusant tout rognage par conception, les espaces non remplis des boîtes géométriques affichent une bande noire pour conserver l'image 100% visible. L'option "Optimisation Maximale" permet justement de compresser cela.
+* **Bandes noires visibles ?** En mode *Ajuster*, c'est attendu : aucune image n'est rognée, l'espace restant reste noir. Choisissez *Remplir* pour couvrir les écrans, ou « Optimisation Maximale » pour réduire les bandes.
 
 ## 📄 Licence
 Distribué sous licence [MIT](LICENSE).
