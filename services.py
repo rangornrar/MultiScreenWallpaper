@@ -63,6 +63,28 @@ class ConfigStore:
                 except OSError:
                     pass
 
+    def _manifest_path(self, monitors):
+        return os.path.join(self.root, layout_signature(monitors), "manifest.json")
+
+    def release(self, monitors):
+        """L'utilisateur a choisi un autre fond : plus de réapplication automatique pour cette configuration."""
+        path = self._manifest_path(monitors)
+        try:
+            with open(path, encoding="utf-8") as f:
+                manifest = json.load(f)
+            manifest["released"] = True
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(manifest, f, indent=2, ensure_ascii=False)
+        except (OSError, ValueError):
+            pass
+
+    def is_released(self, monitors):
+        try:
+            with open(self._manifest_path(monitors), encoding="utf-8") as f:
+                return bool(json.load(f).get("released"))
+        except (OSError, ValueError):
+            return False
+
     def load(self, monitors):
         """Retourne [(moniteur, chemin)] mémorisés pour cette configuration, ou []."""
         folder = os.path.join(self.root, layout_signature(monitors))
@@ -79,15 +101,43 @@ class ConfigStore:
         return results
 
 
-def wallpaper_was_replaced(expected_paths, current):
+THEME_MARKERS = (
+    "/microsoft/windows/themes/",  # thèmes et synchronisation du compte
+    "transcodedwallpaper",
+    "/windows/web/",               # fonds fournis par Windows
+    "spotlight", "contentdeliverymanager",  # Windows à la une
+)
+
+
+def is_theme_wallpaper(path):
+    """True si le fichier vient d'un thème Windows (et non d'un choix de l'utilisateur)."""
+    if not path:
+        return True
+    low = path.replace("\\", "/").lower()
+    return any(marker in low for marker in THEME_MARKERS)
+
+
+def wallpaper_change(expected_paths, current):
     """
-    True si au moins un écran n'affiche plus un fichier appliqué par WallCraft.
+    Compare les fonds actuels à ceux appliqués par WallCraft :
+    - None : rien n'a changé ;
+    - "theme" : Windows a remis un thème (synchronisation, mise à jour) → réappliquer ;
+    - "user" : l'utilisateur a choisi un autre fond → ne plus y toucher.
     `current` = résultat de screen_splitter.get_current_wallpapers().
     """
     if not expected_paths or not current:
-        return False
+        return None
     expected = {os.path.normcase(os.path.abspath(p)) for p in expected_paths}
-    return any(os.path.normcase(os.path.abspath(c["path"])) not in expected for c in current if c.get("path") is not None)
+    replaced = [c.get("path", "") for c in current
+                if os.path.normcase(os.path.abspath(c.get("path") or "")) not in expected]
+    if not replaced:
+        return None
+    return "theme" if all(is_theme_wallpaper(p) for p in replaced) else "user"
+
+
+def wallpaper_was_replaced(expected_paths, current):
+    """Compatibilité : True si au moins un écran n'affiche plus un fichier appliqué par WallCraft."""
+    return wallpaper_change(expected_paths, current) is not None
 
 
 # --- Rotation ---

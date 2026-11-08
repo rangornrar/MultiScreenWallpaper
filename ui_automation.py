@@ -13,7 +13,7 @@ from image_tools import load_images_from_paths
 from locales import tr
 from screen_splitter import get_current_wallpapers, get_monitor_layout, set_multi_wallpaper_windows
 from services import (TrayIcon, get_autostart, list_images, pick_rotation, render_and_apply,
-                      set_autostart, wallpaper_was_replaced)
+                      set_autostart, wallpaper_change)
 
 
 class AutomationMixin:
@@ -181,22 +181,32 @@ class AutomationMixin:
             self.root.after(4000, self._service_tick)
 
     def _check_wallpaper_kept(self):
+        if self.store.is_released(self.monitor_layout):
+            return
         saved = self.store.load(self.monitor_layout)
         if not saved:
             return
         expected = [path for _m, path in saved]
+        monitors = self.monitor_layout
 
         def work(_images):
-            return wallpaper_was_replaced(expected, get_current_wallpapers())
+            return wallpaper_change(expected, get_current_wallpapers())
 
-        def done(replaced, error):
-            if error is None and replaced:
+        def done(change, error):
+            if error is not None:
+                return
+            if change == "theme":
                 self._reapply_saved()
+            elif change == "user":
+                # Fond choisi par l'utilisateur : on ne le remplace pas.
+                self.store.release(monitors)
 
         self._run_in_background(work, done, quiet=True)
 
     def _reapply_saved(self, force=False):
         """Réapplique les images mémorisées pour la configuration d'écrans actuelle (sans nouveau rendu)."""
+        if not force and self.store.is_released(self.monitor_layout):
+            return
         saved = self.store.load(self.monitor_layout)
         if not saved:
             if force and self.images:

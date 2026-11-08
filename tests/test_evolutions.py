@@ -12,7 +12,7 @@ from display_geometry import (PhysicalSettings, apply_layout, diagonal_inches, l
                               parse_edid_size_mm)
 from image_tools import AutoLayoutStrategy, LoadedImage, load_project_json, save_project_json
 from screen_splitter import split_wallpaper_by_monitors
-from services import ConfigStore, pick_rotation, wallpaper_was_replaced
+from services import ConfigStore, pick_rotation, wallpaper_change, wallpaper_was_replaced
 
 
 def solid(size, color="red"):
@@ -202,6 +202,29 @@ class ServiceTests(unittest.TestCase):
         self.assertFalse(wallpaper_was_replaced(ours, same))
         self.assertTrue(wallpaper_was_replaced(ours, theme))
         self.assertFalse(wallpaper_was_replaced([], theme))
+
+    def test_theme_reset_is_told_apart_from_user_choice(self):
+        ours = [r"C:\Users\p\AppData\Local\WallCraft\configs\abc\wallcraft_1_pos_00.png"]
+        theme = [{"path": r"C:\Windows\Web\Wallpaper\ThemeA\img20.jpg"}]
+        synced = [{"path": r"C:\Users\p\AppData\Roaming\Microsoft\Windows\Themes\TranscodedWallpaper"}]
+        mine = [{"path": r"D:\Photos\plage.jpg"}]
+        self.assertIsNone(wallpaper_change(ours, [{"path": ours[0]}]))
+        self.assertEqual(wallpaper_change(ours, theme), "theme")
+        self.assertEqual(wallpaper_change(ours, synced), "theme")
+        self.assertEqual(wallpaper_change(ours, mine), "user")
+
+    def test_released_configuration_is_not_reapplied(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store = ConfigStore(directory)
+            mons = monitors_27_between_24s()[:1]
+            path = Path(store.dir_for(mons)) / "wallcraft_x_pos_00.png"
+            solid((10, 10)).save(path)
+            store.save(mons, [(mons[0], str(path))], "wallcraft_x")
+            self.assertFalse(store.is_released(mons))
+            store.release(mons)
+            self.assertTrue(store.is_released(mons))
+            store.save(mons, [(mons[0], str(path))], "wallcraft_x")  # nouvelle application : surveillance reprise
+            self.assertFalse(store.is_released(mons))
 
     def test_rotation_avoids_previous_images(self):
         import random
