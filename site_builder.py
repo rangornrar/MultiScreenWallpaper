@@ -14,7 +14,7 @@ ARCHI_IT_HOME_URL = "https://www.archi-it.fr/"
 PRODUCT_VERSION = "2026.11.8"
 # Tag de la release GitHub qui contient l'exécutable (le workflow release.yml le nomme
 # WallCraft-Pro-v<version>-Windows.exe). À mettre à jour avec PRODUCT_VERSION.
-RELEASE_TAG = "v2026.11.8"
+RELEASE_TAG = "Tag_v2026.11.8"
 DOWNLOAD_URL = f"{REPO_URL}/releases/download/{RELEASE_TAG}/WallCraft-Pro-v{PRODUCT_VERSION}-Windows.exe"
 GOOGLE_SITE_VERIFICATION = ""
 SCREEN_1 = "assets/wallcraft_2026_workspace.png"
