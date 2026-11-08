@@ -1,11 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=./fr/index.html">
-    <script>window.location.href = "./fr/index.html";</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WallCraft Pro language router</title>
+    <meta name="robots" content="noindex,follow">
+    <script>
+        (function () {
+            const supported = ["fr", "en", "es", "de"];
+            const params = new URLSearchParams(window.location.search);
+            const saved = window.localStorage.getItem("wallcraft.lang");
+            const candidates = [params.get("lang"), saved].concat(navigator.languages || [navigator.language || ""]);
+            for (const value of candidates) {
+                if (!value) continue;
+                const normalized = String(value).toLowerCase().split("-")[0];
+                if (supported.includes(normalized)) {
+                    window.location.replace("./" + normalized + "/index.html");
+                    return;
+                }
+            }
+            window.location.replace("./en/index.html");
+        })();
+    </script>
 </head>
 <body>
-    <p>Redirecting to <a href="./fr/index.html">French version</a> / <a href="./en/index.html">English version</a></p>
+    <p>Select a language:</p>
+    <ul>
+        <li><a href="./fr/index.html">Français</a></li>
+        <li><a href="./en/index.html">English</a></li>
+        <li><a href="./es/index.html">Español</a></li>
+        <li><a href="./de/index.html">Deutsch</a></li>
+    </ul>
 </body>
 </html>

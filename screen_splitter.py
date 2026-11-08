@@ -1,8 +1,9 @@
 # screen_splitter.py
-import os
+import contextlib
 import ctypes
-from ctypes import wintypes
-import winreg
+import os
+import sys
+
 from PIL import Image
 
 # On essaie d'importer screeninfo, sinon on fera sans
@@ -10,6 +11,8 @@ try:
     from screeninfo import get_monitors as _get_monitors
 except ImportError:
     _get_monitors = None
+
+IS_WINDOWS = sys.platform == "win32"
 
 # --- STRUCTURES WINDOWS (Low Level) ---
 
@@ -36,42 +39,75 @@ class RECT(ctypes.Structure):
 CLSID_DesktopWallpaper = GUID("{C2CF3110-460E-4fc1-B9D0-8A1C0C9CC4BD}")
 IID_IDesktopWallpaper  = GUID("{B92B56A9-8B55-4E14-9A89-0199BBB6F93B}")
 
-# Définition de la VTable (Table des méthodes virtuelles COM)
+DWPOS_FILL = 4
+
+_FUNC = ctypes.WINFUNCTYPE if IS_WINDOWS else ctypes.CFUNCTYPE
+
+# VTable d'IDesktopWallpaper (ordre exact de shobjidl_core.h)
 class IDesktopWallpaperVtbl(ctypes.Structure):
     _fields_ = [
-        ("QueryInterface", ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(GUID), ctypes.POINTER(ctypes.c_void_p))),
-        ("AddRef", ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)),
-        ("Release", ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)),
-        # Method 3: SetWallpaper
-        ("SetWallpaper", ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_wchar_p)),
+        ("QueryInterface", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(GUID), ctypes.POINTER(ctypes.c_void_p))),
+        ("AddRef", _FUNC(ctypes.c_ulong, ctypes.c_void_p)),
+        ("Release", _FUNC(ctypes.c_ulong, ctypes.c_void_p)),
+        ("SetWallpaper", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_wchar_p)),
         ("GetWallpaper", ctypes.c_void_p),
-        ("GetMonitorDevicePathAt", ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_uint, ctypes.POINTER(ctypes.c_wchar_p))),
-        ("GetMonitorDevicePathCount", ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint))),
-        # Method 7: GetRect (Crucial pour l'ordre des écrans)
-        ("GetRect", ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.c_wchar_p, ctypes.POINTER(RECT))),
+        # Les chaînes rendues sont allouées par CoTaskMemAlloc : on les reçoit en pointeur brut pour les libérer.
+        ("GetMonitorDevicePathAt", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.c_uint, ctypes.POINTER(ctypes.c_void_p))),
+        ("GetMonitorDevicePathCount", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint))),
+        ("GetMonitorRECT", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.c_wchar_p, ctypes.POINTER(RECT))),
+        ("SetBackgroundColor", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.c_ulong)),
+        ("GetBackgroundColor", ctypes.c_void_p),
+        ("SetPosition", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.c_int)),
     ]
 
 class IDesktopWallpaper(ctypes.Structure):
     _fields_ = [("lpVtbl", ctypes.POINTER(IDesktopWallpaperVtbl))]
 
+# --- DPI ---
+
+@contextlib.contextmanager
+def per_monitor_dpi():
+    """
+    Passe temporairement le thread en DPI « Per-Monitor V2 » (Windows 10 1703+) pour que
+    les coordonnées des écrans soient en pixels physiques, même si l'interface reste
+    « system aware ». Sans effet hors Windows ou sur les anciennes versions.
+    """
+    previous = None
+    setter = None
+    if IS_WINDOWS:
+        try:
+            setter = ctypes.windll.user32.SetThreadDpiAwarenessContext
+            setter.restype = ctypes.c_void_p
+            setter.argtypes = [ctypes.c_void_p]
+            previous = setter(ctypes.c_void_p(-4))  # DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
+        except (AttributeError, OSError):
+            setter = None
+    try:
+        yield
+    finally:
+        if setter and previous:
+            setter(ctypes.c_void_p(previous))
+
 # --- FONCTIONS UTILITAIRES ---
 
 def get_monitor_layout():
-    """Récupère la configuration réelle des écrans via screeninfo."""
+    """Récupère la configuration réelle des écrans via screeninfo, en pixels physiques."""
     monitors = []
     if _get_monitors is None: return monitors
     try:
-        for m in _get_monitors():
+        with per_monitor_dpi():
+            found = list(_get_monitors())
+        for m in found:
             monitors.append({
                 "x": int(getattr(m, "x", 0)),
                 "y": int(getattr(m, "y", 0)),
                 "width": int(getattr(m, "width", 0)),
                 "height": int(getattr(m, "height", 0)),
-                "name": getattr(m, "name", "monitor"),
-                "device_id": getattr(m, "name", "")
+                "name": getattr(m, "name", "monitor") or "monitor",
+                "device_id": getattr(m, "name", "") or "",
             })
-        # Tri gauche -> droite pour le découpage
-        monitors.sort(key=lambda m: m["x"])
+        # Tri gauche -> droite puis haut -> bas, stable même pour des écrans empilés
+        monitors.sort(key=lambda m: (m["x"], m["y"]))
     except Exception:
         return []
     return monitors
@@ -92,8 +128,9 @@ def _clamp_box(box, max_w, max_h):
 
 def split_wallpaper_by_monitors(final_image: Image.Image, monitors, out_dir, base_name="wallpaper"):
     """
-    Découpe l'image. Retourne une liste de chemins d'images.
-    IMPORTANT: Les images sont générées dans l'ordre gauche -> droite car 'monitors' est trié.
+    Découpe l'image du bureau virtuel en une image par écran.
+    Retourne une liste de (moniteur, chemin) : le rectangle du moniteur sert ensuite
+    à retrouver l'écran Windows correspondant, quelle que soit la disposition.
     """
     if not monitors: raise RuntimeError("Aucun moniteur détecté.")
     if not os.path.isdir(out_dir): raise RuntimeError(f"Dossier introuvable: {out_dir}")
@@ -102,7 +139,7 @@ def split_wallpaper_by_monitors(final_image: Image.Image, monitors, out_dir, bas
     virt_w, virt_h = x1 - x0, y1 - y0
     img_w, img_h = final_image.size
     rx = img_w / virt_w; ry = img_h / virt_h
-    results = [] # Liste de tuples (id_dummy, path)
+    results = []
 
     for i, m in enumerate(monitors):
         px0 = (m["x"] - x0) * rx; py0 = (m["y"] - y0) * ry
@@ -115,119 +152,133 @@ def split_wallpaper_by_monitors(final_image: Image.Image, monitors, out_dir, bas
         if crop_im.size != (m["width"], m["height"]):
             crop_im = crop_im.resize((m["width"], m["height"]), Image.Resampling.LANCZOS)
 
-        # On utilise un index simple dans le nom pour l'ordre de tri
         fname = f"{base_name}_pos_{i:02d}.png"
         fpath = os.path.join(out_dir, fname)
         crop_im.save(fpath, "PNG")
-        results.append((m["device_id"], fpath))
+        results.append((m, fpath))
 
     return results
 
+def match_monitors(split_results, windows_monitors):
+    """
+    Associe chaque image découpée à un écran Windows par recouvrement de rectangles.
+    split_results : [(moniteur screeninfo, chemin)] ; windows_monitors : [{"id", "rect": (l, t, r, b)}].
+    Retourne [(id Windows, chemin)] et la liste des images sans écran.
+    """
+    def overlap(a, b):
+        w = min(a[2], b[2]) - max(a[0], b[0])
+        h = min(a[3], b[3]) - max(a[1], b[1])
+        return max(0, w) * max(0, h)
+
+    pairs, unmatched = [], []
+    free = list(windows_monitors)
+    for m, path in split_results:
+        rect = (m["x"], m["y"], m["x"] + m["width"], m["y"] + m["height"])
+        best = max(free, key=lambda wm: overlap(rect, wm["rect"]), default=None)
+        if best is None or overlap(rect, best["rect"]) == 0:
+            unmatched.append(path)
+            continue
+        free.remove(best)
+        pairs.append((best["id"], path))
+    return pairs, unmatched
+
 # --- CŒUR DU SYSTÈME (CTYPES) ---
 
-def set_multi_wallpaper_windows(monitor_image_map):
+def set_multi_wallpaper_windows(split_results, bg_color=(0, 0, 0)):
     """
-    Applique le wallpaper en triant les ID Windows par leur position physique X.
-    Cela garantit que l'image de gauche va sur l'écran de gauche, peu importe son ID (1, 2 ou 3).
+    Applique une image par écran via IDesktopWallpaper.
+    Retourne (succès, erreurs, appliqués) : succès vaut True si tout a été appliqué sans erreur,
+    `erreurs` est une liste de messages lisibles et `appliqués` le nombre d'écrans mis à jour.
     """
+    if not IS_WINDOWS:
+        return False, ["L'application du fond d'écran nécessite Windows 10 ou 11."], 0
+
     ole32 = ctypes.windll.ole32
-    
-    # Init COM
-    ole32.CoInitialize(None)
-    
+    ole32.CoTaskMemFree.argtypes = [ctypes.c_void_p]
+    errors = []
+
+    hr_init = ole32.CoInitialize(None)
     p_desktop_wallpaper = ctypes.POINTER(IDesktopWallpaper)()
-    
+
     try:
-        CLSCTX_LOCAL_SERVER = 4
-        hr = ole32.CoCreateInstance(
-            ctypes.byref(CLSID_DesktopWallpaper), 
-            None, 
-            CLSCTX_LOCAL_SERVER, 
-            ctypes.byref(IID_IDesktopWallpaper), 
-            ctypes.byref(p_desktop_wallpaper)
-        )
-        
-        if hr != 0 or not p_desktop_wallpaper:
-            print(f"Erreur CoCreateInstance: {hr}")
-            return False
+        with per_monitor_dpi():
+            CLSCTX_LOCAL_SERVER = 4
+            hr = ole32.CoCreateInstance(
+                ctypes.byref(CLSID_DesktopWallpaper),
+                None,
+                CLSCTX_LOCAL_SERVER,
+                ctypes.byref(IID_IDesktopWallpaper),
+                ctypes.byref(p_desktop_wallpaper)
+            )
+            if hr != 0 or not p_desktop_wallpaper:
+                return False, [f"CoCreateInstance a échoué (0x{hr & 0xFFFFFFFF:08X})."], 0
 
-        # 1. Récupérer TOUS les écrans et leurs positions RECT
-        count = ctypes.c_uint()
-        p_desktop_wallpaper.contents.lpVtbl.contents.GetMonitorDevicePathCount(p_desktop_wallpaper, ctypes.byref(count))
-        
-        windows_monitors = []
-        
-        print(f"Windows détecte {count.value} écrans via IDesktopWallpaper.")
+            vtbl = p_desktop_wallpaper.contents.lpVtbl.contents
 
-        for i in range(count.value):
-            monitor_id_ptr = ctypes.c_wchar_p()
-            p_desktop_wallpaper.contents.lpVtbl.contents.GetMonitorDevicePathAt(p_desktop_wallpaper, i, ctypes.byref(monitor_id_ptr))
-            mid = monitor_id_ptr.value
-            
-            # Récupérer le RECT (position physique) pour cet ID
-            rect = RECT()
-            hr_rect = p_desktop_wallpaper.contents.lpVtbl.contents.GetRect(p_desktop_wallpaper, ctypes.c_wchar_p(mid), ctypes.byref(rect))
-            
-            x_pos = 0
-            if hr_rect == 0:
-                x_pos = rect.left
-            
-            windows_monitors.append({
-                "id": mid,
-                "x": x_pos
-            })
+            # 1. Écrans connus de Windows ; ceux dont GetMonitorRECT échoue sont inactifs et ignorés.
+            count = ctypes.c_uint()
+            vtbl.GetMonitorDevicePathCount(p_desktop_wallpaper, ctypes.byref(count))
+            windows_monitors = []
+            for i in range(count.value):
+                raw = ctypes.c_void_p()
+                if vtbl.GetMonitorDevicePathAt(p_desktop_wallpaper, i, ctypes.byref(raw)) != 0 or not raw.value:
+                    continue
+                try:
+                    mid = ctypes.wstring_at(raw.value)
+                finally:
+                    ole32.CoTaskMemFree(raw)
+                rect = RECT()
+                if vtbl.GetMonitorRECT(p_desktop_wallpaper, mid, ctypes.byref(rect)) != 0:
+                    continue
+                windows_monitors.append({"id": mid, "rect": (rect.left, rect.top, rect.right, rect.bottom)})
 
-        # 2. TRIER les écrans Windows par position X (Gauche -> Droite)
-        # C'est l'étape clé : on ignore l'ID (1, 2, 3) et on prend l'ordre visuel (Gauche, Milieu, Droite)
-        windows_monitors.sort(key=lambda m: m["x"])
-        
-        print("Ordre physique détecté (ID : X) :")
-        for wm in windows_monitors:
-            print(f" - {wm['id']} : {wm['x']}")
+            if not windows_monitors:
+                return False, ["Windows ne signale aucun écran actif."], 0
 
-        # 3. Appliquer les images dans l'ordre
-        # monitor_image_map contient les images déjà triées de gauche à droite (split index 0, 1, 2...)
-        for i, (_, img_path) in enumerate(monitor_image_map):
-            if i < len(windows_monitors):
-                target_monitor = windows_monitors[i]
-                target_id = target_monitor["id"]
-                
-                print(f"Application Image {i} -> Ecran {target_id} (Pos X={target_monitor['x']})")
-                
-                hr_set = p_desktop_wallpaper.contents.lpVtbl.contents.SetWallpaper(
-                    p_desktop_wallpaper, 
-                    ctypes.c_wchar_p(target_id), 
-                    ctypes.c_wchar_p(img_path)
-                )
+            # 2. Remplissage exact (évite d'hériter d'un mode « Étendre » précédent) et fond assorti.
+            r, g, b = bg_color
+            vtbl.SetBackgroundColor(p_desktop_wallpaper, r | (g << 8) | (b << 16))
+            hr_pos = vtbl.SetPosition(p_desktop_wallpaper, DWPOS_FILL)
+            if hr_pos != 0:
+                errors.append(f"SetPosition a échoué (0x{hr_pos & 0xFFFFFFFF:08X}).")
+
+            # 3. Association par rectangle puis application
+            pairs, unmatched = match_monitors(split_results, windows_monitors)
+            for path in unmatched:
+                errors.append(f"Aucun écran Windows ne correspond à {os.path.basename(path)}.")
+            applied = 0
+            for mid, path in pairs:
+                hr_set = vtbl.SetWallpaper(p_desktop_wallpaper, mid, os.path.abspath(path))
                 if hr_set != 0:
-                    print(f"Echec SetWallpaper (Code {hr_set})")
-            else:
-                print(f"Pas d'écran Windows trouvé pour l'image {i}")
+                    errors.append(f"SetWallpaper a échoué pour {os.path.basename(path)} (0x{hr_set & 0xFFFFFFFF:08X}).")
+                else:
+                    applied += 1
 
-        return True
+            return applied > 0 and not errors, errors, applied
 
     except Exception as e:
-        print(f"Erreur Ctypes: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
-        
+        errors.append(f"Erreur ctypes : {e}")
+        return False, errors, 0
+
     finally:
         if p_desktop_wallpaper:
             p_desktop_wallpaper.contents.lpVtbl.contents.Release(p_desktop_wallpaper)
-        ole32.CoUninitialize()
+        if hr_init in (0, 1):  # S_OK ou S_FALSE : appel à équilibrer
+            ole32.CoUninitialize()
 
 # --- MÉTHODE SECOURS (Panorama) ---
 
 def set_wallpaper_span(image_path):
+    """Applique une seule image étirée sur tout le bureau (mode Étendre de Windows)."""
+    if not IS_WINDOWS:
+        return False
+    import winreg
     path = os.path.abspath(image_path)
     try:
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Control Panel\\Desktop", 0, winreg.KEY_SET_VALUE)
         winreg.SetValueEx(key, "WallpaperStyle", 0, winreg.REG_SZ, "22")
         winreg.SetValueEx(key, "TileWallpaper", 0, winreg.REG_SZ, "0")
         winreg.CloseKey(key)
-        ctypes.windll.user32.SystemParametersInfoW(20, 0, path, 3)
-        return True
-    except Exception as e:
-        print(f"Erreur Span: {e}")
+        return bool(ctypes.windll.user32.SystemParametersInfoW(20, 0, path, 3))
+    except Exception:
         return False

@@ -21,7 +21,7 @@ Resuelve completamente el problema de las resoluciones de monitores dispares med
 
 ### 📐 El Motor de Visibilidad Absoluta
 El programa se adhiere a la regla del 100%:
-- **0 Recortes (Crop)**: Ninguna imagen subida tendrá sus bordes cortados.
+- **0 Recortes (Crop)**: los modos automáticos nunca cortan los bordes de una imagen; el recorte es una elección manual (modo *Recortar*).
 - **0 Superposición**: Ninguna foto cubre a otra foto.
 - **0 Desbordamiento**: Las imágenes nunca superarán los bordes de la pantalla.
 - **0 Distorsión**: La relación de aspecto original se conserva matemáticamente.
@@ -45,7 +45,7 @@ El programa se adhiere a la regla del 100%:
 ## 📦 Instalación
 
 ### Requisitos previos
-- Python 3.8 o superior.
+- Python 3.10 o superior.
 - Windows 10/11 (Requerido debido a la API de fondos de pantalla).
 
 ### Dependencias
@@ -53,16 +53,19 @@ El programa se adhiere a la regla del 100%:
 pip install pillow screeninfo
 ```
 
+## 📥 Descargar
+El ejecutable de Windows se publica en la página [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest). Su huella SHA-256 figura en las notas de cada versión.
+
 ## 🛠️ Uso
-1. Inicie la aplicación: `python main.py`
-2. **Añadir Imágenes**: Haga clic en el botón o arrastre y suelte los archivos.
-3. **Menú de Idioma**: Elija EN/FR/ES/DE dinámicamente desde la interfaz.
-4. **Elija una Disposición**: Seleccione uno de los 6 modos ("Optimización Máxima" es altamente recomendada para limitar las bandas negras globales).
-5. **Auto-Organizar**: Pulse el botón "🎲" y deje que la matemática haga el resto.
-6. **Aplicar**:
-    * 💾 Exportar: Guarda un montaje compuesto extenso.
-    * ✂ Dividir: Divide la composición en imágenes mapeadas a sus pantallas físicas.
-    * 🖥️ Aplicar: Modifica activamente su escritorio de Windows.
+1. Inicie la aplicación: `python main.py` (o el ejecutable de la [última versión](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
+2. **Añadir imágenes**: botón «+ Añadir Imágenes» o menú *Archivo*. Las fotos de smartphone se enderezan automáticamente.
+3. **Idioma**: elija EN/FR/ES/DE directamente desde la interfaz.
+4. **Elija una disposición**: seleccione uno de los 6 modos («Optimización Máxima» recomendada para limitar las bandas negras).
+5. **Auto-Organizar** y luego ajuste a mano: modos *Mover*, *Escalar* y *Recortar*, capas adelante/atrás, *Girar 90°* y *Ajustes…* (brillo, contraste, saturación, desenfoque).
+6. **Menú Archivo**:
+    * Guardar / abrir un proyecto (`Ctrl+S` / `Ctrl+O`).
+    * Exportar la imagen completa (`Ctrl+E`) o una imagen por pantalla.
+    * 🖥️ Aplicar fondo: modifica su escritorio de Windows, pantalla por pantalla.
 
 ## 📂 Estructura del Proyecto
 * `main.py`: Punto de entrada, gestiona el High-DPI de Windows.
@@ -75,6 +78,9 @@ pip install pillow screeninfo
 * **¿La aplicación se ve borrosa?** Ejecútela a través de la terminal estándar (cmd/powershell) en lugar de la IDE para garantizar que Windows utilice la alta fidelidad visual nativa.
 * **¿Bordos o bandas negras muy prominentes?** Al no recortar NINGUNA imagen, el espacio restante debe ser llenado. Use "Optimización Máxima" para forzar mejores encajes de rompecabezas.
 
+
+## 📄 Licencia
+Distribuido bajo la [licencia MIT](LICENSE).
 
 ## Architecture & validation
 

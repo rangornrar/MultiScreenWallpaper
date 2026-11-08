@@ -3,10 +3,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = ROOT / "html" / "assets" / "wallcraft_triplescreen_mockup.png"
 
 

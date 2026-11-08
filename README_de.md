@@ -21,7 +21,7 @@ Sie löst das Problem unterschiedlicher Monitorauflösungen und Bildschirmrände
 
 ### 📐 Die Absolute "Fit Inside" Engine
 Das Programm hält sich strikt an die 100 % Regel:
-- **0 Zuschnitt (Crop)**: Die Ränder hochgeladener Bilder werden nicht abgeschnitten.
+- **0 Zuschnitt (Crop)**: Die automatischen Layouts schneiden nie Bildränder ab; Zuschneiden ist eine manuelle Entscheidung (Modus *Zuschneiden*).
 - **0 Überlappung**: Kein Foto verdeckt ein anderes Foto.
 - **0 Überstand**: Bilder ragen niemals über die Bildschirmränder hinaus.
 - **0 Verzerrung**: Das ursprüngliche Seitenverhältnis bleibt mathematisch gewahrt.
@@ -45,7 +45,7 @@ Das Programm hält sich strikt an die 100 % Regel:
 ## 📦 Installation
 
 ### Voraussetzungen
-- Python 3.8 oder höher.
+- Python 3.10 oder höher.
 - Windows 10/11 (Erforderlich aufgrund der Windows-Wallpaper-API).
 
 ### Abhängigkeiten
@@ -53,16 +53,19 @@ Das Programm hält sich strikt an die 100 % Regel:
 pip install pillow screeninfo
 ```
 
+## 📥 Download
+Die Windows-EXE wird auf der Seite [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest) veröffentlicht. Ihre SHA-256-Prüfsumme steht in den Notizen jeder Version.
+
 ## 🛠️ Verwendung
-1. Starten Sie die App: `python main.py`
-2. **Bilder hinzufügen**: Klicken Sie auf die Schaltfläche oder ziehen Sie Dateien per Drag-and-Drop.
-3. **Sprachmenü**: Wählen Sie EN/FR/ES/DE dynamisch direkt in der Benutzeroberfläche.
-4. **Layout wählen**: Wählen Sie einen der 6 Modi ("Maximale Optimierung" wird dringend empfohlen, um schwarze Balken zu minimieren).
-5. **Auto-Anordnen**: Klicken Sie auf den "🎲"-Button und überlassen Sie der Mathematik den Rest.
-6. **Anwenden**:
-    * 💾 Exportieren: Erstellt einen großen Entwurf.
-    * ✂ Teilen (Split): Unterteilt die Komposition in Bilder, die exakt Ihren Monitoren entsprechen.
-    * 🖥️ Anwenden: Ändert aktiv Ihren Windows-Desktop-Hintergrund in bester Qualität!
+1. Starten Sie die App: `python main.py` (oder die EXE aus der [neuesten Release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
+2. **Bilder hinzufügen**: Schaltfläche „+ Bilder hinzufügen“ oder Menü *Datei*. Smartphone-Fotos werden automatisch richtig gedreht.
+3. **Sprache**: Wählen Sie EN/FR/ES/DE direkt in der Oberfläche.
+4. **Layout wählen**: Wählen Sie einen der 6 Modi („Maximale Optimierung“ empfohlen, um schwarze Balken zu minimieren).
+5. **Auto-Anordnen**, dann von Hand verfeinern: Modi *Bewegen*, *Skalieren* und *Zuschneiden*, Ebenen vor/zurück, *90° drehen* und *Anpassen…* (Helligkeit, Kontrast, Sättigung, Unschärfe).
+6. **Menü Datei**:
+    * Projekt speichern / öffnen (`Strg+S` / `Strg+O`).
+    * Gesamtbild exportieren (`Strg+E`) oder ein Bild pro Bildschirm.
+    * 🖥️ Hintergrundbild anwenden: ändert Ihren Windows-Desktop, Bildschirm für Bildschirm.
 
 ## 📂 Projektstruktur
 * `main.py`: Einstiegspunkt, koppelt Windows High-DPI-Einstellungen.
@@ -75,6 +78,9 @@ pip install pillow screeninfo
 * **Ist die Anwendung unscharf?** Führen Sie sie über das Standard-Terminal von Windows (cmd/powershell) und nicht über eine Entwicklungsumgebung (IDE) aus. 
 * **Sind schwarze Balken sichtbar?** Dies ist das erwartete Verhalten. Da die Anwendung Bilder absichtlich nicht zuschneidet ("No Crop"), wird der verbleibende Platz durch schwarze Balken gefüllt ("Fit Inside"). Verwenden Sie "Maximale Optimierung", um dies zu verringern.
 
+
+## 📄 Lizenz
+Veröffentlicht unter der [MIT-Lizenz](LICENSE).
 
 ## Architecture & validation
 

@@ -100,7 +100,7 @@ _STRINGS = {
     },
     "chk_show_monitors": {
         "en": "View Monitors",
-        "fr": "Voir Ecrans",
+        "fr": "Voir les écrans",
         "es": "Ver Monitores",
         "de": "Monitore anzeigen"
     },
@@ -130,13 +130,13 @@ _STRINGS = {
     },
     "msg_apply_ok": {
         "en": "Wallpaper successfully applied to specific screens!",
-        "fr": "Wallpaper appliqué par écran !",
+        "fr": "Fond d'écran appliqué sur chaque écran !",
         "es": "¡Fondo de pantalla aplicado a pantallas específicas!",
         "de": "Hintergrundbild erfolgreich angewendet!"
     },
     "err_api_fail": {
         "en": "Windows API failed. The wallpaper might not be applied correctly.",
-        "fr": "Echec API Windows. Le fond n'a peut-être pas été appliqué.",
+        "fr": "Échec de l'API Windows. Le fond n'a peut-être pas été appliqué.",
         "es": "Fallo de la API de Windows. Puede que el fondo no se aplicara.",
         "de": "Windows API fehlgeschlagen."
     },
@@ -169,21 +169,48 @@ _STRINGS = {
         "fr": "Vue Simulée",
         "es": "Vista Real",
         "de": "Reale Ansicht"
+    },
+    "error_title": {
+        "en": "Error",
+        "fr": "Erreur",
+        "es": "Error",
+        "de": "Fehler"
+    },
+    "info_title": {
+        "en": "Information",
+        "fr": "Information",
+        "es": "Información",
+        "de": "Information"
+    },
+    "filetype_images": {
+        "en": "Images",
+        "fr": "Images",
+        "es": "Imágenes",
+        "de": "Bilder"
     }
 }
 
 def detect_os_language():
     """Detect default OS language, fallback to English."""
     try:
-        windll = ctypes.windll.kernel32
-        lang_id = windll.GetUserDefaultUILanguage()
-        primary_lang_id = lang_id & 0x3ff
-        # 0x09: English, 0x0C: French, 0x0A: Spanish, 0x07: German
-        if primary_lang_id == 0x0C: return "fr"
-        if primary_lang_id == 0x0A: return "es"
-        if primary_lang_id == 0x07: return "de"
+        kernel32 = ctypes.windll.kernel32
+        buffer = ctypes.create_unicode_buffer(85)
+        if kernel32.GetUserDefaultLocaleName(buffer, len(buffer)):
+            lang_code = buffer.value.split("-")[0].lower()
+            if lang_code in LANGUAGES:
+                return lang_code
     except Exception:
         pass
+
+    try:
+        lang_code = locale.getlocale()[0]
+        if lang_code:
+            lang_code = lang_code.split("_")[0].lower()
+            if lang_code in LANGUAGES:
+                return lang_code
+    except Exception:
+        pass
+
     return "en"
 
 def set_language(lang_code):
