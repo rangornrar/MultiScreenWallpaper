@@ -50,7 +50,7 @@ class IDesktopWallpaperVtbl(ctypes.Structure):
         ("AddRef", _FUNC(ctypes.c_ulong, ctypes.c_void_p)),
         ("Release", _FUNC(ctypes.c_ulong, ctypes.c_void_p)),
         ("SetWallpaper", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_wchar_p)),
-        ("GetWallpaper", ctypes.c_void_p),
+        ("GetWallpaper", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.c_wchar_p, ctypes.POINTER(ctypes.c_void_p))),
         # Les chaînes rendues sont allouées par CoTaskMemAlloc : on les reçoit en pointeur brut pour les libérer.
         ("GetMonitorDevicePathAt", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.c_uint, ctypes.POINTER(ctypes.c_void_p))),
         ("GetMonitorDevicePathCount", _FUNC(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint))),
@@ -135,15 +135,22 @@ def split_wallpaper_by_monitors(final_image: Image.Image, monitors, out_dir, bas
     if not monitors: raise RuntimeError("Aucun moniteur détecté.")
     if not os.path.isdir(out_dir): raise RuntimeError(f"Dossier introuvable: {out_dir}")
 
-    x0, y0, x1, y1 = virtual_desktop_bbox(monitors)
-    virt_w, virt_h = x1 - x0, y1 - y0
     img_w, img_h = final_image.size
-    rx = img_w / virt_w; ry = img_h / virt_h
+    if all("canvas" in m for m in monitors):
+        # Rectangles de composition (mode pixels ou physique, voir display_geometry)
+        rects = [m["canvas"] for m in monitors]
+        comp_w = max(r[0] + r[2] for r in rects); comp_h = max(r[1] + r[3] for r in rects)
+    else:
+        x0, y0, x1, y1 = virtual_desktop_bbox(monitors)
+        rects = [(m["x"] - x0, m["y"] - y0, m["width"], m["height"]) for m in monitors]
+        comp_w, comp_h = x1 - x0, y1 - y0
+    rx = img_w / comp_w; ry = img_h / comp_h
     results = []
 
     for i, m in enumerate(monitors):
-        px0 = (m["x"] - x0) * rx; py0 = (m["y"] - y0) * ry
-        px1 = (m["x"] - x0 + m["width"]) * rx; py1 = (m["y"] - y0 + m["height"]) * ry
+        cx, cy, cw, ch = rects[i]
+        px0 = cx * rx; py0 = cy * ry
+        px1 = (cx + cw) * rx; py1 = (cy + ch) * ry
 
         box = _clamp_box((int(round(px0)), int(round(py0)), int(round(px1)), int(round(py1))), img_w, img_h)
         if box[2] <= box[0] or box[3] <= box[1]: continue
@@ -264,6 +271,52 @@ def set_multi_wallpaper_windows(split_results, bg_color=(0, 0, 0)):
         if p_desktop_wallpaper:
             p_desktop_wallpaper.contents.lpVtbl.contents.Release(p_desktop_wallpaper)
         if hr_init in (0, 1):  # S_OK ou S_FALSE : appel à équilibrer
+            ole32.CoUninitialize()
+
+def get_current_wallpapers():
+    """
+    Fond actuel de chaque écran actif : liste de {"id", "rect", "path"}.
+    Sert à détecter qu'un thème Windows a remplacé le fond appliqué par WallCraft.
+    """
+    if not IS_WINDOWS:
+        return []
+    ole32 = ctypes.windll.ole32
+    ole32.CoTaskMemFree.argtypes = [ctypes.c_void_p]
+    hr_init = ole32.CoInitialize(None)
+    p = ctypes.POINTER(IDesktopWallpaper)()
+    out = []
+    try:
+        with per_monitor_dpi():
+            if ole32.CoCreateInstance(ctypes.byref(CLSID_DesktopWallpaper), None, 4,
+                                      ctypes.byref(IID_IDesktopWallpaper), ctypes.byref(p)) != 0 or not p:
+                return []
+            v = p.contents.lpVtbl.contents
+            count = ctypes.c_uint()
+            v.GetMonitorDevicePathCount(p, ctypes.byref(count))
+            for i in range(count.value):
+                raw = ctypes.c_void_p()
+                if v.GetMonitorDevicePathAt(p, i, ctypes.byref(raw)) != 0 or not raw.value:
+                    continue
+                try:
+                    mid = ctypes.wstring_at(raw.value)
+                finally:
+                    ole32.CoTaskMemFree(raw)
+                rect = RECT()
+                if v.GetMonitorRECT(p, mid, ctypes.byref(rect)) != 0:
+                    continue
+                wp = ctypes.c_void_p()
+                path = ""
+                if v.GetWallpaper(p, mid, ctypes.byref(wp)) == 0 and wp.value:
+                    path = ctypes.wstring_at(wp.value)
+                    ole32.CoTaskMemFree(wp)
+                out.append({"id": mid, "rect": (rect.left, rect.top, rect.right, rect.bottom), "path": path})
+        return out
+    except Exception:
+        return out
+    finally:
+        if p:
+            p.contents.lpVtbl.contents.Release(p)
+        if hr_init in (0, 1):
             ole32.CoUninitialize()
 
 # --- MÉTHODE SECOURS (Panorama) ---
