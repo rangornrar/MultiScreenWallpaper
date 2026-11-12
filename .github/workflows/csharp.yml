@@ -1,0 +1,63 @@
+name: C# (WallCraft)
+
+on:
+  push:
+    paths:
+      - "csharp/**"
+      - ".github/workflows/csharp.yml"
+  pull_request:
+    paths:
+      - "csharp/**"
+      - ".github/workflows/csharp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+jobs:
+  core:
+    name: Cœur (Ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Tests du cœur
+        run: dotnet run --project csharp/tests/WallCraft.Core.Tests -c Release
+
+  windows:
+    name: Application (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('csharp/**/*.csproj', 'csharp/Directory.Build.props') }}
+          restore-keys: nuget-${{ runner.os }}-
+      - name: Compilation de WallCraft.Platform.Windows
+        run: dotnet build csharp/src/WallCraft.Platform.Windows -c Release
+      - name: Tests du cœur
+        run: dotnet run --project csharp/tests/WallCraft.Core.Tests -c Release
+      - name: Publication de WallCraft.App (win-x64)
+        run: >
+          dotnet publish csharp/src/WallCraft.App -c Release -r win-x64
+          -p:Platform=x64 --self-contained true -p:PublishSingleFile=true
+          -o publish/win-x64
+      - name: Contenu publié
+        shell: pwsh
+        run: Get-ChildItem publish/win-x64 | Select-Object Name, Length | Format-Table -AutoSize
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WallCraft-win-x64
+          path: publish/win-x64
+          if-no-files-found: error
