@@ -1,0 +1,2614 @@
+{
+ "meta": {
+  "generator": "tools/export_golden.py",
+  "python": "3.12.3",
+  "pillow": "13.0.0",
+  "description": "_apply_fit_inside et _apply_crop_cover appelées directement. Le focus est fixé ; result.w/h valent null quand la boîte est vide (rien n'est modifié)."
+ },
+ "cases": [
+  {
+   "id": "wide_in_square|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 166.66666666666669,
+    "w": 1000,
+    "h": 666,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "wide_in_square|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 1000,
+    "crop": [
+     0.16666666666666669,
+     0.0,
+     0.8333333333333333,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "wide_in_tall|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    100,
+    50,
+    500,
+    1500
+   ],
+   "result": {
+    "x": 100.0,
+    "y": 633.3333333333334,
+    "w": 500,
+    "h": 333,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "wide_in_tall|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    100,
+    50,
+    500,
+    1500
+   ],
+   "result": {
+    "x": 100,
+    "y": 50,
+    "w": 500,
+    "h": 1500,
+    "crop": [
+     0.3888888888888889,
+     0.0,
+     0.6111111111111112,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "tall_in_wide|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     4000,
+     6000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 600.0,
+    "y": 0.0,
+    "w": 720,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "tall_in_wide|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     4000,
+     6000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.3125,
+     1.0,
+     0.6875
+    ]
+   }
+  },
+  {
+   "id": "square_in_wide|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     3000,
+     3000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.0,
+    "visible_aspect": 1.0
+   },
+   "box": [
+    1920,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 2340.0,
+    "y": 0.0,
+    "w": 1080,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "square_in_wide|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     3000,
+     3000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.0,
+    "visible_aspect": 1.0
+   },
+   "box": [
+    1920,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 1920,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.21875,
+     1.0,
+     0.78125
+    ]
+   }
+  },
+  {
+   "id": "same_ratio|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     1920,
+     1080
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.7777777777777777,
+    "visible_aspect": 1.7777777777777777
+   },
+   "box": [
+    10,
+    20,
+    960,
+    540
+   ],
+   "result": {
+    "x": 10.0,
+    "y": 20.0,
+    "w": 960,
+    "h": 540,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "same_ratio|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     1920,
+     1080
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.7777777777777777,
+    "visible_aspect": 1.7777777777777777
+   },
+   "box": [
+    10,
+    20,
+    960,
+    540
+   ],
+   "result": {
+    "x": 10,
+    "y": 20,
+    "w": 960,
+    "h": 540,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_top_left|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.0,
+     0.0
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 166.66666666666669,
+    "w": 1000,
+    "h": 666,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_top_left|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.0,
+     0.0
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 1000,
+    "crop": [
+     0.0,
+     0.0,
+     0.6666666666666666,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_bottom_right|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     1.0,
+     1.0
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 166.66666666666669,
+    "w": 1000,
+    "h": 666,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_bottom_right|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     1.0,
+     1.0
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 1000,
+    "crop": [
+     0.33333333333333337,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_top_left_tall|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     4000,
+     6000
+    ],
+    "focus": [
+     0.0,
+     0.0
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 600.0,
+    "y": 0.0,
+    "w": 720,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_top_left_tall|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     4000,
+     6000
+    ],
+    "focus": [
+     0.0,
+     0.0
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     0.375
+    ]
+   }
+  },
+  {
+   "id": "focus_bottom_right_tall|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     4000,
+     6000
+    ],
+    "focus": [
+     1.0,
+     1.0
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 600.0,
+    "y": 0.0,
+    "w": 720,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_bottom_right_tall|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     4000,
+     6000
+    ],
+    "focus": [
+     1.0,
+     1.0
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.625,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_center_panorama|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     2000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 3.0,
+    "visible_aspect": 3.0
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 220.0,
+    "w": 1920,
+    "h": 640,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_center_panorama|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     2000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 3.0,
+    "visible_aspect": 3.0
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.20370370370370372,
+     0.0,
+     0.7962962962962963,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_0.9_0.2_wide|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.9,
+     0.2
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 166.66666666666669,
+    "w": 1000,
+    "h": 666,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_0.9_0.2_wide|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.9,
+     0.2
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 1000,
+    "crop": [
+     0.33333333333333337,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_0.9_0.2_tall|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     4000,
+     6000
+    ],
+    "focus": [
+     0.9,
+     0.2
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 600.0,
+    "y": 0.0,
+    "w": 720,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_0.9_0.2_tall|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     4000,
+     6000
+    ],
+    "focus": [
+     0.9,
+     0.2
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.012500000000000011,
+     1.0,
+     0.3875
+    ]
+   }
+  },
+  {
+   "id": "focus_out_of_range|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     1.5,
+     -0.2
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 166.66666666666669,
+    "w": 1000,
+    "h": 666,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "focus_out_of_range|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     1.5,
+     -0.2
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 1000,
+    "crop": [
+     0.33333333333333337,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "rotated_270_once|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 1,
+    "angle": 270,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 166.66666666666669,
+    "y": 0.0,
+    "w": 666,
+    "h": 1000,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "rotated_270_once|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 1,
+    "angle": 270,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 1000,
+    "crop": [
+     0.0,
+     0.16666666666666669,
+     1.0,
+     0.8333333333333333
+    ]
+   }
+  },
+  {
+   "id": "rotated_180_twice|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.3,
+     0.7
+    ],
+    "rotations_cw": 2,
+    "angle": 180,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 166.66666666666669,
+    "w": 1000,
+    "h": 666,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "rotated_180_twice|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.3,
+     0.7
+    ],
+    "rotations_cw": 2,
+    "angle": 180,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 1000,
+    "crop": [
+     0.0,
+     0.0,
+     0.6666666666666666,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "rotated_90_thrice|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.3,
+     0.7
+    ],
+    "rotations_cw": 3,
+    "angle": 90,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 600.0,
+    "y": 0.0,
+    "w": 720,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "rotated_90_thrice|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.3,
+     0.7
+    ],
+    "rotations_cw": 3,
+    "angle": 90,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.5125,
+     1.0,
+     0.8875
+    ]
+   }
+  },
+  {
+   "id": "rotated_270_tall_box|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.1,
+     0.9
+    ],
+    "rotations_cw": 1,
+    "angle": 270,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    500,
+    1500
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 375.0,
+    "w": 500,
+    "h": 750,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "rotated_270_tall_box|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.1,
+     0.9
+    ],
+    "rotations_cw": 1,
+    "angle": 270,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 0.6666666666666666
+   },
+   "box": [
+    0,
+    0,
+    500,
+    1500
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 500,
+    "h": 1500,
+    "crop": [
+     0.0,
+     0.0,
+     0.5,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "already_cropped_square|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.25,
+     0.0,
+     0.75,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 0.75
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 125.0,
+    "y": 0.0,
+    "w": 750,
+    "h": 1000,
+    "crop": [
+     0.25,
+     0.0,
+     0.75,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "already_cropped_square|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.25,
+     0.0,
+     0.75,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 0.75
+   },
+   "box": [
+    0,
+    0,
+    1000,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 1000,
+    "crop": [
+     0.16666666666666669,
+     0.0,
+     0.8333333333333333,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "already_cropped_wide|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.2,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.1,
+     0.5,
+     0.9
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 0.9375
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 453.75,
+    "y": 0.0,
+    "w": 1012,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.1,
+     0.5,
+     0.9
+    ]
+   }
+  },
+  {
+   "id": "already_cropped_wide|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.2,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.1,
+     0.5,
+     0.9
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 0.9375
+   },
+   "box": [
+    0,
+    0,
+    1920,
+    1080
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.078125,
+     1.0,
+     0.921875
+    ]
+   }
+  },
+  {
+   "id": "already_cropped_and_rotated|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 1,
+    "angle": 270,
+    "crop": [
+     0.1,
+     0.2,
+     0.9,
+     0.6
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 1.3333333333333335
+   },
+   "box": [
+    0,
+    0,
+    800,
+    1200
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 300.00000000000006,
+    "w": 800,
+    "h": 599,
+    "crop": [
+     0.1,
+     0.2,
+     0.9,
+     0.6
+    ]
+   }
+  },
+  {
+   "id": "already_cropped_and_rotated|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 1,
+    "angle": 270,
+    "crop": [
+     0.1,
+     0.2,
+     0.9,
+     0.6
+    ],
+    "current_aspect": 0.6666666666666666,
+    "visible_aspect": 1.3333333333333335
+   },
+   "box": [
+    0,
+    0,
+    800,
+    1200
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 800,
+    "h": 1200,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "half_pixel_box_even|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    100.5,
+    100
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 16.5,
+    "w": 100,
+    "h": 67,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "half_pixel_box_even|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    100.5,
+    100
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 100,
+    "h": 100,
+    "crop": [
+     0.16500000000000004,
+     0.0,
+     0.835,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "half_pixel_box_odd|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    101.5,
+    100
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 16.166666666666664,
+    "w": 101,
+    "h": 67,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "half_pixel_box_odd|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    101.5,
+    100
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 102,
+    "h": 100,
+    "crop": [
+     0.16166666666666668,
+     0.0,
+     0.8383333333333334,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "half_pixel_box_2_5|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    2.5,
+    3.5
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 0.9166666666666666,
+    "w": 2,
+    "h": 1,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "half_pixel_box_2_5|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    2.5,
+    3.5
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 2,
+    "h": 4,
+    "crop": [
+     0.26190476190476186,
+     0.0,
+     0.7380952380952381,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "tiny_box_rounds_to_zero|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    0.4,
+    0.4
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 0.06666666666666668,
+    "w": 0,
+    "h": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "tiny_box_rounds_to_zero|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    0.4,
+    0.4
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1,
+    "h": 1,
+    "crop": [
+     0.16666666666666669,
+     0.0,
+     0.8333333333333333,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "fractional_box|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.37,
+     0.61
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    12.75,
+    33.3,
+    1279.99,
+    719.51
+   ],
+   "result": {
+    "x": 113.11250000000007,
+    "y": 33.3,
+    "w": 1079,
+    "h": 719,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "fractional_box|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.37,
+     0.61
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    12.75,
+    33.3,
+    1279.99,
+    719.51
+   ],
+   "result": {
+    "x": 12.75,
+    "y": 33.3,
+    "w": 1280,
+    "h": 720,
+    "crop": [
+     0.0,
+     0.15681763138774518,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "truncation_fit|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     1000,
+     999
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.001001001001001,
+    "visible_aspect": 1.001001001001001
+   },
+   "box": [
+    0,
+    0,
+    1919.9,
+    1079.9
+   ],
+   "result": {
+    "x": 419.4595095095094,
+    "y": 0.0,
+    "w": 1080,
+    "h": 1079,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "truncation_fit|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     1000,
+     999
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.001001001001001,
+    "visible_aspect": 1.001001001001001
+   },
+   "box": [
+    0,
+    0,
+    1919.9,
+    1079.9
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 1920,
+    "h": 1080,
+    "crop": [
+     0.0,
+     0.21847987369629118,
+     1.0,
+     0.7815201263037088
+    ]
+   }
+  },
+  {
+   "id": "zero_width_box|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    5,
+    5,
+    0,
+    100
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": null,
+    "h": null,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "zero_width_box|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    5,
+    5,
+    0,
+    100
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": null,
+    "h": null,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "negative_height_box|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    5,
+    5,
+    100,
+    -3
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": null,
+    "h": null,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "negative_height_box|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     4000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    5,
+    5,
+    100,
+    -3
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": null,
+    "h": null,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "origin_offset_integer|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     3000,
+     3000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.0,
+    "visible_aspect": 1.0
+   },
+   "box": [
+    7,
+    9,
+    100,
+    100
+   ],
+   "result": {
+    "x": 7.0,
+    "y": 9.0,
+    "w": 100,
+    "h": 100,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "origin_offset_integer|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     3000,
+     3000
+    ],
+    "focus": [
+     0.5,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.0,
+    "visible_aspect": 1.0
+   },
+   "box": [
+    7,
+    9,
+    100,
+    100
+   ],
+   "result": {
+    "x": 7,
+    "y": 9,
+    "w": 100,
+    "h": 100,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "very_tall_panorama_box|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     6000,
+     2000
+    ],
+    "focus": [
+     0.95,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 3.0,
+    "visible_aspect": 3.0
+   },
+   "box": [
+    0,
+    0,
+    10,
+    1000
+   ],
+   "result": {
+    "x": 0.0,
+    "y": 498.3333333333333,
+    "w": 10,
+    "h": 3,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "very_tall_panorama_box|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     6000,
+     2000
+    ],
+    "focus": [
+     0.95,
+     0.5
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 3.0,
+    "visible_aspect": 3.0
+   },
+   "box": [
+    0,
+    0,
+    10,
+    1000
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 10,
+    "h": 1000,
+    "crop": [
+     0.9483333333333333,
+     0.0,
+     0.9516666666666665,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "tiny_image|fit_inside",
+   "function": "fit_inside",
+   "image": {
+    "size": [
+     600,
+     400
+    ],
+    "focus": [
+     0.2,
+     0.7
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "result": {
+    "x": 50.0,
+    "y": 0.0,
+    "w": 540,
+    "h": 360,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "id": "tiny_image|crop_cover",
+   "function": "crop_cover",
+   "image": {
+    "size": [
+     600,
+     400
+    ],
+    "focus": [
+     0.2,
+     0.7
+    ],
+    "rotations_cw": 0,
+    "angle": 0,
+    "crop": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "current_aspect": 1.5,
+    "visible_aspect": 1.5
+   },
+   "box": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "result": {
+    "x": 0,
+    "y": 0,
+    "w": 640,
+    "h": 360,
+    "crop": [
+     0.0,
+     0.15625,
+     1.0,
+     1.0
+    ]
+   }
+  }
+ ]
+}

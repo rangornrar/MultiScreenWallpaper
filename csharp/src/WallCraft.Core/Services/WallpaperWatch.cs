@@ -39,11 +39,26 @@ public static class WallpaperWatch
         return replaced.All(IsThemeWallpaper) ? WallpaperChange.Theme : WallpaperChange.User;
     }
 
-    /// <summary>Équivalent de <c>os.path.normcase(os.path.abspath(p))</c> sous Windows.</summary>
+    /// <summary>
+    /// Équivalent de <c>ntpath.normcase(ntpath.abspath(p))</c> : séparateurs « \ », « . » et « .. » résolus,
+    /// minuscules. Indépendant du système, pour donner le même résultat dans les tests sous Linux.
+    /// </summary>
     internal static string Normalize(string path)
     {
-        if (path.Length == 0) return Path.GetFullPath(".").ToLowerInvariant();
-        string full = Path.GetFullPath(path);
-        return OperatingSystem.IsWindows() ? full.Replace('/', '\\').ToLowerInvariant() : full;
+        string p = path.Replace('/', '\\');
+        string prefix = "";
+        if (p.StartsWith(@"\\", StringComparison.Ordinal)) { prefix = @"\\"; p = p[2..]; }        // UNC
+        else if (p.Length >= 2 && p[1] == ':') { prefix = p[..2]; p = p[2..]; }                        // lecteur
+        bool rooted = prefix.Length > 0 || p.StartsWith('\\');
+        var parts = new List<string>();
+        foreach (var part in p.Split('\\'))
+        {
+            if (part.Length == 0 || part == ".") continue;
+            if (part == "..") { if (parts.Count > 0 && parts[^1] != "..") parts.RemoveAt(parts.Count - 1); else if (!rooted) parts.Add(part); continue; }
+            parts.Add(part);
+        }
+        string body = string.Join('\\', parts);
+        string result = prefix == @"\\" ? prefix + body : prefix + (rooted ? "\\" : "") + body;
+        return result.ToLowerInvariant();
     }
 }

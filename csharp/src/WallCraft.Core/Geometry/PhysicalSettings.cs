@@ -41,8 +41,9 @@ public sealed class PhysicalSettings
     {
         var s = new PhysicalSettings();
         if (node is not JsonObject obj) return s;
-        s.Enabled = Json.Bool(obj["enabled"]) ?? false;
-        s.BezelMm = Json.Number(obj["bezel_mm"]) ?? 0.0;
+        // Comme bool(...) et float(...) de Python : 1 → vrai, "" → faux, "12.5" → 12,5.
+        s.Enabled = Json.Truthy(obj["enabled"]);
+        s.BezelMm = Json.Number(obj["bezel_mm"]) ?? Json.ParseNumber(Json.String(obj["bezel_mm"])) ?? 0.0;
         if (obj["overrides"] is JsonObject overrides)
         {
             foreach (var (key, value) in overrides)

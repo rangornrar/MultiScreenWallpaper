@@ -26,7 +26,8 @@ public static class MonitorNames
     public static string Vendor(MonitorInfo m)
     {
         string hw = m.HwId ?? "";
-        string code = hw.Contains('#') && hw.Length >= 3 ? hw[..3].ToUpperInvariant() : "";
+        // hw[:3].upper() de Python : « ß » devient « SS » (le code peut alors faire 4 lettres).
+        string code = hw.Contains('#') && hw.Length >= 3 ? hw[..3].Replace("ß", "ss").ToUpperInvariant() : "";
         if (code.Length == 0 || !code.All(char.IsLetter)) return "";
         return Vendors.GetValueOrDefault(code, code);
     }

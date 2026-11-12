@@ -125,7 +125,7 @@ public static class CompositionLayout
     public static string Signature(IEnumerable<MonitorInfo> monitors)
     {
         var items = monitors.Select(m => (m.Name, m.X, m.Y, m.Width, m.Height))
-            .OrderBy(t => t.Name, StringComparer.Ordinal).ThenBy(t => t.X).ThenBy(t => t.Y).ThenBy(t => t.Width).ThenBy(t => t.Height);
+            .OrderBy(t => t.Name, CodePointComparer.Instance).ThenBy(t => t.X).ThenBy(t => t.Y).ThenBy(t => t.Width).ThenBy(t => t.Height);
         var sb = new StringBuilder("[");
         bool first = true;
         foreach (var t in items)
@@ -175,5 +175,27 @@ public static class CompositionLayout
         return boxes;
 
         static int Clamp(long v, int max) => (int)Math.Max(0, Math.Min(v, max));
+    }
+}
+
+/// <summary>Comparaison par point de code Unicode, comme les chaînes Python (et non par unité UTF-16).</summary>
+internal sealed class CodePointComparer : IComparer<string>
+{
+    public static readonly CodePointComparer Instance = new();
+
+    public int Compare(string? x, string? y)
+    {
+        if (ReferenceEquals(x, y)) return 0;
+        if (x is null) return -1;
+        if (y is null) return 1;
+        var ex = x.EnumerateRunes();
+        var ey = y.EnumerateRunes();
+        while (true)
+        {
+            bool hx = ex.MoveNext(), hy = ey.MoveNext();
+            if (!hx || !hy) return hx == hy ? 0 : hx ? 1 : -1;
+            int c = ex.Current.Value.CompareTo(ey.Current.Value);
+            if (c != 0) return c;
+        }
     }
 }

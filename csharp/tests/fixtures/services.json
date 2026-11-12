@@ -1,0 +1,584 @@
+{
+ "meta": {
+  "generator": "tools/export_golden.py",
+  "python": "3.12.3",
+  "pillow": "13.0.0",
+  "description": "services.py : is_theme_wallpaper, wallpaper_change (avec ntpath, donc sémantique Windows : casse et séparateurs ignorés) et pick_rotation.",
+  "path_semantics": "ntpath (Windows)"
+ },
+ "is_theme_wallpaper": [
+  {
+   "path": "C:\\Users\\Patrick\\AppData\\Roaming\\Microsoft\\Windows\\Themes\\TranscodedWallpaper",
+   "result": true
+  },
+  {
+   "path": "C:\\Users\\Patrick\\AppData\\Roaming\\Microsoft\\Windows\\Themes\\CachedFiles\\CachedImage_1920_1080_POS4.jpg",
+   "result": true
+  },
+  {
+   "path": "C:\\Users\\Patrick\\AppData\\Roaming\\Microsoft\\Windows\\Themes\\transcodedwallpaper",
+   "result": true
+  },
+  {
+   "path": "C:\\Users\\Patrick\\AppData\\Local\\Microsoft\\Windows\\Themes\\RoamedThemeFiles\\DesktopBackground\\a.jpg",
+   "result": true
+  },
+  {
+   "path": "C:\\Windows\\Web\\Wallpaper\\Windows\\img0.jpg",
+   "result": true
+  },
+  {
+   "path": "C:\\WINDOWS\\WEB\\4K\\Wallpaper\\Windows\\img0_3840x2160.jpg",
+   "result": true
+  },
+  {
+   "path": "c:/windows/web/screen/img100.jpg",
+   "result": true
+  },
+  {
+   "path": "C:\\Users\\Patrick\\AppData\\Local\\Packages\\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\\LocalState\\Assets\\abc",
+   "result": true
+  },
+  {
+   "path": "C:\\Users\\Patrick\\AppData\\Local\\Packages\\MicrosoftWindows.Client.CBS\\LocalState\\Spotlight\\x.jpg",
+   "result": true
+  },
+  {
+   "path": "C:\\ProgramData\\Microsoft\\Windows\\SystemData\\S-1-5-18\\ReadOnly\\LockScreen\\img.jpg",
+   "result": false
+  },
+  {
+   "path": "C:\\Users\\Patrick\\Pictures\\spotlight_backup.jpg",
+   "result": true
+  },
+  {
+   "path": "C:\\Users\\Patrick\\Pictures\\mon TranscodedWallpaper perso.jpg",
+   "result": true
+  },
+  {
+   "path": "C:\\Users\\Patrick\\Pictures\\vacances\\IMG_0001.jpg",
+   "result": false
+  },
+  {
+   "path": "D:\\Fonds\\wallcraft_20261112-101500_pos_00.png",
+   "result": false
+  },
+  {
+   "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+   "result": false
+  },
+  {
+   "path": "\\\\serveur\\partage\\fonds\\a.png",
+   "result": false
+  },
+  {
+   "path": "C:\\Users\\Patrick\\AppData\\Roaming\\Microsoft\\Windows\\Themes",
+   "result": false
+  },
+  {
+   "path": "C:\\Users\\Patrick\\Microsoft\\Windows\\Themes\\a.jpg",
+   "result": true
+  },
+  {
+   "path": "/usr/share/backgrounds/a.jpg",
+   "result": false
+  },
+  {
+   "path": "/Microsoft/Windows/Themes/x.jpg",
+   "result": true
+  },
+  {
+   "path": "C:\\İstanbul\\SPOTLIGHT.jpg",
+   "result": true
+  },
+  {
+   "path": "",
+   "result": true
+  },
+  {
+   "path": null,
+   "result": true
+  }
+ ],
+ "wallpaper_change": [
+  {
+   "id": "nothing_changed",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+    },
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+    }
+   ],
+   "result": null
+  },
+  {
+   "id": "one_theme",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+    },
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Roaming\\Microsoft\\Windows\\Themes\\TranscodedWallpaper"
+    }
+   ],
+   "result": "theme"
+  },
+  {
+   "id": "all_theme_two_kinds",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Roaming\\Microsoft\\Windows\\Themes\\TranscodedWallpaper"
+    },
+    {
+     "path": "C:\\Windows\\Web\\Wallpaper\\Windows\\img0.jpg"
+    }
+   ],
+   "result": "theme"
+  },
+  {
+   "id": "one_user",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+    },
+    {
+     "path": "C:\\Users\\Patrick\\Pictures\\vacances\\IMG_0001.jpg"
+    }
+   ],
+   "result": "user"
+  },
+  {
+   "id": "mixed_theme_and_user",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Roaming\\Microsoft\\Windows\\Themes\\TranscodedWallpaper"
+    },
+    {
+     "path": "C:\\Users\\Patrick\\Pictures\\vacances\\IMG_0001.jpg"
+    }
+   ],
+   "result": "user"
+  },
+  {
+   "id": "different_case",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\USERS\\PATRICK\\APPDATA\\LOCAL\\WALLCRAFT\\CONFIGS\\ABC\\WALLCRAFT_1_POS_00.PNG"
+    },
+    {
+     "path": "c:\\users\\patrick\\appdata\\local\\wallcraft\\configs\\abc\\wallcraft_1_pos_01.png"
+    }
+   ],
+   "result": null
+  },
+  {
+   "id": "forward_slashes_same_file",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:/Users/Patrick/AppData/Local/WallCraft/configs/abc/wallcraft_1_pos_00.png"
+    },
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+    }
+   ],
+   "result": null
+  },
+  {
+   "id": "dotdot_normalised",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\x\\..\\abc\\wallcraft_1_pos_00.png"
+    }
+   ],
+   "result": null
+  },
+  {
+   "id": "expected_empty",
+   "expected_paths": [],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\Pictures\\vacances\\IMG_0001.jpg"
+    }
+   ],
+   "result": null
+  },
+  {
+   "id": "current_empty",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+   ],
+   "current": [],
+   "result": null
+  },
+  {
+   "id": "both_empty",
+   "expected_paths": [],
+   "current": [],
+   "result": null
+  },
+  {
+   "id": "empty_path_counts_as_theme",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+   ],
+   "current": [
+    {
+     "path": ""
+    }
+   ],
+   "result": "theme"
+  },
+  {
+   "id": "missing_path_key",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+    },
+    {}
+   ],
+   "result": "theme"
+  },
+  {
+   "id": "none_path",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+   ],
+   "current": [
+    {
+     "path": null
+    }
+   ],
+   "result": "theme"
+  },
+  {
+   "id": "fewer_current_than_expected",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+    }
+   ],
+   "result": null
+  },
+  {
+   "id": "more_current_than_expected",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+    },
+    {
+     "path": "C:\\Users\\Patrick\\Pictures\\vacances\\IMG_0001.jpg"
+    }
+   ],
+   "result": "user"
+  },
+  {
+   "id": "current_swapped_order",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png",
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+   ],
+   "current": [
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_01.png"
+    },
+    {
+     "path": "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+    }
+   ],
+   "result": null
+  },
+  {
+   "id": "unc_path_user",
+   "expected_paths": [
+    "C:\\Users\\Patrick\\AppData\\Local\\WallCraft\\configs\\abc\\wallcraft_1_pos_00.png"
+   ],
+   "current": [
+    {
+     "path": "\\\\serveur\\partage\\a.png"
+    }
+   ],
+   "result": "user"
+  }
+ ],
+ "pick_rotation": [
+  {
+   "id": "basic",
+   "count": 3,
+   "files": [
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f02.jpg",
+    "D:\\Fonds\\f03.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f07.jpg",
+    "D:\\Fonds\\f08.jpg",
+    "D:\\Fonds\\f09.jpg"
+   ],
+   "previous": [],
+   "seed": 11,
+   "result": [
+    "D:\\Fonds\\f07.jpg",
+    "D:\\Fonds\\f08.jpg",
+    "D:\\Fonds\\f09.jpg"
+   ]
+  },
+  {
+   "id": "avoid_previous",
+   "count": 3,
+   "files": [
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f02.jpg",
+    "D:\\Fonds\\f03.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f07.jpg",
+    "D:\\Fonds\\f08.jpg",
+    "D:\\Fonds\\f09.jpg"
+   ],
+   "previous": [
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f02.jpg"
+   ],
+   "seed": 11,
+   "result": [
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f07.jpg",
+    "D:\\Fonds\\f09.jpg"
+   ]
+  },
+  {
+   "id": "pool_too_small_falls_back_to_all",
+   "count": 4,
+   "files": [
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f02.jpg",
+    "D:\\Fonds\\f03.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f07.jpg",
+    "D:\\Fonds\\f08.jpg",
+    "D:\\Fonds\\f09.jpg"
+   ],
+   "previous": [
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f02.jpg",
+    "D:\\Fonds\\f03.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f07.jpg"
+   ],
+   "seed": 5,
+   "result": [
+    "D:\\Fonds\\f09.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f06.jpg"
+   ]
+  },
+  {
+   "id": "count_greater_than_files",
+   "count": 12,
+   "files": [
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f02.jpg",
+    "D:\\Fonds\\f03.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f07.jpg",
+    "D:\\Fonds\\f08.jpg",
+    "D:\\Fonds\\f09.jpg"
+   ],
+   "previous": [],
+   "seed": 99,
+   "result": [
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f09.jpg",
+    "D:\\Fonds\\f03.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f08.jpg",
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f02.jpg",
+    "D:\\Fonds\\f07.jpg"
+   ]
+  },
+  {
+   "id": "big_pool_set_algorithm",
+   "count": 3,
+   "files": [
+    "D:\\Fonds\\g00.jpg",
+    "D:\\Fonds\\g01.jpg",
+    "D:\\Fonds\\g02.jpg",
+    "D:\\Fonds\\g03.jpg",
+    "D:\\Fonds\\g04.jpg",
+    "D:\\Fonds\\g05.jpg",
+    "D:\\Fonds\\g06.jpg",
+    "D:\\Fonds\\g07.jpg",
+    "D:\\Fonds\\g08.jpg",
+    "D:\\Fonds\\g09.jpg",
+    "D:\\Fonds\\g10.jpg",
+    "D:\\Fonds\\g11.jpg",
+    "D:\\Fonds\\g12.jpg",
+    "D:\\Fonds\\g13.jpg",
+    "D:\\Fonds\\g14.jpg",
+    "D:\\Fonds\\g15.jpg",
+    "D:\\Fonds\\g16.jpg",
+    "D:\\Fonds\\g17.jpg",
+    "D:\\Fonds\\g18.jpg",
+    "D:\\Fonds\\g19.jpg",
+    "D:\\Fonds\\g20.jpg",
+    "D:\\Fonds\\g21.jpg",
+    "D:\\Fonds\\g22.jpg",
+    "D:\\Fonds\\g23.jpg",
+    "D:\\Fonds\\g24.jpg",
+    "D:\\Fonds\\g25.jpg",
+    "D:\\Fonds\\g26.jpg",
+    "D:\\Fonds\\g27.jpg",
+    "D:\\Fonds\\g28.jpg",
+    "D:\\Fonds\\g29.jpg",
+    "D:\\Fonds\\g30.jpg",
+    "D:\\Fonds\\g31.jpg",
+    "D:\\Fonds\\g32.jpg",
+    "D:\\Fonds\\g33.jpg",
+    "D:\\Fonds\\g34.jpg",
+    "D:\\Fonds\\g35.jpg",
+    "D:\\Fonds\\g36.jpg",
+    "D:\\Fonds\\g37.jpg",
+    "D:\\Fonds\\g38.jpg",
+    "D:\\Fonds\\g39.jpg"
+   ],
+   "previous": [
+    "D:\\Fonds\\g00.jpg",
+    "D:\\Fonds\\g01.jpg",
+    "D:\\Fonds\\g02.jpg",
+    "D:\\Fonds\\g03.jpg",
+    "D:\\Fonds\\g04.jpg"
+   ],
+   "seed": 4294967301,
+   "result": [
+    "D:\\Fonds\\g15.jpg",
+    "D:\\Fonds\\g36.jpg",
+    "D:\\Fonds\\g23.jpg"
+   ]
+  },
+  {
+   "id": "single_file",
+   "count": 1,
+   "files": [
+    "D:\\Fonds\\only.jpg"
+   ],
+   "previous": [],
+   "seed": 0,
+   "result": [
+    "D:\\Fonds\\only.jpg"
+   ]
+  },
+  {
+   "id": "count_zero",
+   "count": 0,
+   "files": [
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f02.jpg",
+    "D:\\Fonds\\f03.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f07.jpg",
+    "D:\\Fonds\\f08.jpg",
+    "D:\\Fonds\\f09.jpg"
+   ],
+   "previous": [],
+   "seed": 1,
+   "result": []
+  },
+  {
+   "id": "empty_files",
+   "count": 3,
+   "files": [],
+   "previous": [],
+   "seed": 1,
+   "result": []
+  },
+  {
+   "id": "previous_not_in_files",
+   "count": 2,
+   "files": [
+    "D:\\Fonds\\f00.jpg",
+    "D:\\Fonds\\f01.jpg",
+    "D:\\Fonds\\f02.jpg",
+    "D:\\Fonds\\f03.jpg",
+    "D:\\Fonds\\f04.jpg",
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f06.jpg",
+    "D:\\Fonds\\f07.jpg",
+    "D:\\Fonds\\f08.jpg",
+    "D:\\Fonds\\f09.jpg"
+   ],
+   "previous": [
+    "Z:\\nope.jpg"
+   ],
+   "seed": 7,
+   "result": [
+    "D:\\Fonds\\f05.jpg",
+    "D:\\Fonds\\f02.jpg"
+   ]
+  }
+ ]
+}

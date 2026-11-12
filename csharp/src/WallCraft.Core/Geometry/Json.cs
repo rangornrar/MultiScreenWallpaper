@@ -18,6 +18,25 @@ internal static class Json
     public static bool? Bool(JsonNode? node) => node is JsonValue v && v.GetValueKind() is JsonValueKind.True or JsonValueKind.False
         ? v.GetValue<bool>() : null;
 
+    /// <summary>Vérité « à la Python » : false, 0, "", null, [] et {} sont faux.</summary>
+    public static bool Truthy(JsonNode? node) => node switch
+    {
+        null => false,
+        JsonArray a => a.Count > 0,
+        JsonObject o => o.Count > 0,
+        JsonValue v => v.GetValueKind() switch
+        {
+            JsonValueKind.True => true,
+            JsonValueKind.Number => v.TryGetValue(out double d) && d != 0,
+            JsonValueKind.String => v.GetValue<string>().Length > 0,
+            _ => false,
+        },
+        _ => false,
+    };
+
+    public static double? ParseNumber(string? text) =>
+        double.TryParse(text?.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double d) && double.IsFinite(d) ? d : null;
+
     public static string? String(JsonNode? node) => node is JsonValue v && v.GetValueKind() == JsonValueKind.String ? v.GetValue<string>() : null;
 
     /// <summary>Chaîne JSON comme <c>json.dumps</c> (ensure_ascii=True) : tout caractère hors ASCII en \uXXXX minuscule.</summary>

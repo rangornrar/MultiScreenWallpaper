@@ -1,0 +1,5822 @@
+{
+ "meta": {
+  "generator": "tools/export_golden.py",
+  "python": "3.12.3",
+  "pillow": "13.0.0",
+  "description": "display_geometry.py : EDID, diagonales, fabricants, libellés, upscale_factor, réglages, physical_positions/apply_layout (layouts) et layout_signature."
+ },
+ "edid": [
+  {
+   "id": "detailed_and_cm_agree",
+   "hex": "00ffffffffffff0000000000000000000000000000331d00000000000000000000000000000000000000000000000000000000000000011d00000000000000000000fd1e110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    509.0,
+    286.0
+   ]
+  },
+  {
+   "id": "detailed_wins_over_cm",
+   "hex": "00ffffffffffff0000000000000000000000000000351e00000000000000000000000000000000000000000000000000000000000000011d000000000000000000000f28210000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    527.0,
+    296.0
+   ]
+  },
+  {
+   "id": "detailed_only",
+   "hex": "00ffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011d00000000000000000000202f210000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    544.0,
+    303.0
+   ]
+  },
+  {
+   "id": "cm_only_name_descriptor",
+   "hex": "00ffffffffffff00000000000000000000000000003c2200000000000000000000000000000000000000000000000000000000000000000000fc0050484c2032340a6363000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    600.0,
+    340.0
+   ]
+  },
+  {
+   "id": "inconsistent_cm_vs_detailed",
+   "hex": "00ffffffffffff0000000000000000000000000000a05a00000000000000000000000000000000000000000000000000000000000000011d00000000000000000000fd1e110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    509.0,
+    286.0
+   ]
+  },
+  {
+   "id": "detailed_too_small_falls_back_to_cm",
+   "hex": "00ffffffffffff0000000000000000000000000000351e00000000000000000000000000000000000000000000000000000000000000011d000000000000000000001009000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    530.0,
+    300.0
+   ]
+  },
+  {
+   "id": "detailed_width_exactly_50_falls_back",
+   "hex": "00ffffffffffff0000000000000000000000000000351e00000000000000000000000000000000000000000000000000000000000000011d00000000000000000000321e010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    530.0,
+    300.0
+   ]
+  },
+  {
+   "id": "detailed_height_exactly_50_falls_back",
+   "hex": "00ffffffffffff0000000000000000000000000000351e00000000000000000000000000000000000000000000000000000000000000011d00000000000000000000fd32100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    530.0,
+    300.0
+   ]
+  },
+  {
+   "id": "detailed_width_51_accepted",
+   "hex": "00ffffffffffff0000000000000000000000000000351e00000000000000000000000000000000000000000000000000000000000000011d000000000000000000003333000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    51.0,
+    51.0
+   ]
+  },
+  {
+   "id": "detailed_high_nibbles_1200x700",
+   "hex": "00ffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011d00000000000000000000b0bc420000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    1200.0,
+    700.0
+   ]
+  },
+  {
+   "id": "detailed_too_small_no_cm",
+   "hex": "00ffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011d000000000000000000001009000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": null
+  },
+  {
+   "id": "invalid_header",
+   "hex": "00ffffffffffff0100000000000000000000000000351e00000000000000000000000000000000000000000000000000000000000000011d000000000000000000000f28210000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": null
+  },
+  {
+   "id": "too_short_127_bytes",
+   "hex": "00ffffffffffff00000000000000000000000000003c2200000000000000000000000000000000000000000000000000000000000000011d000000000000000000000f282100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": null
+  },
+  {
+   "id": "empty",
+   "hex": "",
+   "result": null
+  },
+  {
+   "id": "all_zero_sizes",
+   "hex": "00ffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": null
+  },
+  {
+   "id": "cm_width_only",
+   "hex": "00ffffffffffff00000000000000000000000000003500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": null
+  },
+  {
+   "id": "cm_height_only",
+   "hex": "00ffffffffffff0000000000000000000000000000001e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": null
+  },
+  {
+   "id": "extension_block_256_bytes",
+   "hex": "00ffffffffffff0000000000000000000000000000351e00000000000000000000000000000000000000000000000000000000000000011d000000000000000000000f282100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    527.0,
+    296.0
+   ]
+  },
+  {
+   "id": "pixel_clock_low_byte_only",
+   "hex": "00ffffffffffff0000000000000000000000000000351e00000000000000000000000000000000000000000000000000000000000000010000000000000000000000ffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "result": [
+    255.0,
+    255.0
+   ]
+  },
+  {
+   "id": "none_input",
+   "hex": null,
+   "result": null
+  }
+ ],
+ "diagonal_inches": [
+  {
+   "width_mm": 509,
+   "height_mm": 286,
+   "inches": 22.98609159297886
+  },
+  {
+   "width_mm": 544,
+   "height_mm": 303,
+   "inches": 24.51542273777681
+  },
+  {
+   "width_mm": 527,
+   "height_mm": 296,
+   "inches": 23.796762018639537
+  },
+  {
+   "width_mm": 597,
+   "height_mm": 336,
+   "inches": 26.970802821725755
+  },
+  {
+   "width_mm": 600,
+   "height_mm": 340,
+   "inches": 27.151086062309712
+  },
+  {
+   "width_mm": 1,
+   "height_mm": 1,
+   "inches": 0.055677699306027374
+  },
+  {
+   "width_mm": 0,
+   "height_mm": 0,
+   "inches": 0.0
+  },
+  {
+   "width_mm": 298,
+   "height_mm": 530,
+   "inches": 23.938302907363592
+  },
+  {
+   "width_mm": 696.5,
+   "height_mm": 391.8,
+   "inches": 31.462075411904706
+  },
+  {
+   "width_mm": 254,
+   "height_mm": 0,
+   "inches": 10.0
+  }
+ ],
+ "vendors": [
+  {
+   "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008",
+   "vendor": "Philips"
+  },
+  {
+   "hw_id": "IVM6132#5&1c8a4f2&0&UID4353",
+   "vendor": "iiyama"
+  },
+  {
+   "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352",
+   "vendor": "LG"
+  },
+  {
+   "hw_id": "gsm5b7f#1",
+   "vendor": "LG"
+  },
+  {
+   "hw_id": "DEL#x",
+   "vendor": "Dell"
+  },
+  {
+   "hw_id": "ZZZ0001#a",
+   "vendor": "ZZZ"
+  },
+  {
+   "hw_id": "ABC",
+   "vendor": ""
+  },
+  {
+   "hw_id": "",
+   "vendor": ""
+  },
+  {
+   "hw_id": null,
+   "vendor": ""
+  },
+  {
+   "hw_id": "12#x",
+   "vendor": ""
+  },
+  {
+   "hw_id": "A1B#x",
+   "vendor": ""
+  },
+  {
+   "hw_id": "AB#x",
+   "vendor": ""
+  },
+  {
+   "hw_id": "éAB#x",
+   "vendor": "ÉAB"
+  },
+  {
+   "hw_id": "ßAB#x",
+   "vendor": "SSAB"
+  },
+  {
+   "hw_id": "SAM#1",
+   "vendor": "Samsung"
+  },
+  {
+   "hw_id": "sam#1",
+   "vendor": "Samsung"
+  },
+  {
+   "hw_id": "XMI#1",
+   "vendor": "Xiaomi"
+  },
+  {
+   "hw_id": "LGD#1",
+   "vendor": "LG"
+  },
+  {
+   "hw_id": "BOE#1",
+   "vendor": "BOE"
+  },
+  {
+   "hw_id": "HWP#1",
+   "vendor": "HP"
+  },
+  {
+   "hw_id": "ENC#1",
+   "vendor": "EIZO"
+  },
+  {
+   "hw_id": "#abc",
+   "vendor": ""
+  },
+  {
+   "hw_id": "ABC#",
+   "vendor": "ABC"
+  },
+  {
+   "hw_id": "ǅAB#x",
+   "vendor": "ǄAB"
+  },
+  {
+   "hw_id": "ΑΒΓ#x",
+   "vendor": "ΑΒΓ"
+  },
+  {
+   "hw_id": "日本語#x",
+   "vendor": "日本語"
+  },
+  {
+   "hw_id": "<absent>",
+   "vendor": ""
+  }
+ ],
+ "labels": [
+  {
+   "id": "single_no_size",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "1920 × 1080"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "1920 × 1080"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "single_with_size_philips",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Philips 23″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Philips 23″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pair_row",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2560,
+     "y": 360,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · LG 27″",
+      "Droite · Dell 24″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · LG 27″",
+      "Right · Dell 24″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pair_row_input_reversed",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2560,
+     "y": 360,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Droite · Dell 24″",
+      "Gauche · LG 27″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Right · Dell 24″",
+      "Left · LG 27″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "real_triple",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · Philips 23″",
+      "Centre · iiyama 24,5″",
+      "Droite · iiyama 24,5″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · Philips 23″",
+      "Center · iiyama 24.5″",
+      "Right · iiyama 24.5″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "stacked_two",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": -1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Haut · Dell 23,8″",
+      "Bas · LG 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Top · Dell 23.8″",
+      "Bottom · LG 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "stacked_two_input_reversed",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": -1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Bas · LG 23,8″",
+      "Haut · Dell 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Bottom · LG 23.8″",
+      "Top · Dell 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "four_in_row",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY4",
+     "x": 5760,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Écran 1 · LG 23,8″",
+      "Écran 2 · LG 23,8″",
+      "Écran 3 · LG 23,8″",
+      "Écran 4 · LG 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Screen 1 · LG 23.8″",
+      "Screen 2 · LG 23.8″",
+      "Screen 3 · LG 23.8″",
+      "Screen 4 · LG 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "l_shape_three",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Écran 1 · LG 23,8″",
+      "Écran 2 · Dell 23,8″",
+      "Écran 3 · Philips 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Screen 1 · LG 23.8″",
+      "Screen 2 · Dell 23.8″",
+      "Screen 3 · Philips 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "quad_2x2",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY4",
+     "x": 1920,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Écran 1 · LG 23,8″",
+      "Écran 3 · Dell 23,8″",
+      "Écran 2 · Philips 23,8″",
+      "Écran 4 · iiyama 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Screen 1 · LG 23.8″",
+      "Screen 3 · Dell 23.8″",
+      "Screen 2 · Philips 23.8″",
+      "Screen 4 · iiyama 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mirrored_same_rect",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Écran 1 · LG 23,8″",
+      "Écran 2 · Dell 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Screen 1 · LG 23.8″",
+      "Screen 2 · Dell 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "three_stacked",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 0,
+     "y": 2160,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Écran 1 · 1920 × 1080",
+      "Écran 2 · 1920 × 1080",
+      "Écran 3 · 1920 × 1080"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Screen 1 · 1920 × 1080",
+      "Screen 2 · 1920 × 1080",
+      "Screen 3 · 1920 × 1080"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "unknown_vendor_and_mixed_sizes",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 600,
+     "height_mm": 340,
+     "hw_id": "ZZZ0001#4&55ee66ff&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 4480,
+     "y": 0,
+     "width": 1280,
+     "height": 1024,
+     "width_mm": 376,
+     "height_mm": 301,
+     "hw_id": null
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · ZZZ 27,2″",
+      "Centre · Dell",
+      "Droite · 19″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · ZZZ 27.2″",
+      "Center · Dell",
+      "Right · 19″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "portrait_landscape",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": -420,
+     "width": 1080,
+     "height": 1920,
+     "width_mm": 298,
+     "height_mm": 530,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · LG 23,8″",
+      "Droite · Dell 23,9″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · LG 23.8″",
+      "Right · Dell 23.9″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "one_pixel_overlap_tolerance",
+   "monitors": [
+    {
+     "name": "A",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "B",
+     "x": 1919,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · LG 23,8″",
+      "Droite · Dell 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · LG 23.8″",
+      "Right · Dell 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "diagonals_27_and_31_5",
+   "monitors": [
+    {
+     "name": "A",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 596,
+     "height_mm": 335,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "B",
+     "x": 2560,
+     "y": 0,
+     "width": 3840,
+     "height": 2160,
+     "width_mm": 697,
+     "height_mm": 392,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · LG 26,9″",
+      "Droite · LG 31,5″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · LG 26.9″",
+      "Right · LG 31.5″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "empty",
+   "monitors": [],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": []
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": []
+    }
+   ]
+  },
+  {
+   "id": "real_triple|canvas=physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "canvas": [
+    [
+     0,
+     32,
+     1920,
+     1079
+    ],
+    [
+     1977,
+     0,
+     2052,
+     1143
+    ],
+    [
+     4085,
+     0,
+     2052,
+     1143
+    ]
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · Philips 23″",
+      "Centre · iiyama 24,5″",
+      "Droite · iiyama 24,5″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · Philips 23″",
+      "Center · iiyama 24.5″",
+      "Right · iiyama 24.5″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "real_triple|canvas=pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1080
+    ],
+    [
+     3840,
+     0,
+     1920,
+     1080
+    ]
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · Philips 23″",
+      "Centre · iiyama 24,5″",
+      "Droite · iiyama 24,5″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · Philips 23″",
+      "Center · iiyama 24.5″",
+      "Right · iiyama 24.5″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "l_shape_three|canvas=physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     1078,
+     1920,
+     1079
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1078
+    ]
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Écran 1 · LG 23,8″",
+      "Écran 2 · Dell 23,8″",
+      "Écran 3 · Philips 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Screen 1 · LG 23.8″",
+      "Screen 2 · Dell 23.8″",
+      "Screen 3 · Philips 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "stacked_two|canvas=physical_bezel5",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": -1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 5.0,
+    "overrides": {}
+   },
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     1097,
+     1920,
+     1078
+    ]
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Haut · Dell 23,8″",
+      "Bas · LG 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Top · Dell 23.8″",
+      "Bottom · LG 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pair_27_and_24|canvas=physical_bezel10",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2560,
+     "y": 360,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 10.0,
+    "overrides": {}
+   },
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1441
+    ],
+    [
+     2603,
+     79,
+     2277,
+     1282
+    ]
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · LG 27″",
+      "Droite · Dell 24″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · LG 27″",
+      "Right · Dell 24″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "not_contiguous|canvas=physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2100,
+     "y": 200,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     2100,
+     200,
+     1920,
+     1078
+    ]
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Gauche · LG 23,8″",
+      "Droite · Dell 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Left · LG 23.8″",
+      "Right · Dell 23.8″"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "quad_2x2|canvas=physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY4",
+     "x": 1920,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     1975,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     1133,
+     1920,
+     1078
+    ],
+    [
+     1975,
+     1133,
+     1920,
+     1078
+    ]
+   ],
+   "results": [
+    {
+     "words_id": "fr",
+     "decimal": ",",
+     "labels": [
+      "Écran 1 · LG 23,8″",
+      "Écran 3 · Dell 23,8″",
+      "Écran 2 · Philips 23,8″",
+      "Écran 4 · iiyama 23,8″"
+     ]
+    },
+    {
+     "words_id": "en",
+     "decimal": ".",
+     "labels": [
+      "Screen 1 · LG 23.8″",
+      "Screen 3 · Dell 23.8″",
+      "Screen 2 · Philips 23.8″",
+      "Screen 4 · iiyama 23.8″"
+     ]
+    }
+   ]
+  }
+ ],
+ "upscale_factor": [
+  {
+   "id": "identity",
+   "original_size": [
+    1920,
+    1080
+   ],
+   "angle": 0,
+   "crop": [
+    0.0,
+    0.0,
+    1.0,
+    1.0
+   ],
+   "w": 1920,
+   "h": 1080,
+   "factor": 1.0
+  },
+  {
+   "id": "stretched_2_5x",
+   "original_size": [
+    1000,
+    600
+   ],
+   "angle": 0,
+   "crop": [
+    0.0,
+    0.0,
+    1.0,
+    1.0
+   ],
+   "w": 2500,
+   "h": 1500,
+   "factor": 2.5
+  },
+  {
+   "id": "downscaled",
+   "original_size": [
+    6000,
+    4000
+   ],
+   "angle": 0,
+   "crop": [
+    0.0,
+    0.0,
+    1.0,
+    1.0
+   ],
+   "w": 1920,
+   "h": 1280,
+   "factor": 0.32
+  },
+  {
+   "id": "rotated_90_swaps",
+   "original_size": [
+    4000,
+    3000
+   ],
+   "angle": 90,
+   "crop": [
+    0.0,
+    0.0,
+    1.0,
+    1.0
+   ],
+   "w": 1080,
+   "h": 1440,
+   "factor": 0.36
+  },
+  {
+   "id": "rotated_270_swaps",
+   "original_size": [
+    4000,
+    3000
+   ],
+   "angle": 270,
+   "crop": [
+    0.0,
+    0.0,
+    1.0,
+    1.0
+   ],
+   "w": 3000,
+   "h": 4000,
+   "factor": 1.0
+  },
+  {
+   "id": "rotated_180_keeps",
+   "original_size": [
+    4000,
+    3000
+   ],
+   "angle": 180,
+   "crop": [
+    0.0,
+    0.0,
+    1.0,
+    1.0
+   ],
+   "w": 2000,
+   "h": 1500,
+   "factor": 0.5
+  },
+  {
+   "id": "cropped_half_width",
+   "original_size": [
+    4000,
+    3000
+   ],
+   "angle": 0,
+   "crop": [
+    0.25,
+    0.0,
+    0.75,
+    1.0
+   ],
+   "w": 4000,
+   "h": 3000,
+   "factor": 2.0
+  },
+  {
+   "id": "cropped_square",
+   "original_size": [
+    6000,
+    4000
+   ],
+   "angle": 0,
+   "crop": [
+    0.2,
+    0.0,
+    0.8,
+    1.0
+   ],
+   "w": 1000,
+   "h": 1000,
+   "factor": 0.27777777777777773
+  },
+  {
+   "id": "cropped_and_rotated",
+   "original_size": [
+    4000,
+    3000
+   ],
+   "angle": 270,
+   "crop": [
+    0.1,
+    0.2,
+    0.9,
+    0.6
+   ],
+   "w": 1920,
+   "h": 1080,
+   "factor": 0.8
+  },
+  {
+   "id": "tiny_crop_clamped_to_1px",
+   "original_size": [
+    1000,
+    1000
+   ],
+   "angle": 0,
+   "crop": [
+    0.5,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "w": 500,
+   "h": 500,
+   "factor": 500.0
+  },
+  {
+   "id": "height_dominates",
+   "original_size": [
+    2000,
+    500
+   ],
+   "angle": 0,
+   "crop": [
+    0.0,
+    0.0,
+    1.0,
+    1.0
+   ],
+   "w": 2000,
+   "h": 1500,
+   "factor": 3.0
+  },
+  {
+   "id": "fractional_displayed_size",
+   "original_size": [
+    3000,
+    2000
+   ],
+   "angle": 0,
+   "crop": [
+    0.0,
+    0.0,
+    1.0,
+    1.0
+   ],
+   "w": 1921,
+   "h": 1081,
+   "factor": 0.6403333333333333
+  },
+  {
+   "id": "crop_tiny_nonzero",
+   "original_size": [
+    800,
+    600
+   ],
+   "angle": 0,
+   "crop": [
+    0.0,
+    0.0,
+    0.0005,
+    1.0
+   ],
+   "w": 640,
+   "h": 360,
+   "factor": 640.0
+  }
+ ],
+ "physical_settings": [
+  {
+   "input": null,
+   "to_dict": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   }
+  },
+  {
+   "input": {},
+   "to_dict": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   }
+  },
+  {
+   "input": {
+    "enabled": true
+   },
+   "to_dict": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   }
+  },
+  {
+   "input": {
+    "enabled": 1,
+    "bezel_mm": "12.5",
+    "overrides": {
+     "a": {
+      "width_mm": 1
+     }
+    }
+   },
+   "to_dict": {
+    "enabled": true,
+    "bezel_mm": 12.5,
+    "overrides": {
+     "a": {
+      "width_mm": 1
+     }
+    }
+   }
+  },
+  {
+   "input": {
+    "enabled": "",
+    "bezel_mm": 3
+   },
+   "to_dict": {
+    "enabled": false,
+    "bezel_mm": 3.0,
+    "overrides": {}
+   }
+  },
+  {
+   "input": {
+    "enabled": true,
+    "bezel_mm": 15,
+    "overrides": {
+     "X#1": {
+      "offset_x_mm": -2.5
+     }
+    }
+   },
+   "to_dict": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {
+     "X#1": {
+      "offset_x_mm": -2.5
+     }
+    }
+   }
+  }
+ ],
+ "layouts": [
+  {
+   "id": "real_triple|pixels",
+   "config": "real_triple",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     -1053.0,
+     8.5,
+     509.0,
+     286.0
+    ],
+    [
+     -544.0,
+     0.0,
+     544.0,
+     303.0
+    ],
+    [
+     0.0,
+     0.0,
+     544.0,
+     303.0
+    ]
+   ],
+   "size": [
+    5760,
+    1080
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1080
+    ],
+    [
+     3840,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "real_triple|pixels_settings_none",
+   "config": "real_triple",
+   "variant": "pixels_settings_none",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": null,
+   "physical_positions_mm": [
+    [
+     -1053.0,
+     8.5,
+     509.0,
+     286.0
+    ],
+    [
+     -544.0,
+     0.0,
+     544.0,
+     303.0
+    ],
+    [
+     0.0,
+     0.0,
+     544.0,
+     303.0
+    ]
+   ],
+   "size": [
+    5760,
+    1080
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1080
+    ],
+    [
+     3840,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "real_triple|physical_bezel0",
+   "config": "real_triple",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     -1053.0,
+     8.5,
+     509.0,
+     286.0
+    ],
+    [
+     -544.0,
+     0.0,
+     544.0,
+     303.0
+    ],
+    [
+     0.0,
+     0.0,
+     544.0,
+     303.0
+    ]
+   ],
+   "size": [
+    6025,
+    1143
+   ],
+   "canvas": [
+    [
+     0,
+     32,
+     1920,
+     1079
+    ],
+    [
+     1920,
+     0,
+     2052,
+     1143
+    ],
+    [
+     3972,
+     0,
+     2052,
+     1143
+    ]
+   ]
+  },
+  {
+   "id": "real_triple|physical_bezel15",
+   "config": "real_triple",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     -1083.0,
+     8.5,
+     509.0,
+     286.0
+    ],
+    [
+     -559.0,
+     0.0,
+     544.0,
+     303.0
+    ],
+    [
+     0.0,
+     0.0,
+     544.0,
+     303.0
+    ]
+   ],
+   "size": [
+    6138,
+    1143
+   ],
+   "canvas": [
+    [
+     0,
+     32,
+     1920,
+     1079
+    ],
+    [
+     1977,
+     0,
+     2052,
+     1143
+    ],
+    [
+     4085,
+     0,
+     2052,
+     1143
+    ]
+   ]
+  },
+  {
+   "id": "real_triple|physical_overrides",
+   "config": "real_triple",
+   "variant": "physical_overrides",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {
+     "PHLC069#5&2a9e1f3&0&UID16843008": {
+      "width_mm": 527,
+      "height_mm": 296,
+      "offset_y_mm": 4.5
+     },
+     "IVM6132#5&1c8a4f2&0&UID4354": {
+      "offset_x_mm": -3,
+      "offset_y_mm": 12
+     }
+    }
+   },
+   "physical_positions_mm": [
+    [
+     -1101.0,
+     8.0,
+     527.0,
+     296.0
+    ],
+    [
+     -562.0,
+     12.0,
+     544.0,
+     303.0
+    ],
+    [
+     0.0,
+     0.0,
+     544.0,
+     303.0
+    ]
+   ],
+   "size": [
+    5994,
+    1148
+   ],
+   "canvas": [
+    [
+     0,
+     29,
+     1920,
+     1079
+    ],
+    [
+     1964,
+     44,
+     1982,
+     1104
+    ],
+    [
+     4011,
+     0,
+     1982,
+     1104
+    ]
+   ]
+  },
+  {
+   "id": "real_triple|physical_disabled_with_overrides",
+   "config": "real_triple",
+   "variant": "physical_disabled_with_overrides",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 15.0,
+    "overrides": {
+     "PHLC069#5&2a9e1f3&0&UID16843008": {
+      "width_mm": 527,
+      "height_mm": 296
+     }
+    }
+   },
+   "physical_positions_mm": [
+    [
+     -1101.0,
+     3.5,
+     527.0,
+     296.0
+    ],
+    [
+     -559.0,
+     0.0,
+     544.0,
+     303.0
+    ],
+    [
+     0.0,
+     0.0,
+     544.0,
+     303.0
+    ]
+   ],
+   "size": [
+    5760,
+    1080
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1080
+    ],
+    [
+     3840,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "pair_27_and_24|pixels",
+   "config": "pair_27_and_24",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2560,
+     "y": 360,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ],
+    [
+     597.0,
+     18.5,
+     531.0,
+     299.0
+    ]
+   ],
+   "size": [
+    4480,
+    1440
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1440
+    ],
+    [
+     2560,
+     360,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "pair_27_and_24|physical_bezel0",
+   "config": "pair_27_and_24",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2560,
+     "y": 360,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ],
+    [
+     597.0,
+     18.5,
+     531.0,
+     299.0
+    ]
+   ],
+   "size": [
+    4837,
+    1441
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1441
+    ],
+    [
+     2560,
+     79,
+     2277,
+     1282
+    ]
+   ]
+  },
+  {
+   "id": "pair_27_and_24|physical_bezel15",
+   "config": "pair_27_and_24",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2560,
+     "y": 360,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ],
+    [
+     612.0,
+     18.5,
+     531.0,
+     299.0
+    ]
+   ],
+   "size": [
+    4902,
+    1441
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1441
+    ],
+    [
+     2624,
+     79,
+     2277,
+     1282
+    ]
+   ]
+  },
+  {
+   "id": "pair_27_and_24|physical_bezel10",
+   "config": "pair_27_and_24",
+   "variant": "physical_bezel10",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2560,
+     "y": 360,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 10.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ],
+    [
+     607.0,
+     18.5,
+     531.0,
+     299.0
+    ]
+   ],
+   "size": [
+    4880,
+    1441
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1441
+    ],
+    [
+     2603,
+     79,
+     2277,
+     1282
+    ]
+   ]
+  },
+  {
+   "id": "stacked_two|pixels",
+   "config": "stacked_two",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": -1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     -296.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    1920,
+    2160
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     0,
+     1080,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "stacked_two|physical_bezel5",
+   "config": "stacked_two",
+   "variant": "physical_bezel5",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": -1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 5.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     -301.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    1920,
+    2176
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     1097,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "l_shape_three|pixels",
+   "config": "l_shape_three",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     296.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3840,
+    2160
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     0,
+     1080,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "l_shape_three|physical_bezel0",
+   "config": "l_shape_three",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     296.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3840,
+    2157
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     1078,
+     1920,
+     1079
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "l_shape_three|physical_bezel15",
+   "config": "l_shape_three",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     311.0,
+     527.0,
+     296.0
+    ],
+    [
+     542.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3895,
+    2212
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     1133,
+     1920,
+     1078
+    ],
+    [
+     1975,
+     0,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "not_contiguous|pixels",
+   "config": "not_contiguous",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2100,
+     "y": 200,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     576.40625,
+     54.895833333333336,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    4020,
+    1280
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     2100,
+     200,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "not_contiguous|physical_bezel0",
+   "config": "not_contiguous",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2100,
+     "y": 200,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     576.40625,
+     54.895833333333336,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    4020,
+    1279
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     2100,
+     200,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "not_contiguous|physical_bezel15",
+   "config": "not_contiguous",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2100,
+     "y": 200,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     576.40625,
+     54.895833333333336,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    4020,
+    1279
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     2100,
+     200,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "no_physical_sizes|pixels",
+   "config": "no_physical_sizes",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     521.2800000000001,
+     293.22
+    ],
+    [
+     521.2800000000001,
+     -48.870000000000005,
+     695.0400000000001,
+     390.96000000000004
+    ]
+   ],
+   "size": [
+    4480,
+    1440
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     2560,
+     1440
+    ]
+   ]
+  },
+  {
+   "id": "no_physical_sizes|physical_bezel0",
+   "config": "no_physical_sizes",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     521.2800000000001,
+     293.22
+    ],
+    [
+     521.2800000000001,
+     -48.870000000000005,
+     695.0400000000001,
+     390.96000000000004
+    ]
+   ],
+   "size": [
+    4480,
+    1440
+   ],
+   "canvas": [
+    [
+     0,
+     180,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     2560,
+     1440
+    ]
+   ]
+  },
+  {
+   "id": "no_physical_sizes|physical_bezel15",
+   "config": "no_physical_sizes",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     521.2800000000001,
+     293.22
+    ],
+    [
+     536.2800000000001,
+     -48.870000000000005,
+     695.0400000000001,
+     390.96000000000004
+    ]
+   ],
+   "size": [
+    4536,
+    1440
+   ],
+   "canvas": [
+    [
+     0,
+     180,
+     1920,
+     1080
+    ],
+    [
+     1975,
+     0,
+     2560,
+     1440
+    ]
+   ]
+  },
+  {
+   "id": "single_1440p|pixels",
+   "config": "single_1440p",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ]
+   ],
+   "size": [
+    2560,
+    1440
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1440
+    ]
+   ]
+  },
+  {
+   "id": "single_1440p|physical_bezel0",
+   "config": "single_1440p",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ]
+   ],
+   "size": [
+    2560,
+    1441
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1441
+    ]
+   ]
+  },
+  {
+   "id": "single_1440p|physical_bezel15",
+   "config": "single_1440p",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ]
+   ],
+   "size": [
+    2560,
+    1441
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1441
+    ]
+   ]
+  },
+  {
+   "id": "portrait_beside_landscape|pixels",
+   "config": "portrait_beside_landscape",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": -420,
+     "width": 1080,
+     "height": 1920,
+     "width_mm": 298,
+     "height_mm": 530,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     -117.0,
+     298.0,
+     530.0
+    ]
+   ],
+   "size": [
+    3000,
+    1920
+   ],
+   "canvas": [
+    [
+     0,
+     420,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     1080,
+     1920
+    ]
+   ]
+  },
+  {
+   "id": "portrait_beside_landscape|physical_bezel0",
+   "config": "portrait_beside_landscape",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": -420,
+     "width": 1080,
+     "height": 1920,
+     "width_mm": 298,
+     "height_mm": 530,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     -117.0,
+     298.0,
+     530.0
+    ]
+   ],
+   "size": [
+    3006,
+    1931
+   ],
+   "canvas": [
+    [
+     0,
+     426,
+     1920,
+     1079
+    ],
+    [
+     1920,
+     0,
+     1086,
+     1931
+    ]
+   ]
+  },
+  {
+   "id": "portrait_beside_landscape|physical_bezel15",
+   "config": "portrait_beside_landscape",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": -420,
+     "width": 1080,
+     "height": 1920,
+     "width_mm": 298,
+     "height_mm": 530,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     542.0,
+     -117.0,
+     298.0,
+     530.0
+    ]
+   ],
+   "size": [
+    3061,
+    1931
+   ],
+   "canvas": [
+    [
+     0,
+     426,
+     1920,
+     1079
+    ],
+    [
+     1975,
+     0,
+     1085,
+     1931
+    ]
+   ]
+  },
+  {
+   "id": "quad_2x2|pixels",
+   "config": "quad_2x2",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY4",
+     "x": 1920,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     296.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     296.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3840,
+    2160
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1080
+    ],
+    [
+     0,
+     1080,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     1080,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "quad_2x2|physical_bezel0",
+   "config": "quad_2x2",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY4",
+     "x": 1920,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     296.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     296.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3840,
+    2157
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     1078,
+     1920,
+     1079
+    ],
+    [
+     1920,
+     1078,
+     1920,
+     1079
+    ]
+   ]
+  },
+  {
+   "id": "quad_2x2|physical_bezel15",
+   "config": "quad_2x2",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY4",
+     "x": 1920,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     542.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     311.0,
+     527.0,
+     296.0
+    ],
+    [
+     542.0,
+     311.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3895,
+    2212
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     1975,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     1133,
+     1920,
+     1078
+    ],
+    [
+     1975,
+     1133,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "primary_in_the_middle|pixels",
+   "config": "primary_in_the_middle",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -2560,
+     "y": -200,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 100,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     -597.0,
+     -18.5,
+     597.0,
+     336.0
+    ],
+    [
+     0.0,
+     0.0,
+     531.0,
+     299.0
+    ],
+    [
+     531.0,
+     1.5,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    6400,
+    1440
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1440
+    ],
+    [
+     2560,
+     200,
+     1920,
+     1080
+    ],
+    [
+     4480,
+     300,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "primary_in_the_middle|physical_bezel0",
+   "config": "primary_in_the_middle",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -2560,
+     "y": -200,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 100,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     -597.0,
+     -18.5,
+     597.0,
+     336.0
+    ],
+    [
+     0.0,
+     0.0,
+     531.0,
+     299.0
+    ],
+    [
+     531.0,
+     1.5,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    7097,
+    1441
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1441
+    ],
+    [
+     2560,
+     79,
+     2277,
+     1282
+    ],
+    [
+     4837,
+     86,
+     2260,
+     1269
+    ]
+   ]
+  },
+  {
+   "id": "primary_in_the_middle|physical_bezel15",
+   "config": "primary_in_the_middle",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -2560,
+     "y": -200,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 100,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     -612.0,
+     -18.5,
+     597.0,
+     336.0
+    ],
+    [
+     0.0,
+     0.0,
+     531.0,
+     299.0
+    ],
+    [
+     546.0,
+     1.5,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    7226,
+    1441
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     2560,
+     1441
+    ],
+    [
+     2624,
+     79,
+     2277,
+     1282
+    ],
+    [
+     4966,
+     86,
+     2259,
+     1269
+    ]
+   ]
+  },
+  {
+   "id": "adjacent_with_2px_tolerance|pixels",
+   "config": "adjacent_with_2px_tolerance",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1922,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3842,
+    1080
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     1922,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "adjacent_with_2px_tolerance|physical_bezel0",
+   "config": "adjacent_with_2px_tolerance",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1922,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3840,
+    1079
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "adjacent_with_2px_tolerance|physical_bezel15",
+   "config": "adjacent_with_2px_tolerance",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1922,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     542.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    3895,
+    1079
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     1975,
+     0,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "mirrored_same_rect|pixels",
+   "config": "mirrored_same_rect",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    1920,
+    1080
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     0,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "mirrored_same_rect|physical_bezel0",
+   "config": "mirrored_same_rect",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    1920,
+    1079
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     0,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "mirrored_same_rect|physical_bezel15",
+   "config": "mirrored_same_rect",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ]
+   ],
+   "size": [
+    1920,
+    1079
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1078
+    ],
+    [
+     0,
+     0,
+     1920,
+     1078
+    ]
+   ]
+  },
+  {
+   "id": "mixed_density_4k_and_1080p|pixels",
+   "config": "mixed_density_4k_and_1080p",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 3840,
+     "height": 2160,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ],
+    [
+     597.0,
+     18.5,
+     531.0,
+     299.0
+    ]
+   ],
+   "size": [
+    5760,
+    2160
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     3840,
+     2160
+    ],
+    [
+     3840,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "mixed_density_4k_and_1080p|physical_bezel0",
+   "config": "mixed_density_4k_and_1080p",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 3840,
+     "height": 2160,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ],
+    [
+     597.0,
+     18.5,
+     531.0,
+     299.0
+    ]
+   ],
+   "size": [
+    7256,
+    2162
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     3840,
+     2161
+    ],
+    [
+     3840,
+     119,
+     3415,
+     1923
+    ]
+   ]
+  },
+  {
+   "id": "mixed_density_4k_and_1080p|physical_bezel15",
+   "config": "mixed_density_4k_and_1080p",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 3840,
+     "height": 2160,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     597.0,
+     336.0
+    ],
+    [
+     612.0,
+     18.5,
+     531.0,
+     299.0
+    ]
+   ],
+   "size": [
+    7352,
+    2162
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     3840,
+     2161
+    ],
+    [
+     3936,
+     119,
+     3416,
+     1923
+    ]
+   ]
+  },
+  {
+   "id": "partial_sizes_known|pixels",
+   "config": "partial_sizes_known",
+   "variant": "pixels",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     -0.21875,
+     527.0,
+     296.4375
+    ]
+   ],
+   "size": [
+    3840,
+    1080
+   ],
+   "canvas": [
+    [
+     0,
+     0,
+     1920,
+     1080
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "partial_sizes_known|physical_bezel0",
+   "config": "partial_sizes_known",
+   "variant": "physical_bezel0",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     -0.21875,
+     527.0,
+     296.4375
+    ]
+   ],
+   "size": [
+    3840,
+    1080
+   ],
+   "canvas": [
+    [
+     0,
+     1,
+     1920,
+     1078
+    ],
+    [
+     1920,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "partial_sizes_known|physical_bezel15",
+   "config": "partial_sizes_known",
+   "variant": "physical_bezel15",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 15.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     542.0,
+     -0.21875,
+     527.0,
+     296.4375
+    ]
+   ],
+   "size": [
+    3895,
+    1080
+   ],
+   "canvas": [
+    [
+     0,
+     1,
+     1920,
+     1078
+    ],
+    [
+     1975,
+     0,
+     1920,
+     1080
+    ]
+   ]
+  },
+  {
+   "id": "partial_sizes_known|physical_override_supplies_size",
+   "config": "partial_sizes_known",
+   "variant": "physical_override_supplies_size",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {
+     "DELA0B1#4&33cc44dd&0&UID4353": {
+      "width_mm": 600,
+      "height_mm": 340
+     }
+    }
+   },
+   "physical_positions_mm": [
+    [
+     0.0,
+     0.0,
+     527.0,
+     296.0
+    ],
+    [
+     527.0,
+     -22.0,
+     600.0,
+     340.0
+    ]
+   ],
+   "size": [
+    4106,
+    1239
+   ],
+   "canvas": [
+    [
+     0,
+     80,
+     1920,
+     1079
+    ],
+    [
+     1920,
+     0,
+     2186,
+     1239
+    ]
+   ]
+  },
+  {
+   "id": "empty|pixels",
+   "config": "empty",
+   "variant": "pixels",
+   "monitors": [],
+   "settings": {
+    "enabled": false,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [],
+   "size": [
+    1920,
+    1080
+   ],
+   "canvas": []
+  },
+  {
+   "id": "empty|physical_bezel0",
+   "config": "empty",
+   "variant": "physical_bezel0",
+   "monitors": [],
+   "settings": {
+    "enabled": true,
+    "bezel_mm": 0.0,
+    "overrides": {}
+   },
+   "physical_positions_mm": [],
+   "size": [
+    1920,
+    1080
+   ],
+   "canvas": []
+  }
+ ],
+ "signatures": [
+  {
+   "id": "real_triple",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", -3840, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY3\", -1920, 0, 1920, 1080]]",
+   "signature": "3ac1aad1acbd5baa"
+  },
+  {
+   "id": "pair_27_and_24",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2560,
+     "y": 360,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 2560, 1440], [\"\\\\\\\\.\\\\DISPLAY2\", 2560, 360, 1920, 1080]]",
+   "signature": "33f39ca0ce3a72d4"
+  },
+  {
+   "id": "stacked_two",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": -1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 0, -1080, 1920, 1080]]",
+   "signature": "444446fed3680304"
+  },
+  {
+   "id": "l_shape_three",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 0, 1080, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY3\", 1920, 0, 1920, 1080]]",
+   "signature": "36c5788fbf6e8dd1"
+  },
+  {
+   "id": "not_contiguous",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 2100,
+     "y": 200,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 2100, 200, 1920, 1080]]",
+   "signature": "f5cfbfe5de136455"
+  },
+  {
+   "id": "no_physical_sizes",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 1920, 0, 2560, 1440]]",
+   "signature": "464172e2c0efea5a"
+  },
+  {
+   "id": "single_1440p",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 2560, 1440]]",
+   "signature": "81be8d0dbb86ab69"
+  },
+  {
+   "id": "portrait_beside_landscape",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": -420,
+     "width": 1080,
+     "height": 1920,
+     "width_mm": 298,
+     "height_mm": 530,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 1920, -420, 1080, 1920]]",
+   "signature": "8e216c88fe2d6d3f"
+  },
+  {
+   "id": "quad_2x2",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 0,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    },
+    {
+     "name": "\\\\.\\DISPLAY4",
+     "x": 1920,
+     "y": 1080,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 1920, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY3\", 0, 1080, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY4\", 1920, 1080, 1920, 1080]]",
+   "signature": "418266e7523214a7"
+  },
+  {
+   "id": "primary_in_the_middle",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -2560,
+     "y": -200,
+     "width": 2560,
+     "height": 1440,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": 1920,
+     "y": 100,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", -2560, -200, 2560, 1440], [\"\\\\\\\\.\\\\DISPLAY3\", 1920, 100, 1920, 1080]]",
+   "signature": "e82f9a88be66ef60"
+  },
+  {
+   "id": "adjacent_with_2px_tolerance",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1922,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 1922, 0, 1920, 1080]]",
+   "signature": "525aed8356bd1961"
+  },
+  {
+   "id": "mirrored_same_rect",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 0, 0, 1920, 1080]]",
+   "signature": "93c30b56e7e01a91"
+  },
+  {
+   "id": "mixed_density_4k_and_1080p",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 3840,
+     "height": 2160,
+     "width_mm": 597,
+     "height_mm": 336,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 531,
+     "height_mm": 299,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 3840, 2160], [\"\\\\\\\\.\\\\DISPLAY2\", 3840, 0, 1920, 1080]]",
+   "signature": "36e561086735370e"
+  },
+  {
+   "id": "partial_sizes_known",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 527,
+     "height_mm": 296,
+     "hw_id": "GSM5B7F#4&11aa22bb&0&UID4352"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": "DELA0B1#4&33cc44dd&0&UID4353"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", 1920, 0, 1920, 1080]]",
+   "signature": "f37bc915dca478f8"
+  },
+  {
+   "id": "empty",
+   "monitors": [],
+   "key_json": "[]",
+   "signature": "97d170e1550eee4a"
+  },
+  {
+   "id": "real_triple_reversed_input",
+   "monitors": [
+    {
+     "name": "\\\\.\\DISPLAY1",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4353"
+    },
+    {
+     "name": "\\\\.\\DISPLAY3",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 544,
+     "height_mm": 303,
+     "hw_id": "IVM6132#5&1c8a4f2&0&UID4354"
+    },
+    {
+     "name": "\\\\.\\DISPLAY2",
+     "x": -3840,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": 509,
+     "height_mm": 286,
+     "hw_id": "PHLC069#5&2a9e1f3&0&UID16843008"
+    }
+   ],
+   "key_json": "[[\"\\\\\\\\.\\\\DISPLAY1\", 0, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY2\", -3840, 0, 1920, 1080], [\"\\\\\\\\.\\\\DISPLAY3\", -1920, 0, 1920, 1080]]",
+   "signature": "3ac1aad1acbd5baa"
+  },
+  {
+   "id": "unicode_names",
+   "monitors": [
+    {
+     "name": "Écran é",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "日本語",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "key_json": "[[\"\\u00c9cran \\u00e9\", 0, 0, 1920, 1080], [\"\\u65e5\\u672c\\u8a9e\", 1920, 0, 1920, 1080]]",
+   "signature": "e6fc1bc54ecea826"
+  },
+  {
+   "id": "sort_by_code_point_bmp_vs_astral",
+   "monitors": [
+    {
+     "name": "🖥",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "ｱ",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "key_json": "[[\"\\uff71\", 0, 0, 1920, 1080], [\"\\ud83d\\udda5\", 0, 0, 1920, 1080]]",
+   "signature": "a12ecbec95b160c1"
+  },
+  {
+   "id": "same_name_sorted_by_coordinates",
+   "monitors": [
+    {
+     "name": "M",
+     "x": 1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "M",
+     "x": -1920,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    },
+    {
+     "name": "M",
+     "x": 0,
+     "y": 0,
+     "width": 1920,
+     "height": 1080,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "key_json": "[[\"M\", -1920, 0, 1920, 1080], [\"M\", 0, 0, 1920, 1080], [\"M\", 1920, 0, 1920, 1080]]",
+   "signature": "f9effc09a104716f"
+  },
+  {
+   "id": "name_missing_key",
+   "monitors": [
+    {
+     "x": 0,
+     "y": 0,
+     "width": 800,
+     "height": 600
+    }
+   ],
+   "key_json": "[[\"\", 0, 0, 800, 600]]",
+   "signature": "18fa606a91bbc206"
+  },
+  {
+   "id": "quote_and_backslash_in_name",
+   "monitors": [
+    {
+     "name": "a\"b\\c'd\n",
+     "x": 0,
+     "y": 0,
+     "width": 1,
+     "height": 1,
+     "width_mm": null,
+     "height_mm": null,
+     "hw_id": null
+    }
+   ],
+   "key_json": "[[\"a\\\"b\\\\c'd\\n\", 0, 0, 1, 1]]",
+   "signature": "60d5c58ef52292dc"
+  }
+ ]
+}
