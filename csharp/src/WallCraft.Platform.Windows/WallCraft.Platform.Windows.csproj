@@ -1,13 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- Intégration Windows : fond d'écran (COM), EDID, surveillance des écrans, démarrage auto, visages, rendu HD. -->
+  <!--
+    Intégration Windows sans projection WinRT : fond d'écran (COM IDesktopWallpaper), écrans et EDID,
+    mode « Étendre », démarrage automatique. Cible net10.0 (API marquées SupportedOSPlatform("windows"))
+    pour se compiler aussi sous Linux sans paquet NuGet. Ce qui demande le SDK Windows (visages, Win2D)
+    vit dans l'application.
+  -->
   <PropertyGroup>
-    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
-    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>WallCraft.Platform.Windows</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\WallCraft.Core\WallCraft.Core.csproj" />
+    <AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatformAttribute">
+      <_Parameter1>windows</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 </Project>
