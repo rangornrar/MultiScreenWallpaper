@@ -142,7 +142,7 @@ class PhysicalDialog(_Dialog):
                 "height_mm": tk.StringVar(value=f"{h:.0f}" if h else ""),
                 "offset_y_mm": tk.StringVar(value=f"{o.get('offset_y_mm', 0):g}"),
             }
-            self.label(self.win, m.get("name", f"#{i + 1}").replace("\\\\.\\", ""), r, 0)
+            self.label(self.win, app.monitor_label(m), r, 0)
             self.label(self.win, f"{m['width']} × {m['height']}", r, 1)
             self.entry(self.win, vars_["width_mm"], r, 2)
             self.entry(self.win, vars_["height_mm"], r, 3)

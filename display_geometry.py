@@ -240,3 +240,79 @@ def save_settings(data):
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
     os.replace(tmp, path)
+
+
+# --- Noms lisibles des écrans ---
+
+# Codes fabricant PNP (3 lettres en tête de l'identifiant matériel) les plus courants.
+VENDORS = {
+    "ACR": "Acer", "AOC": "AOC", "APP": "Apple", "AUO": "AUO", "AUS": "ASUS", "BNQ": "BenQ", "BOE": "BOE",
+    "CMN": "Innolux", "DEL": "Dell", "EIZ": "EIZO", "ENC": "EIZO", "GBT": "Gigabyte", "GSM": "LG", "HKC": "HKC",
+    "HPN": "HP", "HWP": "HP", "IVM": "iiyama", "KOS": "KOORUI", "LEN": "Lenovo", "LGD": "LG", "MEI": "Panasonic",
+    "MSI": "MSI", "NEC": "NEC", "PHL": "Philips", "SAM": "Samsung", "SDC": "Samsung", "SHP": "Sharp",
+    "SNY": "Sony", "VSC": "ViewSonic", "XMI": "Xiaomi",
+}
+
+
+def monitor_vendor(m):
+    hw = m.get("hw_id") or ""
+    code = hw[:3].upper() if "#" in hw else ""
+    return VENDORS.get(code, code) if code.isalpha() else ""
+
+
+def _format_inches(width_mm, height_mm, decimal=","):
+    d = round(diagonal_inches(width_mm, height_mm), 1)
+    text = f"{d:.0f}" if d == int(d) else f"{d:.1f}".replace(".", decimal)
+    return text + "″"
+
+
+def monitor_labels(monitors, words, decimal=","):
+    """
+    Noms lisibles, dans l'ordre de `monitors` : « Gauche · Philips 23″ ».
+    words = {"left", "center", "right", "top", "bottom", "screen"} (« Écran {} »).
+    Les écrans sont nommés de gauche à droite (ou de haut en bas s'ils sont empilés), sinon numérotés.
+    """
+    def rect(m):
+        return m.get("canvas") or (m["x"], m["y"], m["width"], m["height"])
+
+    order = sorted(range(len(monitors)), key=lambda i: (rect(monitors[i])[0], rect(monitors[i])[1]))
+    rects = [rect(monitors[i]) for i in order]
+    in_row = all(rects[k][0] + rects[k][2] <= rects[k + 1][0] + 1 for k in range(len(rects) - 1))
+    order_v = sorted(range(len(monitors)), key=lambda i: (rect(monitors[i])[1], rect(monitors[i])[0]))
+    rects_v = [rect(monitors[i]) for i in order_v]
+    in_col = all(rects_v[k][1] + rects_v[k][3] <= rects_v[k + 1][1] + 1 for k in range(len(rects_v) - 1))
+
+    positions = {}
+    n = len(monitors)
+    if n >= 2 and n <= 3 and in_row:
+        names = [words["left"], words["right"]] if n == 2 else [words["left"], words["center"], words["right"]]
+        positions = {i: names[k] for k, i in enumerate(order)}
+    elif n == 2 and in_col:
+        positions = {order_v[0]: words["top"], order_v[1]: words["bottom"]}
+    elif n > 1:
+        positions = {i: words["screen"].format(k + 1) for k, i in enumerate(order)}
+
+    labels = []
+    for i, m in enumerate(monitors):
+        parts = []
+        vendor = monitor_vendor(m)
+        size = _format_inches(m["width_mm"], m["height_mm"], decimal) if m.get("width_mm") and m.get("height_mm") else ""
+        detail = " ".join(p for p in (vendor, size) if p) or f"{m['width']} × {m['height']}"
+        if i in positions:
+            parts.append(positions[i])
+        parts.append(detail)
+        labels.append(" · ".join(parts))
+    return labels
+
+
+def upscale_factor(img):
+    """
+    Agrandissement subi par l'image dans la composition : 1 = pixel pour pixel, 2,5 = étirée 2,5 fois.
+    `img` est une LoadedImage (taille d'origine, rotation, rognage, taille affichée w × h).
+    """
+    ow, oh = img.original_size
+    if (img.angle % 180) == 90:
+        ow, oh = oh, ow
+    cl, ct, cr, cb = img.crop_box_norm
+    src_w, src_h = max(1.0, ow * (cr - cl)), max(1.0, oh * (cb - ct))
+    return max(img.w / src_w, img.h / src_h)

@@ -15,7 +15,7 @@ from image_tools import (
     image_to_project_entry, save_project_json, load_project_json,
 )
 from screen_splitter import split_wallpaper_by_monitors
-from display_geometry import PhysicalSettings, load_settings
+from display_geometry import PhysicalSettings, load_settings, monitor_labels, upscale_factor
 from services import ConfigStore, render_and_apply
 from dialogs import AdjustDialog, VariantsDialog
 from ui_automation import AutomationMixin
@@ -25,6 +25,7 @@ from locales import tr
 from ui_text import UI_TEXT
 
 SNAP_DIST = 25
+LOWRES_THRESHOLD = 1.3  # au-delà, l'image est visiblement floue sur l'écran
 MIN_CROP = 0.05
 
 
@@ -85,9 +86,10 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
             "accent_line": "#d9e7ff",
             "text": "#f7f9fd",
             "text_dim": "#b1bfd3",
-            "text_muted": "#7d8ca3",
+            "text_muted": "#9aa9bf",  # contraste ≥ 6:1 sur tous les fonds de panneau
             "success": "#78d4a0",
             "danger": "#ff8a80",
+            "warning": "#ffc46e",
             "border": "#314056",
             "border_soft": "#243246",
             "monitor": "#9ecbff",
@@ -102,6 +104,7 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
 
         self.root.bind("<Control-z>", lambda e: self.cmd_undo())
         self.root.bind("<Control-y>", lambda e: self.cmd_redo())
+        self.root.bind("<Control-n>", lambda e: self.cmd_new_project())
         self.root.bind("<Control-o>", lambda e: self.cmd_open_project())
         self.root.bind("<Control-s>", lambda e: self.cmd_save_project())
         self.root.bind("<Control-e>", lambda e: self.cmd_export_image())
@@ -124,6 +127,11 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         menubar.add_cascade(menu=self.menu_file, label="")
         menubar.add_cascade(menu=self.menu_image, label="")
         menubar.add_cascade(menu=self.menu_screens, label="")
+        self.menu_lang = tk.Menu(menubar, tearoff=False)
+        menubar.add_cascade(menu=self.menu_lang, label="")
+        self.lang_var = tk.StringVar(value=locales.get_current_language())
+        for code, name in locales.LANGUAGES.items():
+            self.menu_lang.add_radiobutton(label=name, value=code, variable=self.lang_var, command=self.on_lang_changed)
         self.menubar = menubar
         self.root.config(menu=menubar)
 
@@ -131,6 +139,7 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         self.menubar.entryconfigure(0, label=self._u("menu_file"))
         self.menubar.entryconfigure(1, label=self._u("menu_image"))
         self.menubar.entryconfigure(2, label=self._u("menu_screens"))
+        self.menubar.entryconfigure(3, label=self._u("menu_language"))
         sc = self.menu_screens
         sc.delete(0, tk.END)
         sc.add_command(label=self._u("menu_physical"), command=self.cmd_physical)
@@ -139,7 +148,7 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         sc.add_command(label=self._u("menu_reload_screens"), command=lambda: self._on_monitors_changed(force=True))
         f = self.menu_file
         f.delete(0, tk.END)
-        f.add_command(label=self._u("btn_new_project"), command=self.cmd_new_project)
+        f.add_command(label=self._u("btn_new_project"), accelerator="Ctrl+N", command=self.cmd_new_project)
         f.add_command(label=self._u("menu_open"), accelerator="Ctrl+O", command=self.cmd_open_project)
         f.add_command(label=self._u("menu_save"), accelerator="Ctrl+S", command=self.cmd_save_project)
         f.add_separator()
@@ -197,6 +206,10 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
             )
             return
 
+        if variant == "danger":
+            self._style_danger(button)
+            return
+
         if variant == "tonal":
             bg = self.colors["accent_soft"] if active else self.colors["panel_alt"]
             fg = self.colors["accent_line"] if active else self.colors["text"]
@@ -226,6 +239,11 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
             relief="flat",
         )
 
+    def _style_danger(self, button):
+        button.config(bg=self.colors["panel"], fg=self.colors["danger"], activebackground="#3a1f26",
+                      activeforeground=self.colors["danger"], highlightthickness=1, highlightbackground="#5a2f36",
+                      highlightcolor="#5a2f36", bd=0, relief="flat")
+
     def _make_contained_preview(self, img, width, height, bg_hex=None):
         bg_hex = bg_hex or self.colors["thumb"]
         im_rot = img.display_image.rotate(img.angle, expand=True, resample=Image.Resampling.NEAREST)
@@ -249,9 +267,10 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
 
     def _setup_ui(self):
         self.status_var = tk.StringVar(value=tr("status_ready"))
+        self.view_mode = "compose"  # "compose" (édition) ou "preview" (aperçu sur les écrans)
         self._build_menu()
         self.root.configure(bg=self.colors["bg"])
-        self.root.minsize(1220, 790)
+        self.root.minsize(1100, 700)
 
         style = ttk.Style(self.root)
         style.theme_use("clam")
@@ -265,160 +284,102 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
             lightcolor=self.colors["border"],
             darkcolor=self.colors["border"],
             insertcolor=self.colors["text"],
-            padding=8,
+            padding=6,
         )
         style.map(
             "WallCraft.TCombobox",
             fieldbackground=[("readonly", self.colors["panel_alt"])],
             foreground=[("readonly", self.colors["text"])],
         )
-        outlined_button = {
-            "font": ("Segoe UI Semibold", 9),
-            "padx": 10,
-            "pady": 9,
-            "cursor": "hand2",
-            "disabledforeground": self.colors["text_muted"],
-        }
-        tonal_button = {
-            "font": ("Segoe UI Semibold", 9),
-            "padx": 9,
-            "pady": 9,
-            "cursor": "hand2",
-            "disabledforeground": self.colors["text_muted"],
-        }
+        button_font = ("Segoe UI Semibold", 9)
+        button = {"font": button_font, "padx": 12, "pady": 7, "cursor": "hand2", "disabledforeground": self.colors["text_muted"]}
+        segment = {"font": button_font, "padx": 12, "pady": 5, "cursor": "hand2", "disabledforeground": self.colors["text_muted"]}
+        caption = {"fg": self.colors["text_muted"], "font": ("Segoe UI", 9)}
 
         self._layout_ids = ["layout_mosaic", "layout_lines", "layout_grid", "layout_v_strip", "layout_h_strip", "layout_optimal"]
 
         shell = tk.Frame(self.root, bg=self.colors["bg"])
-        shell.pack(fill=tk.BOTH, expand=True, padx=18, pady=18)
+        shell.pack(fill=tk.BOTH, expand=True, padx=12, pady=(10, 0))
 
+        # --- Barre d'outils : une seule ligne (projet | disposition | appliquer) ---
         topbar = self._make_card(shell, "surface")
-        topbar.pack(fill=tk.X, pady=(0, 14))
+        topbar.pack(fill=tk.X, pady=(0, 10))
+        bar = tk.Frame(topbar, bg=self.colors["surface"])
+        bar.pack(fill=tk.X, padx=10, pady=8)
+        self.toolbar = bar
+        self.btn_apply = tk.Button(bar, command=self.cmd_apply_wallpaper, font=("Segoe UI Semibold", 10), padx=18, pady=7, cursor="hand2")
+        self.btn_apply.pack(side=tk.RIGHT, padx=(10, 0))
 
-        header_top = tk.Frame(topbar, bg=self.colors["surface"])
-        header_top.pack(fill=tk.X, padx=18, pady=(16, 10))
+        # « Nouveau projet » reste dans le menu Fichier (Ctrl+N) : la barre garde les actions fréquentes.
+        self.btn_new = tk.Button(bar, command=self.cmd_new_project, **button)
+        self.btn_add = tk.Button(bar, command=self.cmd_add_images, **button)
+        self.btn_add.pack(side=tk.LEFT, padx=(0, 6))
+        self._separator(bar)
 
-        brand = tk.Frame(header_top, bg=self.colors["surface"])
-        self.lbl_title = tk.Label(brand, text=tr("app_title"), font=("Segoe UI Semibold", 22), bg=self.colors["surface"], fg=self.colors["text"])
-        self.lbl_title.pack(anchor="w")
-        self.lbl_sub = tk.Label(brand, text="", font=("Segoe UI", 9), bg=self.colors["surface"], fg=self.colors["text_dim"])
-        self.lbl_sub.pack(anchor="w", pady=(5, 0))
+        self.lbl_layout_tag = tk.Label(bar, bg=self.colors["surface"], **caption)
+        self.lbl_layout_tag.pack(side=tk.LEFT, padx=(0, 6))
+        self.combo_layout = ttk.Combobox(bar, state="readonly", width=19, style="WallCraft.TCombobox")
+        self.combo_layout.pack(side=tk.LEFT, padx=(0, 6))
+        self.btn_auto = tk.Button(bar, command=self.cmd_autofill, **button)
+        self.btn_auto.pack(side=tk.LEFT, padx=(0, 6))
+        self.btn_variants = tk.Button(bar, command=self.cmd_variants, **button)
+        self.btn_variants.pack(side=tk.LEFT, padx=(0, 6))
+        self._separator(bar)
 
-        tag_style = {"fg": self.colors["text_muted"], "font": ("Segoe UI", 8, "bold")}
+        self.lbl_fit_tag = tk.Label(bar, bg=self.colors["surface"], **caption)
+        self.lbl_fit_tag.pack(side=tk.LEFT, padx=(0, 6))
+        fit_seg = self._segment_frame(bar)
+        fit_seg.pack(side=tk.LEFT)
+        self.btn_fit = tk.Button(fit_seg, command=lambda: self._set_fill(False), **segment)
+        self.btn_fit.pack(side=tk.LEFT)
+        self.btn_fill = tk.Button(fit_seg, command=lambda: self._set_fill(True), **segment)
+        self.btn_fill.pack(side=tk.LEFT)
+        self._fill = bool(self.settings.get("fill"))
 
-        toolbar = tk.Frame(topbar, bg=self.colors["surface"])
-        toolbar.pack(fill=tk.X, padx=18, pady=(0, 16))
 
-        lang_card = self._make_card(toolbar, "panel_alt", "border_soft")
-        lang_card.pack(side=tk.LEFT, padx=(0, 8))
-        lang_inner = tk.Frame(lang_card, bg=self.colors["panel_alt"])
-        lang_inner.pack(padx=12, pady=10)
-        self.lbl_lang_tag = tk.Label(lang_inner, bg=self.colors["panel_alt"], **tag_style)
-        self.lbl_lang_tag.pack(anchor="w")
-        self.combo_lang = ttk.Combobox(lang_inner, values=list(locales.LANGUAGES.values()), state="readonly", width=10, style="WallCraft.TCombobox")
-        current_lang = locales.get_current_language()
-        lang_keys = list(locales.LANGUAGES.keys())
-        idx = lang_keys.index(current_lang) if current_lang in lang_keys else 0
-        self.combo_lang.current(idx)
-        self.combo_lang.pack(fill=tk.X, pady=(6, 0))
-        self.combo_lang.bind("<<ComboboxSelected>>", self.on_lang_changed)
-
-        project_group = self._make_card(toolbar, "panel_alt", "border_soft")
-        project_group.pack(side=tk.LEFT, padx=(0, 8))
-        project_inner = tk.Frame(project_group, bg=self.colors["panel_alt"])
-        project_inner.pack(padx=12, pady=10)
-        self.lbl_project_tag = tk.Label(project_inner, bg=self.colors["panel_alt"], **tag_style)
-        self.lbl_project_tag.pack(anchor="w")
-        project_actions = tk.Frame(project_inner, bg=self.colors["panel_alt"])
-        project_actions.pack(fill=tk.X, pady=(8, 0))
-        self.btn_new = tk.Button(project_actions, command=self.cmd_new_project, **outlined_button)
-        self.btn_new.pack(side=tk.LEFT, padx=(0, 8))
-        self.btn_add = tk.Button(project_actions, command=self.cmd_add_images, **outlined_button)
-        self.btn_add.pack(side=tk.LEFT, padx=(0, 8))
-        self.btn_auto = tk.Button(project_actions, command=self.cmd_autofill, **outlined_button)
-        self.btn_auto.pack(side=tk.LEFT)
-
-        layout_group = self._make_card(toolbar, "panel_alt", "border_soft")
-        layout_group.pack(side=tk.LEFT, padx=(0, 8))
-        layout_inner = tk.Frame(layout_group, bg=self.colors["panel_alt"])
-        layout_inner.pack(padx=12, pady=10)
-        self.lbl_layout_tag = tk.Label(layout_inner, bg=self.colors["panel_alt"], **tag_style)
-        self.lbl_layout_tag.pack(anchor="w")
-        self.combo_layout = ttk.Combobox(layout_inner, state="readonly", width=20, style="WallCraft.TCombobox")
-        self.combo_layout.pack(fill=tk.X, pady=(6, 0))
-        layout_options = tk.Frame(layout_inner, bg=self.colors["panel_alt"])
-        layout_options.pack(fill=tk.X, pady=(6, 0))
-        self.combo_fill = ttk.Combobox(layout_options, state="readonly", width=9, style="WallCraft.TCombobox")
-        self.combo_fill.pack(side=tk.LEFT)
-        self.combo_fill.bind("<<ComboboxSelected>>", self._on_fill_changed)
-        self.btn_variants = tk.Button(layout_options, command=self.cmd_variants, font=("Segoe UI Semibold", 9),
-                                      padx=8, pady=3, relief="flat", bd=0, cursor="hand2")
-        self.btn_variants.pack(side=tk.LEFT, padx=(6, 0))
-
-        mode_group_card = self._make_card(toolbar, "panel_alt", "border_soft")
-        mode_group_card.pack(side=tk.LEFT, padx=(0, 10))
-        mode_group = tk.Frame(mode_group_card, bg=self.colors["panel_alt"])
-        mode_group.pack(padx=12, pady=10)
-        self.lbl_mode_tag = tk.Label(mode_group, bg=self.colors["panel_alt"], **tag_style)
-        self.lbl_mode_tag.pack(anchor="w")
-        mode_actions = tk.Frame(mode_group, bg=self.colors["panel_alt"])
-        mode_actions.pack(fill=tk.X, pady=(8, 0))
-        self.btn_mode_move = tk.Button(mode_actions, command=lambda: self.set_mode("move"), **tonal_button)
-        self.btn_mode_move.pack(side=tk.LEFT, padx=(0, 6))
-        self.btn_mode_scale = tk.Button(mode_actions, command=lambda: self.set_mode("scale"), **tonal_button)
-        self.btn_mode_scale.pack(side=tk.LEFT, padx=(0, 6))
-        self.btn_mode_crop = tk.Button(mode_actions, command=lambda: self.set_mode("crop"), **tonal_button)
-        self.btn_mode_crop.pack(side=tk.LEFT)
-
-        self.btn_apply = tk.Button(
-            header_top,
-            command=self.cmd_apply_wallpaper,
-            font=("Segoe UI Semibold", 10),
-            padx=22,
-            pady=12,
-            cursor="hand2",
-        )
-        self.btn_apply.pack(side=tk.RIGHT, anchor="n")
-        brand.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        # --- Barre d'état (bas de fenêtre) ---
+        statusbar = tk.Frame(self.root, bg=self.colors["surface"], highlightthickness=1, highlightbackground=self.colors["border_soft"])
+        statusbar.pack(side=tk.BOTTOM, fill=tk.X, before=shell)
+        self.lbl_status = tk.Label(statusbar, textvariable=self.status_var, bg=self.colors["surface"], fg=self.colors["accent_line"],
+                                   font=("Segoe UI Semibold", 9), padx=12, pady=5)
+        self.lbl_status.pack(side=tk.LEFT)
+        self.btn_kofi = tk.Button(statusbar, command=self.cmd_open_kofi, bg=self.colors["surface"], fg=self.colors["text_muted"],
+                                  activebackground=self.colors["surface"], activeforeground=self.colors["accent"], bd=0, relief="flat",
+                                  highlightthickness=0, font=("Segoe UI", 9), cursor="hand2", padx=12)
+        self.btn_kofi.pack(side=tk.RIGHT)
+        self.lbl_sub = tk.Label(statusbar, bg=self.colors["surface"], fg=self.colors["text_dim"], font=("Segoe UI", 9), padx=8)
+        self.lbl_sub.pack(side=tk.RIGHT)
+        # Packé en dernier : c'est ce texte qui est coupé si la fenêtre est étroite, pas les infos à droite.
+        self.lbl_selection = tk.Label(statusbar, bg=self.colors["surface"], fg=self.colors["text_dim"], font=("Segoe UI", 9), anchor="w")
+        self.lbl_selection.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(8, 8))
 
         content = tk.Frame(shell, bg=self.colors["bg"])
-        content.pack(fill=tk.BOTH, expand=True)
-        content.grid_columnconfigure(0, weight=0, minsize=272)
+        content.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
+        content.grid_columnconfigure(0, weight=0, minsize=260)
         content.grid_columnconfigure(1, weight=1)
         content.grid_rowconfigure(0, weight=1)
 
-        left = tk.Frame(content, bg=self.colors["bg"], width=272)
-        left.grid(row=0, column=0, sticky="nsew", padx=(0, 12))
+        left = tk.Frame(content, bg=self.colors["bg"], width=260)
+        left.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
         left.grid_propagate(False)
-
         center = tk.Frame(content, bg=self.colors["bg"])
         center.grid(row=0, column=1, sticky="nsew")
-        center.grid_rowconfigure(0, weight=5)
-        center.grid_rowconfigure(1, weight=3)
-        center.grid_columnconfigure(0, weight=1)
 
+        # --- Bibliothèque : liste compacte ---
         library_card = self._make_card(left)
         library_card.pack(fill=tk.BOTH, expand=True)
         lib_header = tk.Frame(library_card, bg=self.colors["panel"])
-        lib_header.pack(fill=tk.X, padx=18, pady=(18, 12))
-        self.lbl_library_title = tk.Label(lib_header, bg=self.colors["panel"], fg=self.colors["text"], font=("Segoe UI Semibold", 15))
-        self.lbl_library_title.pack(anchor="w")
+        lib_header.pack(fill=tk.X, padx=14, pady=(12, 8))
+        self.lbl_library_title = tk.Label(lib_header, bg=self.colors["panel"], fg=self.colors["text"], font=("Segoe UI Semibold", 12))
+        self.lbl_library_title.pack(side=tk.LEFT)
         self.lbl_library_count = tk.Label(lib_header, bg=self.colors["panel"], fg=self.colors["text_dim"], font=("Segoe UI", 9))
-        self.lbl_library_count.pack(anchor="w", pady=(4, 0))
+        self.lbl_library_count.pack(side=tk.RIGHT)
 
         library_body = tk.Frame(library_card, bg=self.colors["panel"])
         self.library_canvas = tk.Canvas(library_body, bg=self.colors["panel"], bd=0, highlightthickness=0, yscrollincrement=18)
-        library_scroll = tk.Scrollbar(
-            library_body,
-            orient="vertical",
-            command=self.library_canvas.yview,
-            bg=self.colors["panel_alt"],
-            troughcolor=self.colors["panel_soft"],
-            activebackground=self.colors["accent_soft"],
-            highlightthickness=0,
-            bd=0,
-            relief="flat",
-        )
+        library_scroll = tk.Scrollbar(library_body, orient="vertical", command=self.library_canvas.yview, bg=self.colors["panel_alt"],
+                                      troughcolor=self.colors["panel_soft"], activebackground=self.colors["accent_soft"],
+                                      highlightthickness=0, bd=0, relief="flat")
         self.library_canvas.configure(yscrollcommand=library_scroll.set)
         self.library_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         library_scroll.pack(side=tk.RIGHT, fill=tk.Y)
@@ -426,100 +387,75 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         self._library_window = self.library_canvas.create_window((0, 0), window=self.library_inner, anchor="nw")
         self.library_inner.bind("<Configure>", self._on_library_inner_configure)
         self.library_canvas.bind("<Configure>", self._on_library_canvas_configure)
+        for widget in (self.library_canvas, self.library_inner):
+            widget.bind("<MouseWheel>", self._on_library_wheel)
 
         lib_footer = tk.Frame(library_card, bg=self.colors["panel"])
         # Pied packé avant la liste : quand la fenêtre est basse, c'est la liste qui rétrécit, pas les boutons.
-        lib_footer.pack(side=tk.BOTTOM, fill=tk.X, padx=18, pady=(12, 16))
-        library_body.pack(fill=tk.BOTH, expand=True, padx=12)
-        action_row = tk.Frame(lib_footer, bg=self.colors["panel"])
-        action_row.pack(fill=tk.X)
-        self.btn_rem = tk.Button(action_row, command=self.cmd_remove_img, **outlined_button)
-        self.btn_rem.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 6))
-        layer_row = tk.Frame(action_row, bg=self.colors["panel"])
-        layer_row.pack(side=tk.LEFT, fill=tk.X, expand=True)
-        self.btn_layer_back = tk.Button(layer_row, command=self.cmd_layer_backward, **tonal_button)
+        lib_footer.pack(side=tk.BOTTOM, fill=tk.X, padx=12, pady=(8, 12))
+        library_body.pack(fill=tk.BOTH, expand=True, padx=(8, 4))
+        layer_row = tk.Frame(lib_footer, bg=self.colors["panel"])
+        layer_row.pack(fill=tk.X)
+        self.btn_layer_back = tk.Button(layer_row, command=self.cmd_layer_backward, **button)
         self.btn_layer_back.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 6))
-        self.btn_layer_front = tk.Button(layer_row, command=self.cmd_layer_forward, **tonal_button)
+        self.btn_layer_front = tk.Button(layer_row, command=self.cmd_layer_forward, **button)
         self.btn_layer_front.pack(side=tk.LEFT, fill=tk.X, expand=True)
         edit_row = tk.Frame(lib_footer, bg=self.colors["panel"])
-        edit_row.pack(fill=tk.X, pady=(8, 0))
-        self.btn_rotate = tk.Button(edit_row, command=self.cmd_rotate, **tonal_button)
+        edit_row.pack(fill=tk.X, pady=(6, 0))
+        self.btn_rotate = tk.Button(edit_row, command=self.cmd_rotate, **button)
         self.btn_rotate.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 6))
-        self.btn_adjust = tk.Button(edit_row, command=self.cmd_adjust, **tonal_button)
+        self.btn_adjust = tk.Button(edit_row, command=self.cmd_adjust, **button)
         self.btn_adjust.pack(side=tk.LEFT, fill=tk.X, expand=True)
-        self.chk_monitors = tk.Checkbutton(
-            lib_footer,
-            variable=self.show_monitors,
-            command=self._refresh_canvas,
-            indicatoron=False,
-            bg=self.colors["panel_alt"],
-            fg=self.colors["text_dim"],
-            activebackground=self.colors["panel_alt"],
-            activeforeground=self.colors["text"],
-            selectcolor=self.colors["panel_alt"],
-            relief="flat",
-            bd=0,
-            highlightthickness=1,
-            highlightbackground=self.colors["border"],
-            highlightcolor=self.colors["border"],
-            font=("Segoe UI Semibold", 10),
-            padx=12,
-            pady=10,
-            cursor="hand2",
-        )
-        self.chk_monitors.pack(fill=tk.X, pady=(10, 10))
-        status_row = tk.Frame(lib_footer, bg=self.colors["panel"])
-        status_row.pack(fill=tk.X)
-        self.lbl_status = tk.Label(status_row, textvariable=self.status_var, bg=self.colors["accent_soft"], fg=self.colors["accent_line"], font=("Segoe UI Semibold", 9), padx=10, pady=6)
-        self.lbl_status.pack(side=tk.LEFT)
-        self.btn_kofi = tk.Button(status_row, command=self.cmd_open_kofi, bg=self.colors["panel"], fg=self.colors["text_muted"], activebackground=self.colors["panel"], activeforeground=self.colors["accent"], bd=0, relief="flat", highlightthickness=0, font=("Segoe UI", 9), cursor="hand2")
-        self.btn_kofi.pack(side=tk.RIGHT)
+        # Action destructive : à part, en bas, et dans la couleur d'alerte.
+        self.btn_rem = tk.Button(lib_footer, command=self.cmd_remove_img, **button)
+        self.btn_rem.pack(fill=tk.X, pady=(14, 0))
 
+        # --- Zone de travail unique : Composition / Aperçu sur les écrans ---
         stage_card = self._make_card(center)
-        stage_card.grid(row=0, column=0, sticky="nsew")
+        stage_card.pack(fill=tk.BOTH, expand=True)
         stage_header = tk.Frame(stage_card, bg=self.colors["panel"])
-        stage_header.pack(fill=tk.X, padx=16, pady=(16, 10))
-        stage_titles = tk.Frame(stage_header, bg=self.colors["panel"])
-        self.lbl_stage_title = tk.Label(stage_titles, bg=self.colors["panel"], fg=self.colors["text"], font=("Segoe UI Semibold", 16))
-        self.lbl_stage_title.pack(anchor="w")
-        self.lbl_stage_sub = tk.Label(stage_titles, bg=self.colors["panel"], fg=self.colors["text_dim"], font=("Segoe UI", 9), anchor="w", justify=tk.LEFT)
-        self.lbl_stage_sub.pack(anchor="w", fill=tk.X, pady=(4, 0))
-        stage_badges = tk.Frame(stage_header, bg=self.colors["panel"])
-        stage_badges.pack(side=tk.RIGHT, anchor="ne")
-        self.lbl_stage_meta = tk.Label(stage_badges, bg=self.colors["accent_soft"], fg=self.colors["accent_line"], font=("Segoe UI Semibold", 9), padx=12, pady=6)
-        self.lbl_stage_meta.pack(anchor="e")
-        self.lbl_stage_hint = tk.Label(stage_badges, bg=self.colors["panel"], fg=self.colors["text_dim"], font=("Segoe UI", 9))
-        self.lbl_stage_hint.pack(anchor="e", pady=(6, 0))
-        stage_titles.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        stage_header.pack(fill=tk.X, padx=10, pady=(10, 8))
 
-        canvas_shell = self._make_card(stage_card, "panel_soft", "border_soft")
-        canvas_shell.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
-        self.canvas = tk.Canvas(canvas_shell, bg=self.colors["canvas_bg"], highlightthickness=0, cursor="crosshair")
-        self.canvas.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        self.stage_header = stage_header
+        self.chk_monitors = tk.Checkbutton(
+            stage_header, variable=self.show_monitors, command=self._refresh_canvas,
+            bg=self.colors["panel"], fg=self.colors["text_dim"], activebackground=self.colors["panel"],
+            activeforeground=self.colors["text"], selectcolor=self.colors["panel_alt"], highlightthickness=0,
+            bd=0, font=("Segoe UI", 9), cursor="hand2",
+        )
+        self.chk_monitors.pack(side=tk.RIGHT)  # packé avant les outils : jamais tronqué
+        view_seg = self._segment_frame(stage_header)
+        view_seg.pack(side=tk.LEFT)
+        self.view_seg = view_seg
+        self.btn_view_compose = tk.Button(view_seg, command=lambda: self.set_view("compose"), **segment)
+        self.btn_view_compose.pack(side=tk.LEFT)
+        self.btn_view_preview = tk.Button(view_seg, command=lambda: self.set_view("preview"), **segment)
+        self.btn_view_preview.pack(side=tk.LEFT)
 
-        output_card = self._make_card(center)
-        output_card.grid(row=1, column=0, sticky="nsew", pady=(14, 0))
-        output_header = tk.Frame(output_card, bg=self.colors["panel"])
-        output_header.pack(fill=tk.X, padx=16, pady=(16, 10))
-        output_titles = tk.Frame(output_header, bg=self.colors["panel"])
-        output_titles.pack(side=tk.LEFT, fill=tk.X, expand=True)
-        self.lbl_output_title = tk.Label(output_titles, bg=self.colors["panel"], fg=self.colors["text"], font=("Segoe UI Semibold", 15))
-        self.lbl_output_title.pack(anchor="w")
-        self.lbl_output_sub = tk.Label(output_titles, bg=self.colors["panel"], fg=self.colors["text_dim"], font=("Segoe UI", 9))
-        self.lbl_output_sub.pack(anchor="w", pady=(4, 0))
-        self.lbl_output_meta = tk.Label(output_header, bg=self.colors["panel_alt"], fg=self.colors["accent_line"], font=("Segoe UI Semibold", 9), padx=12, pady=6)
-        self.lbl_output_meta.pack(side=tk.RIGHT, anchor="ne")
+        self.tools_box = tk.Frame(stage_header, bg=self.colors["panel"])
+        # Pas de libellé « Outil » : les trois boutons se suffisent et la barre reste lisible en allemand à 1100 px.
+        tool_seg = self._segment_frame(self.tools_box)
+        tool_seg.pack(side=tk.LEFT, padx=(14, 0))
+        self.btn_mode_move = tk.Button(tool_seg, command=lambda: self.set_mode("move"), **segment)
+        self.btn_mode_move.pack(side=tk.LEFT)
+        self.btn_mode_scale = tk.Button(tool_seg, command=lambda: self.set_mode("scale"), **segment)
+        self.btn_mode_scale.pack(side=tk.LEFT)
+        self.btn_mode_crop = tk.Button(tool_seg, command=lambda: self.set_mode("crop"), **segment)
+        self.btn_mode_crop.pack(side=tk.LEFT)
+        self.tools_box.pack(side=tk.LEFT)
 
-        sim_shell = self._make_card(output_card, "panel_soft", "border_soft")
-        sim_shell.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
-        self.sim_canvas = tk.Canvas(sim_shell, bg=self.colors["panel_soft"], highlightthickness=0)
-        self.sim_canvas.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        self.lbl_preview_hint = tk.Label(stage_header, bg=self.colors["panel"], fg=self.colors["text_dim"], font=("Segoe UI", 9))
 
-        for button in (self.btn_new, self.btn_add, self.btn_auto, self.btn_rem, self.btn_variants):
-            self._style_button(button, "outlined")
-        for button in (self.btn_mode_move, self.btn_mode_scale, self.btn_mode_crop, self.btn_layer_back, self.btn_layer_front,
-                       self.btn_rotate, self.btn_adjust):
-            self._style_button(button, "tonal")
+        self.stage_shell = tk.Frame(stage_card, bg=self.colors["canvas_bg"])
+        self.stage_shell.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.canvas = tk.Canvas(self.stage_shell, bg=self.colors["canvas_bg"], highlightthickness=0, cursor="crosshair")
+        self.canvas.pack(fill=tk.BOTH, expand=True)
+        self.sim_canvas = tk.Canvas(self.stage_shell, bg=self.colors["panel_soft"], highlightthickness=0)
+
+        for b in (self.btn_new, self.btn_add, self.btn_auto, self.btn_variants, self.btn_layer_back, self.btn_layer_front,
+                  self.btn_rotate, self.btn_adjust):
+            self._style_button(b, "outlined")
+        self._style_button(self.btn_rem, "danger")
         self._style_button(self.btn_apply, "contained")
 
         self._refresh_texts()
@@ -535,7 +471,91 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         self.canvas.bind("<MouseWheel>", self.on_zoom)
         self.canvas.bind("<Button-4>", self.on_zoom)
         self.canvas.bind("<Button-5>", self.on_zoom)
+        self.canvas.bind("<Configure>", self._on_stage_resized)
         self.sim_canvas.bind("<Configure>", lambda e: self._refresh_sim_view())
+
+    def _update_min_width(self):
+        """La fenêtre ne peut pas devenir plus étroite que la barre d'outils (dont la largeur dépend de la langue)."""
+        self.root.update_idletasks()
+        needed = max(self.toolbar.winfo_reqwidth() + 46, 260 + 10 + self.stage_header.winfo_reqwidth() + 56, 1100)
+        self.root.minsize(needed, 700)
+
+    def _separator(self, parent):
+        tk.Frame(parent, bg=self.colors["border"], width=1, height=26).pack(side=tk.LEFT, padx=(4, 10))
+
+    def _segment_frame(self, parent):
+        return tk.Frame(parent, bg=self.colors["border"], padx=1, pady=1)
+
+    def _style_segment(self, button, active):
+        if active:
+            button.config(bg=self.colors["accent"], fg=self.colors["canvas_bg"], activebackground=self.colors["accent_line"],
+                          activeforeground=self.colors["canvas_bg"], relief="flat", bd=0, highlightthickness=0)
+        else:
+            button.config(bg=self.colors["panel_alt"], fg=self.colors["text"], activebackground=self.colors["accent_soft"],
+                          activeforeground=self.colors["text"], relief="flat", bd=0, highlightthickness=0)
+
+    def _on_stage_resized(self, _event=None):
+        # La zone grandit avec la fenêtre : on recadre tant que l'utilisateur n'a pas zoomé lui-même.
+        if not getattr(self, "_user_zoomed", False):
+            self.root.after_idle(self._auto_fit)
+        else:
+            self._refresh_canvas()
+
+    def _on_library_wheel(self, event):
+        self.library_canvas.yview_scroll(-1 if event.delta > 0 else 1, "units")
+
+    def set_view(self, view):
+        if view not in ("compose", "preview") or view == self.view_mode:
+            return
+        self.view_mode = view
+        if view == "preview":
+            self.canvas.pack_forget()
+            self.sim_canvas.pack(fill=tk.BOTH, expand=True)
+            self.tools_box.pack_forget()
+            self.chk_monitors.pack_forget()
+            self.lbl_preview_hint.pack(side=tk.LEFT, padx=(18, 0))
+        else:
+            self.sim_canvas.pack_forget()
+            self.canvas.pack(fill=tk.BOTH, expand=True)
+            self.lbl_preview_hint.pack_forget()
+            self.chk_monitors.pack(side=tk.RIGHT, before=self.view_seg)
+            self.tools_box.pack(side=tk.LEFT, after=self.view_seg)
+        self._refresh_view_buttons()
+        self._refresh_canvas()
+
+    def _refresh_view_buttons(self):
+        self._style_segment(self.btn_view_compose, self.view_mode == "compose")
+        self._style_segment(self.btn_view_preview, self.view_mode == "preview")
+        self._style_segment(self.btn_fit, not self._fill)
+        self._style_segment(self.btn_fill, self._fill)
+
+    def _n(self, key, n):
+        """Texte accordé : _n("n_screens", 1) → « 1 écran », _n("n_screens", 3) → « 3 écrans »."""
+        forms = UI_TEXT[key].get(locales.get_current_language(), UI_TEXT[key]["en"])
+        return forms[0 if n == 1 else 1].format(n)
+
+    def _decimal(self):
+        return "." if locales.get_current_language() == "en" else ","
+
+    def _monitor_label_map(self):
+        """{id(moniteur): « Gauche · Philips 23″ »}, recalculé quand la langue ou les écrans changent."""
+        key = (locales.get_current_language(), tuple((m.get("name"), tuple(m.get("canvas", ()))) for m in self.monitor_layout))
+        if getattr(self, "_labels_key", None) != key:
+            words = {k: self._u("pos_" + k) for k in ("left", "center", "right", "top", "bottom", "screen")}
+            labels = monitor_labels(self.monitor_layout, words, self._decimal())
+            self._labels = {id(m): label for m, label in zip(self.monitor_layout, labels)}
+            self._labels_key = key
+        return self._labels
+
+    def monitor_label(self, m):
+        return self._monitor_label_map().get(id(m), m.get("name", ""))
+
+    def lowres_text(self, img):
+        """« ×2,5 » si l'image est nettement agrandie, sinon None."""
+        factor = upscale_factor(img)
+        if factor < LOWRES_THRESHOLD:
+            return None
+        return f"{factor:.1f}".replace(".", self._decimal())
 
     def _on_library_inner_configure(self, _event=None):
         self.library_canvas.configure(scrollregion=self.library_canvas.bbox("all"))
@@ -549,20 +569,15 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
             self._refresh_library_panel()
             self._refresh_canvas()
 
-    def on_lang_changed(self, event):
-        idx = self.combo_lang.current()
-        if idx >= 0:
-            lang_code = list(locales.LANGUAGES.keys())[idx]
-            locales.set_language(lang_code)
-            self._refresh_texts()
+    def on_lang_changed(self, _event=None):
+        locales.set_language(self.lang_var.get())
+        self._refresh_texts()
+        self._refresh_canvas()
             
     def _refresh_texts(self):
         self.root.title(tr("app_title"))
-        self.lbl_title.config(text=tr("app_title"))
-        self.lbl_lang_tag.config(text=tr("lang_select"))
-        self.lbl_project_tag.config(text=self._u("project_actions"))
         self.lbl_layout_tag.config(text=tr("lbl_layout"))
-        self.lbl_mode_tag.config(text=self._u("edit_mode"))
+        self.lbl_fit_tag.config(text=self._u("lbl_fit"))
 
         idx = self.combo_layout.current()
         new_layouts = [tr(l_id) for l_id in self._layout_ids]
@@ -574,8 +589,8 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         self.btn_add.config(text=tr("btn_add_images"))
         self.btn_auto.config(text=tr("btn_auto_arrange"))
         self.btn_variants.config(text=self._u("btn_variants"))
-        self.combo_fill.config(values=[self._u("fill_fit"), self._u("fill_fill")])
-        self.combo_fill.current(1 if self.settings.get("fill") else 0)
+        self.btn_fit.config(text=self._u("fill_fit"))
+        self.btn_fill.config(text=self._u("fill_fill"))
         self.btn_rem.config(text=tr("btn_remove"))
         self.btn_layer_back.config(text=self._u("btn_layer_back"))
         self.btn_layer_front.config(text=self._u("btn_layer_front"))
@@ -585,16 +600,16 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         self._refresh_menu()
         self.btn_apply.config(text=tr("btn_apply"))
         self.chk_monitors.config(text=tr("chk_show_monitors"))
-
+        self.btn_view_compose.config(text=self._u("view_compose"))
+        self.btn_view_preview.config(text=self._u("view_preview"))
+        self.lbl_preview_hint.config(text=self._u("preview_hint"))
         self.lbl_library_title.config(text=self._u("library_title"))
-        self.lbl_stage_title.config(text=self._u("stage_title"))
-        self.lbl_stage_sub.config(text=self._u("stage_subtitle"))
-        self.lbl_output_title.config(text=self._u("output_title"))
-        self.lbl_output_sub.config(text=self._u("output_subtitle"))
 
         if not self._busy:
             self.status_var.set(tr("status_ready"))
+        self._update_min_width()
         self._refresh_mode_buttons()
+        self._refresh_view_buttons()
         self._refresh_header_summary()
         self._refresh_library_panel()
         self._refresh_inspector_panel()
@@ -607,7 +622,7 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         )
         for mode, button, label in buttons:
             button.config(text=label)
-            self._style_button(button, "tonal", active=self.mode == mode)
+            self._style_segment(button, self.mode == mode)
 
     def _refresh_action_states(self):
         has_selection = self.active_idx is not None and 0 <= self.active_idx < len(self.images)
@@ -623,9 +638,9 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
     def _refresh_header_summary(self):
         screen_count = len(self.monitor_layout) if self.monitor_layout else 0
         self.lbl_sub.config(
-            text=f"{self.target_w} x {self.target_h}  •  {tr('monitors_count', screen_count)}"
+            text=f"{self.target_w} × {self.target_h}  •  {self._n('n_screens', screen_count)}"
                  + (f" ({self._u('physical_badge')})" if self.physical.enabled else "")
-                 + f"  •  {self._u('images_count', len(self.images))}"
+                 + f"  •  {self._n('n_images', len(self.images))}"
         )
 
     def _refresh_library_panel(self):
@@ -633,119 +648,76 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
             child.destroy()
 
         self._library_thumbs = []
-        self.lbl_library_count.config(text=self._u("library_count", len(self.images)))
+        self.lbl_library_count.config(text=self._n("n_images", len(self.images)))
         self._refresh_action_states()
 
         if not self.images:
-            empty = tk.Label(
-                self.library_inner,
-                text=self._u("library_empty"),
-                bg=self.colors["panel"],
-                fg=self.colors["text_muted"],
-                font=("Segoe UI", 10),
-                wraplength=190,
-                justify=tk.LEFT,
-                padx=8,
-                pady=18,
-            )
+            empty = tk.Label(self.library_inner, text=self._u("library_empty"), bg=self.colors["panel"], fg=self.colors["text_muted"],
+                             font=("Segoe UI", 10), wraplength=200, justify=tk.LEFT, padx=8, pady=18)
             empty.pack(fill=tk.X, padx=4, pady=(6, 10))
             return
 
-        thumb_w = max(178, self.library_canvas.winfo_width() - 44)
-        thumb_h = 72
-        for idx, img in enumerate(self.images):
+        thumb_w, thumb_h = 76, 48
+        name_chars = 24
+        # Ordre d'affichage : le calque du dessus en premier, comme dans un logiciel de dessin.
+        for idx in reversed(range(len(self.images))):
+            img = self.images[idx]
             active = idx == self.active_idx
-            bg = self.colors["panel_alt"] if active else self.colors["panel_soft"]
-            border = self.colors["accent"] if active else self.colors["border_soft"]
+            bg = self.colors["accent_soft"] if active else self.colors["panel"]
+            border = self.colors["accent"] if active else self.colors["panel"]
 
-            item = tk.Frame(
-                self.library_inner,
-                bg=bg,
-                highlightthickness=1,
-                highlightbackground=border,
-                highlightcolor=border,
-                bd=0,
-            )
-            item.pack(fill=tk.X, padx=4, pady=(0, 10))
+            item = tk.Frame(self.library_inner, bg=bg, highlightthickness=1, highlightbackground=border, highlightcolor=border, bd=0)
+            item.pack(fill=tk.X, padx=2, pady=(0, 4))
 
             thumb = self._make_contained_preview(img, thumb_w, thumb_h)
             self._library_thumbs.append(thumb)
             thumb_label = tk.Label(item, image=thumb, bg=bg, bd=0)
-            thumb_label.pack(fill=tk.X, padx=10, pady=(10, 8))
+            thumb_label.pack(side=tk.LEFT, padx=(6, 8), pady=6)
 
-            title = tk.Label(
-                item,
-                text=os.path.basename(img.path),
-                bg=bg,
-                fg=self.colors["text"],
-                font=("Segoe UI Semibold", 10),
-                anchor="w",
-                justify=tk.LEFT,
-                wraplength=thumb_w,
-            )
-            title.pack(fill=tk.X, padx=10)
-
+            text = tk.Frame(item, bg=bg)
+            text.pack(side=tk.LEFT, fill=tk.X, expand=True, pady=6)
+            name = os.path.basename(img.path)
+            if len(name) > name_chars:
+                name = name[: name_chars // 2 - 1] + "…" + name[-(name_chars // 2 - 1):]
+            title = tk.Label(text, text=name, bg=bg, fg=self.colors["text"], font=("Segoe UI Semibold", 9), anchor="w")
+            title.pack(fill=tk.X)
             ow, oh = img.original_size
-            meta = tk.Label(
-                item,
-                text=f"{ow} x {oh}px  •  {img.z_index + 1}/{len(self.images)}",
-                bg=bg,
-                fg=self.colors["text_dim"],
-                font=("Segoe UI", 9),
-                anchor="w",
-            )
-            meta.pack(fill=tk.X, padx=10, pady=(2, 0))
+            meta = tk.Label(text, text=f"{ow} × {oh}", bg=bg, fg=self.colors["text_dim"], font=("Segoe UI", 9), anchor="w")
+            meta.pack(fill=tk.X)
+            widgets = [item, thumb_label, text, title, meta]
 
-            badge = tk.Label(
-                item,
-                text=self._u("library_selected") if active else self._u("library_ready"),
-                bg=self.colors["accent_soft"] if active else self.colors["panel"],
-                fg=self.colors["accent_line"] if active else self.colors["text_dim"],
-                font=("Segoe UI Semibold", 8),
-                padx=8,
-                pady=4,
-            )
-            badge.pack(anchor="w", padx=10, pady=(8, 10))
+            low = self.lowres_text(img)
+            if low:
+                warn = tk.Label(text, text="⚠ " + self._u("lowres_badge", low), bg=bg, fg=self.colors["warning"],
+                                font=("Segoe UI Semibold", 8), anchor="w")
+                warn.pack(fill=tk.X, pady=(2, 0))
+                widgets.append(warn)
 
-            for widget in (item, thumb_label, title, meta, badge):
+            for widget in widgets:
                 widget.bind("<Button-1>", lambda _e, i=idx: self._select_image(i))
+                widget.bind("<MouseWheel>", self._on_library_wheel)
 
     def _get_mode_name(self):
         return self._u("mode_" + self.mode)
 
     def _refresh_inspector_panel(self):
-        screen_count = len(self.monitor_layout) if self.monitor_layout else 0
-        layout_name = self.combo_layout.get() if self.combo_layout.get() else tr(self._layout_ids[0])
-        mode_name = self._get_mode_name()
+        img = self._selected()
+        if img is None:
+            self.lbl_selection.config(text=self._u("selection_hint") if self.images else "", fg=self.colors["text_dim"])
+            return
+        name = os.path.basename(img.path)
+        if len(name) > 34:
+            name = f"{name[:16]}…{name[-12:]}"
+        parts = [
+            self._u("selection_summary", name, int(img.w), int(img.h), img.z_index + 1, max(1, len(self.images))),
+            f"{self._u('position')} {int(img.x)}, {int(img.y)}",
+            f"{self._u('crop')} {int((img.crop_box_norm[2] - img.crop_box_norm[0]) * 100)} %",
+        ]
+        low = self.lowres_text(img)
+        if low:
+            parts.append("⚠ " + self._u("lowres_tip", low))
+        self.lbl_selection.config(text="  •  ".join(parts), fg=self.colors["warning"] if low else self.colors["text_dim"])
 
-        if self.active_idx is None or self.active_idx >= len(self.images):
-            self.lbl_stage_meta.config(text=self._u("selection_empty"))
-            self.lbl_stage_hint.config(text=self._u("selection_hint"))
-        else:
-            img = self.images[self.active_idx]
-            name = os.path.basename(img.path)
-            if len(name) > 34:
-                name = f"{name[:16]}...{name[-12:]}"
-            self.lbl_stage_meta.config(
-                text=self._u(
-                    "selection_summary",
-                    name,
-                    int(img.w),
-                    int(img.h),
-                    img.z_index + 1,
-                    max(1, len(self.images)),
-                )
-            )
-            self.lbl_stage_hint.config(
-                text=(
-                    f"{mode_name}  •  "
-                    f"{self._u('position')}: {int(img.x)}, {int(img.y)}  •  "
-                    f"{self._u('crop')}: {int((img.crop_box_norm[2] - img.crop_box_norm[0]) * 100)}%"
-                )
-            )
-
-        self.lbl_output_meta.config(text=self._u("output_summary", screen_count, layout_name, int(self.zoom * 100)))
-        
     def set_mode(self, mode):
         if mode not in ("move", "scale", "crop"):
             return
@@ -923,7 +895,8 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         if layout in self._layout_ids:
             self.combo_layout.current(self._layout_ids.index(layout))
         if "fill" in meta:
-            self.combo_fill.current(1 if meta.get("fill") else 0)
+            self._fill = bool(meta.get("fill"))
+            self._refresh_view_buttons()
         self.history = []
         self.history_idx = -1
         self._save_state("Open")
@@ -976,6 +949,7 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         self.history = []
         self.history_idx = -1
         self.mode = "move"
+        self._user_zoomed = False
         self._drag_data = {"x": 0, "y": 0, "item": None, "action": None}
         self.status_var.set(self._u("project_reset_status"))
         self.root.update_idletasks()
@@ -1011,9 +985,12 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
     def logic_to_screen(self, lx, ly): return (lx*self.zoom)+self.pan_x, (ly*self.zoom)+self.pan_y
 
     def _refresh_canvas(self, live=False):
-        """live=True pendant un glisser : l'aperçu des écrans est recalculé au plus toutes les 60 ms."""
+        """Redessine la vue affichée (composition, ou aperçu sur les écrans limité à une fois toutes les 60 ms pendant un glisser)."""
         self._refresh_header_summary()
-        self._refresh_main_canvas()
+        if self.view_mode == "compose":
+            self._refresh_main_canvas()
+            self._refresh_inspector_panel()
+            return
         if live:
             if self._sim_after_id is None:
                 self._sim_after_id = self.root.after(60, self._deferred_sim_refresh)
@@ -1037,6 +1014,7 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         mx, my = self.canvas.canvasx(e.x), self.canvas.canvasy(e.y)
         lx, ly = self.screen_to_logic(mx, my)
         self.zoom = max(0.01, min(self.zoom * f, 10.0))
+        self._user_zoomed = True
         self.pan_x = mx - lx*self.zoom; self.pan_y = my - ly*self.zoom
         self._refresh_canvas()
 
@@ -1193,7 +1171,14 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
         return self._layout_ids[idx] if idx >= 0 else self._layout_ids[0]
 
     def _fill_enabled(self):
-        return self.combo_fill.current() == 1
+        return self._fill
+
+    def _set_fill(self, fill):
+        if fill == self._fill:
+            return
+        self._fill = fill
+        self._refresh_view_buttons()
+        self._on_fill_changed()
 
     def _on_fill_changed(self, _event=None):
         self.settings["fill"] = self._fill_enabled()
@@ -1256,6 +1241,7 @@ class WallpaperApp(ViewsMixin, AutomationMixin):
             self._save_state("Del")
             self._refresh_library_panel()
             self._refresh_canvas()
+            self.status_var.set(self._u("status_removed"))
 
     def cmd_layer_backward(self):
         if self.active_idx is None or self.active_idx <= 0:

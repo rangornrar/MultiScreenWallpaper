@@ -27,58 +27,58 @@ _STRINGS = {
         "de": "{} Bildschirm(e)"
     },
     "btn_add_images": {
-        "en": "+ Add Images",
-        "fr": "+ Ajouter des Images",
-        "es": "+ Añadir Imágenes",
-        "de": "+ Bilder hinzufügen"
+        "en": "Add images",
+        "fr": "Ajouter des images",
+        "es": "Añadir imágenes",
+        "de": "Bilder hinzufügen"
     },
     "lbl_layout": {
-        "en": "Layout:",
-        "fr": "Disposition:",
-        "es": "Disposición:",
-        "de": "Anordnung:"
+        "en": "Layout",
+        "fr": "Disposition",
+        "es": "Disposición",
+        "de": "Anordnung"
     },
     "layout_mosaic": {
-        "en": "Perfect Mosaic",
-        "fr": "Mosaïque Parfaite",
-        "es": "Mosaico Perfecto",
+        "en": "Perfect mosaic",
+        "fr": "Mosaïque parfaite",
+        "es": "Mosaico perfecto",
         "de": "Perfektes Mosaik"
     },
     "layout_lines": {
-        "en": "Justified Lines",
-        "fr": "Lignes Justifiées",
-        "es": "Líneas Justificadas",
+        "en": "Justified rows",
+        "fr": "Lignes justifiées",
+        "es": "Líneas justificadas",
         "de": "Ausgerichtete Linien"
     },
     "layout_grid": {
-        "en": "Regular Grid",
-        "fr": "Grille Régulière",
-        "es": "Cuadrícula Regular",
+        "en": "Regular grid",
+        "fr": "Grille régulière",
+        "es": "Cuadrícula regular",
         "de": "Regelmäßiges Raster"
     },
     "layout_v_strip": {
-        "en": "Vertical Strips",
-        "fr": "Bandes Verticales",
-        "es": "Bandas Verticales",
+        "en": "Vertical strips",
+        "fr": "Bandes verticales",
+        "es": "Bandas verticales",
         "de": "Vertikale Streifen"
     },
     "layout_h_strip": {
-        "en": "Horizontal Strips",
-        "fr": "Bandes Horizontales",
-        "es": "Bandas Horizontales",
+        "en": "Horizontal strips",
+        "fr": "Bandes horizontales",
+        "es": "Bandas horizontales",
         "de": "Horizontale Streifen"
     },
     "layout_optimal": {
-        "en": "Maximum Optimization",
-        "fr": "Optimisation Maximale",
-        "es": "Optimización Máxima",
+        "en": "Maximum optimization",
+        "fr": "Optimisation maximale",
+        "es": "Optimización máxima",
         "de": "Maximale Optimierung"
     },
     "btn_auto_arrange": {
-        "en": "🎲 Auto-Arrange",
-        "fr": "🎲 Auto-Organiser",
-        "es": "🎲 Auto-Organizar",
-        "de": "🎲 Auto-Anordnen"
+        "en": "Auto-arrange",
+        "fr": "Auto-organiser",
+        "es": "Auto-organizar",
+        "de": "Auto-Anordnung"
     },
     "btn_mode_move": {
         "en": "Mode: MOVE",
@@ -93,22 +93,22 @@ _STRINGS = {
         "de": "Modus: ZUSCHNEIDEN"
     },
     "btn_remove": {
-        "en": "🗑️ Remove Image",
-        "fr": "🗑️ Supprimer l'image",
-        "es": "🗑️ Eliminar imagen",
-        "de": "🗑️ Bild entfernen"
+        "en": "Remove image",
+        "fr": "Supprimer l'image",
+        "es": "Eliminar imagen",
+        "de": "Bild entfernen"
     },
     "chk_show_monitors": {
-        "en": "View Monitors",
-        "fr": "Voir les écrans",
-        "es": "Ver Monitores",
-        "de": "Monitore anzeigen"
+        "en": "Screen frames",
+        "fr": "Cadres des écrans",
+        "es": "Marcos de las pantallas",
+        "de": "Bildschirmrahmen"
     },
     "btn_apply": {
-        "en": "🖥️ Apply Wallpaper",
-        "fr": "🖥️ Appliquer en Fond",
-        "es": "🖥️ Fondo de Pantalla",
-        "de": "🖥️ Hintergrundbild"
+        "en": "Apply wallpaper",
+        "fr": "Appliquer le fond d'écran",
+        "es": "Aplicar como fondo",
+        "de": "Hintergrund setzen"
     },
     "status_ready": {
         "en": "Ready",
@@ -153,10 +153,10 @@ _STRINGS = {
         "de": "Die Suche nach der perfekten mathematischen Anordnung kann bis zu 1 Sekunde dauern. Bitte haben Sie Geduld..."
     },
     "lang_select": {
-        "en": "Language/Langue:",
-        "fr": "Langue/Language:",
-        "es": "Idioma/Lang:",
-        "de": "Sprache/Lang:"
+        "en": "Language / Langue",
+        "fr": "Langue / Language",
+        "es": "Idioma / Language",
+        "de": "Sprache / Language"
     },
     "btn_kofi": {
         "en": "☕ Buy me a Ko-fi",
