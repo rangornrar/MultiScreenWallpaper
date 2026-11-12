@@ -32,8 +32,5 @@
     <ProjectReference Include="..\WallCraft.Platform.Windows\WallCraft.Platform.Windows.csproj" />
   </ItemGroup>
 
-  <!-- Traductions : Strings\(langue)\Resources.resw (dossier fourni séparément). -->
-  <ItemGroup>
-    <PRIResource Include="Strings\**\Resources.resw" />
-  </ItemGroup>
+  <!-- Traductions : Strings\(langue)\Resources.resw, inclus automatiquement par le SDK (générés par tools/export_resw.py). -->
 </Project>
