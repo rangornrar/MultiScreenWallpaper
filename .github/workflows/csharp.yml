@@ -53,11 +53,6 @@ jobs:
           dotnet publish csharp/src/WallCraft.App -c Release -r win-x64
           -p:Platform=x64 --self-contained true -p:PublishSingleFile=true
           -o publish/win-x64
-      - name: Versions des paquets résolues
-        shell: pwsh
-        run: |
-          $assets = Get-Content csharp/src/WallCraft.App/obj/project.assets.json -Raw | ConvertFrom-Json
-          $assets.libraries.PSObject.Properties.Name | Where-Object { $_ -match '^(Microsoft\.WindowsAppSDK|Microsoft\.Windows\.SDK\.BuildTools|CommunityToolkit\.Mvvm|Microsoft\.Graphics\.Win2D|H\.NotifyIcon)' } | Sort-Object
       - name: Contenu publié
         shell: pwsh
         run: Get-ChildItem publish/win-x64 | Select-Object Name, Length | Format-Table -AutoSize
@@ -66,7 +61,3 @@ jobs:
           name: WallCraft-win-x64
           path: publish/win-x64
           if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        with:
-          name: project-assets
-          path: csharp/src/WallCraft.App/obj/project.assets.json
