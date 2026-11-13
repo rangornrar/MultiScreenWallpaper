@@ -616,8 +616,7 @@ public sealed partial class MainViewModel : ObservableObject
         var bg = BackgroundColor;
         var (ok, count) = await RunBusyAsync(async () =>
         {
-            using var composite = await HdRenderer.ComposeAsync(images, w, h, bg);
-            return (await HdRenderer.SplitAsync(composite, monitors, folder, "wallcraft")).Count;
+            return (await HdRenderer.SplitAsync(images, w, h, monitors, bg, folder, "wallcraft")).Count;
         });
         if (ok) await _ui.ShowInfoAsync(_loc.Format("msg_split_done", count, folder));
     }

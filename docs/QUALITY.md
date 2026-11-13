@@ -23,6 +23,10 @@ dotnet run --project tests/WallCraft.Core.Tests
 
 Les tests du cœur C# comparent la nouvelle version aux résultats de la version Python (`csharp/tests/fixtures/`, produits par `tools/export_golden*.py`).
 
+Les tests de reprise couvrent les réglages, les images et le panorama de secours d’une configuration, ainsi que la conservation d’un fond déjà mémorisé par le Store. Le workflow MSIX installe une copie signée, teste un bureau synthétique plus large que la limite GPU, vérifie l’application par écran et en mode « Étendre », puis contrôle la tâche de démarrage et l’ouverture de la fenêtre.
+
+Sur un poste de test, `WallCraft.exe --selftest rapport.json --render-only` génère et contrôle les images du bureau synthétique sans changer le fond ni les paramètres de démarrage. La [recette matérielle](MIGRATION_CSHARP.md) couvre les DPI mixtes, le branchement réel et le démarrage à l’ouverture de session.
+
 ## Site
 
 ```bash

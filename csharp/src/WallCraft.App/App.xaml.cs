@@ -23,7 +23,8 @@ public partial class App : Application
         var commandLine = Environment.GetCommandLineArgs().Skip(1).ToArray();
         if (commandLine.Contains("--selftest"))
         {
-            int selftest = await Services.StoreSelfTest.RunAsync(commandLine.SkipWhile(a => a != "--selftest").Skip(1).FirstOrDefault());
+            string? reportPath = commandLine.SkipWhile(a => a != "--selftest").Skip(1).FirstOrDefault();
+            int selftest = await Services.StoreSelfTest.RunAsync(reportPath, commandLine.Contains("--render-only"));
             Exit();
             Environment.Exit(selftest);
             return;

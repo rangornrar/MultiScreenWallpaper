@@ -4,7 +4,7 @@
 
 🌍 **[English](README_en.md)** | **[Français](README.md)** | **[Español](README_es.md)** | **[Deutsch](README_de.md)**
 
-**WallCraft Pro** is a powerful Python application designed to create, organize, and apply wallpapers across complex multi-monitor setups.
+**WallCraft Pro** creates, organizes, and applies wallpapers across Windows monitors. The C# and WinUI 3 edition is built for the Microsoft Store. GitHub Releases distributes the Python edition.
 
 It completely solves the issue of disparate monitor resolutions and borders through its intelligent engine: it merges multiple photos **without ever distorting or cropping them**, guaranteeing **100% absolute visibility** of your images ("Fit Inside" principle).
 
@@ -45,7 +45,7 @@ The program adheres to the 100% rule:
 
 ---
 
-## 📦 Installation
+## 📦 Run the Python edition from source
 
 ### Prerequisites
 - Python 3.10 or higher.
@@ -58,6 +58,9 @@ pip install pillow screeninfo
 ```
 
 ## 📥 Download
+
+The [Microsoft Store guide](docs/MICROSOFT_STORE.md) covers building and preparing the C# MSIX.
+
 The Windows executable is published on the [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest) page. Its SHA-256 checksum is listed in each release's notes.
 
 ## 🛠️ Usage
@@ -74,8 +77,8 @@ The Windows executable is published on the [GitHub Releases](https://github.com/
 ## 📂 Repository layout
 | Folder | Contents |
 |---|---|
-| `python/` | Current app (Python/Tkinter), its tests and the PyInstaller recipe |
-| `csharp/` | Upcoming version (C# / WinUI 3), see [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
+| `python/` | GitHub Releases edition (Python/Tkinter), tests, and PyInstaller recipe |
+| `csharp/` | Microsoft Store edition (C# / WinUI 3), see [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
 | `site/` | Website generator for wallcraft.archi-it.fr (`site_builder.py`), screenshots (`assets/`) and the ready-to-publish site (`html/`) |
 | `docs/` | Architecture, quality, migration, release process |
 | `tools/` | Scripts: reference results for the C# version, translations, mockups |

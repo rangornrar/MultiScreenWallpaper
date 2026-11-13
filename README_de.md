@@ -4,7 +4,7 @@
 
 🌍 **[English](README_en.md)** | **[Français](README.md)** | **[Español](README_es.md)** | **[Deutsch](README_de.md)**
 
-**WallCraft Pro** ist eine leistungsstarke Python-Anwendung, mit der Sie Hintergrundbilder in komplexen Multi-Monitor-Setups erstellen, organisieren und anwenden können.
+**WallCraft Pro** erstellt, organisiert und setzt Hintergrundbilder für mehrere Windows-Monitore. Die Version mit C# und WinUI 3 ist für den Microsoft Store vorgesehen. GitHub Releases stellt die Python-Version bereit.
 
 Sie löst das Problem unterschiedlicher Monitorauflösungen und Bildschirmränder durch ihre intelligente Engine vollständig: Sie ermöglicht das Zusammenfügen mehrerer Fotos, **ohne diese jemals zu verzerren oder zuzuschneiden**, und garantiert so eine **absolute 100%ige Sichtbarkeit** Ihrer Bilder ("Fit Inside"-Prinzip).
 
@@ -45,7 +45,7 @@ Das Programm hält sich strikt an die 100 % Regel:
 
 ---
 
-## 📦 Installation
+## 📦 Python-Version aus dem Quellcode starten
 
 ### Voraussetzungen
 - Python 3.10 oder höher.
@@ -58,6 +58,9 @@ pip install pillow screeninfo
 ```
 
 ## 📥 Download
+
+Die [Anleitung für den Microsoft Store](docs/MICROSOFT_STORE.md) beschreibt, wie das C#-MSIX erstellt und vorbereitet wird.
+
 Die Windows-EXE wird auf der Seite [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest) veröffentlicht. Ihre SHA-256-Prüfsumme steht in den Notizen jeder Version.
 
 ## 🛠️ Verwendung
@@ -74,8 +77,8 @@ Die Windows-EXE wird auf der Seite [GitHub Releases](https://github.com/rangornr
 ## 📂 Aufbau des Repositorys
 | Ordner | Inhalt |
 |---|---|
-| `python/` | Aktuelle App (Python/Tkinter), ihre Tests und das PyInstaller-Rezept |
-| `csharp/` | Kommende Version (C# / WinUI 3), siehe [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
+| `python/` | Version auf GitHub Releases (Python/Tkinter), Tests und PyInstaller-Rezept |
+| `csharp/` | Microsoft-Store-Version (C# / WinUI 3), siehe [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
 | `site/` | Generator der Website wallcraft.archi-it.fr (`site_builder.py`), Screenshots (`assets/`) und die fertige Website (`html/`) |
 | `docs/` | Architektur, Qualität, Migration, Veröffentlichung |
 | `tools/` | Skripte: Referenzergebnisse für die C#-Version, Übersetzungen, Mockups |

@@ -4,7 +4,7 @@
 
 Composer des images pour des écrans de dimensions et de positions différentes, préserver l’intégralité des photos dans les modes de placement et appliquer le résultat au bureau Windows.
 
-Les modules de la version Python sont dans `python/` ; la version C# est décrite dans [MIGRATION_CSHARP.md](MIGRATION_CSHARP.md).
+La version [C# et WinUI 3](MIGRATION_CSHARP.md) cible le Microsoft Store. La version Python, décrite dans le tableau ci-dessous, est distribuée par GitHub Releases.
 
 | Composant | Rôle |
 | --- | --- |
@@ -38,7 +38,7 @@ Les modules de la version Python sont dans `python/` ; la version C# est décrit
 
 ## Distribution
 
-Les exécutables ne sont plus suivis dans Git. Le workflow `release.yml` construit l'exe Windows depuis le code d'un tag et le publie en GitHub Release avec son empreinte SHA-256 ; le site pointe vers `releases/latest`. L'historique n'est pas réécrit : les anciens binaires restent accessibles dans les commits passés.
+Le workflow `release.yml` publie l’exécutable Python et son empreinte SHA-256. Le workflow `store.yml` construit et vérifie le MSIX C# x64. Le paquet destiné à Partner Center est produit avec l’identité de l’éditeur et Microsoft le signe après certification. [Procédure Store](MICROSOFT_STORE.md)
 
 ## Intégration Windows
 

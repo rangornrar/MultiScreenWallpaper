@@ -1,11 +1,11 @@
 name: Microsoft Store (MSIX)
 # Construit le paquet MSIX de la version C# pour le Microsoft Store, l'installe sur le runner avec un certificat
 # de test et vérifie qu'il fonctionne dans un paquet (dossier réel, fond d'écran, tâche de démarrage, ouverture).
-# Le paquet non signé est publié en artefact : c'est lui qu'on dépose dans Partner Center, qui le signe.
+# L'artefact destiné à Partner Center est publié après les vérifications du paquet installé.
 #
 # Identité du paquet : variables du dépôt (Settings > Secrets and variables > Actions > Variables)
 # MSIX_IDENTITY_NAME, MSIX_PUBLISHER, MSIX_PUBLISHER_DISPLAY_NAME, recopiées depuis
-# Partner Center > WallCraft Pro > Identité du produit. Sans elles : identité de test.
+# Partner Center > WallCraft Pro > Identité du produit.
 on:
   push:
     tags: ['v*', 'Tag_v*']
@@ -16,14 +16,15 @@ on:
       version:
         description: 'Version (ex. 2026.11.14)'
         required: false
+      partner_center:
+        description: 'Construire avec l’identité définitive de Partner Center'
+        type: boolean
+        default: false
 permissions:
   contents: read
 env:
   DOTNET_NOLOGO: "true"
   DOTNET_CLI_TELEMETRY_OPTOUT: "true"
-  IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME || 'WallCraftPro.Dev' }}
-  PUBLISHER: ${{ vars.MSIX_PUBLISHER || 'CN=WallCraftDev' }}
-  PUBLISHER_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME || 'rangornrar' }}
 jobs:
   store:
     runs-on: windows-latest
@@ -43,49 +44,82 @@ jobs:
           restore-keys: nuget-${{ runner.os }}-
       - name: Version et identité du paquet
         id: v
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          REQUESTED_PRODUCTION: ${{ inputs.partner_center }}
+          STORE_NAME: ${{ vars.MSIX_IDENTITY_NAME }}
+          STORE_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
+          STORE_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME }}
         run: |
-          $v = "${{ github.ref_name }}" -replace '^(Tag_)?v', ''
-          if ("${{ github.ref_type }}" -ne "tag") {
-            $v = "${{ inputs.version }}"
-            if (-not $v) { $v = Get-Date -Format "yyyy.M.d" }
+          $tag = $env:GITHUB_REF_TYPE -eq 'tag'
+          $version = if ($tag) { $env:GITHUB_REF_NAME -creplace '^(Tag_)?v', '' } else { $env:REQUESTED_VERSION }
+          if (-not $version) { $version = Get-Date -Format 'yyyy.M.d' }
+          if ($version -notmatch '^[0-9]{1,5}(\.[0-9]{1,5}){0,2}$') { throw "Version MSIX invalide : $version" }
+          $parts = @($version.Split('.') | ForEach-Object { [int]$_ })
+          if ($parts[0] -eq 0 -or ($parts | Where-Object { $_ -gt 65535 })) { throw "Version MSIX hors limites : $version" }
+          while ($parts.Count -lt 3) { $parts += 0 }
+          $v = $parts -join '.'
+          $msix = "$v.0"
+
+          $configured = @($env:STORE_NAME, $env:STORE_PUBLISHER, $env:STORE_DISPLAY_NAME |
+              Where-Object { -not [string]::IsNullOrWhiteSpace($_) }).Count
+          $production = $env:REQUESTED_PRODUCTION -eq 'true' -or ($tag -and $configured -gt 0)
+          $identity = 'WallCraftPro.Dev'
+          $publisher = 'CN=WallCraftDev'
+          $displayName = 'rangornrar'
+          $channel = 'test'
+          if ($production) {
+            if ($configured -ne 3 -or $env:STORE_NAME -eq $identity -or $env:STORE_PUBLISHER -eq $publisher) {
+              throw "Renseignez les trois variables MSIX_* avec l’identité du produit dans Partner Center."
+            }
+            $identity = $env:STORE_NAME
+            $publisher = $env:STORE_PUBLISHER
+            $displayName = $env:STORE_DISPLAY_NAME
+            $channel = 'store'
           }
-          $parts = @($v.Split(".")); while ($parts.Count -lt 3) { $parts += "0" }
-          $msix = ($parts[0..2] -join ".") + ".0"   # le Store exige un 4e nombre à 0
           $file = "csharp/src/WallCraft.App/Package.appxmanifest"
           [xml]$m = Get-Content $file -Raw -Encoding UTF8
-          $m.Package.Identity.Name = $env:IDENTITY_NAME
-          $m.Package.Identity.Publisher = $env:PUBLISHER
+          $m.Package.Identity.Name = $identity
+          $m.Package.Identity.Publisher = $publisher
           $m.Package.Identity.Version = $msix
-          $m.Package.Properties.PublisherDisplayName = $env:PUBLISHER_DISPLAY_NAME
+          $m.Package.Properties.PublisherDisplayName = $displayName
           $m.Save((Resolve-Path $file))
+          "IDENTITY_NAME=$identity" >> $env:GITHUB_ENV
+          "PUBLISHER=$publisher" >> $env:GITHUB_ENV
           "version=$v" >> $env:GITHUB_OUTPUT
-          Write-Host "Paquet $env:IDENTITY_NAME $msix"
-      - name: Paquet du Store (non signé)
-        run: >
-          dotnet build csharp/src/WallCraft.App -c Release -r win-x64 -p:Platform=x64
-          -p:WindowsPackageType=MSIX -p:GenerateAppxPackageOnBuild=true
-          -p:UapAppxPackageBuildMode=SideloadOnly
-          -p:AppxPackageDir=${{ github.workspace }}\store\
+          "channel=$channel" >> $env:GITHUB_OUTPUT
+          Write-Host "Paquet $channel : $identity $msix"
+      - name: Construire le MSIX non signé
+        run: |
+          $packageDir = Join-Path $env:GITHUB_WORKSPACE 'store'
+          dotnet build csharp/src/WallCraft.App -c Release -r win-x64 -p:Platform=x64 `
+            -p:WindowsPackageType=MSIX -p:GenerateAppxPackageOnBuild=true `
+            -p:Version=${{ steps.v.outputs.version }} -p:UapAppxPackageBuildMode=SideloadOnly "-p:AppxPackageDir=$packageDir/"
       - name: Nommer le paquet
         run: |
-          $msix = Get-ChildItem store -Recurse -Filter *.msix | Where-Object { $_.Name -notlike "*Microsoft.WindowsAppRuntime*" } | Select-Object -First 1
-          if (-not $msix) { Get-ChildItem store -Recurse | Format-Table FullName; throw "Aucun .msix produit." }
+          $msix = @(Get-ChildItem store -Recurse -Filter WallCraft.App_*.msix)
+          if ($msix.Count -ne 1) { Get-ChildItem store -Recurse | Format-Table FullName; throw "Un seul MSIX de WallCraft était attendu." }
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($msix[0].FullName)
+          try {
+            $reader = [System.IO.StreamReader]::new($archive.GetEntry('AppxManifest.xml').Open())
+            try { [xml]$manifest = $reader.ReadToEnd() } finally { $reader.Dispose() }
+          } finally { $archive.Dispose() }
+          if ($manifest.Package.Identity.Name -cne $env:IDENTITY_NAME -or
+              $manifest.Package.Identity.Publisher -cne $env:PUBLISHER -or
+              $manifest.Package.Identity.Version -ne '${{ steps.v.outputs.version }}.0') {
+            throw "Le manifeste du MSIX ne correspond pas à l’identité et à la version demandées."
+          }
           New-Item -ItemType Directory out -Force | Out-Null
-          Copy-Item $msix.FullName "out/WallCraft-Pro-v${{ steps.v.outputs.version }}-Store.msix"
+          Copy-Item $msix[0].FullName "out/WallCraft-Pro-v${{ steps.v.outputs.version }}-${{ steps.v.outputs.channel }}.msix"
           Get-ChildItem out | Format-Table Name, Length
-      - uses: actions/upload-artifact@v4
-        with:
-          name: wallcraft-store-msix
-          path: out/*.msix
-          if-no-files-found: error
 
       # --- Vérification du paquet installé ---
       - name: Paquet de test signé et installé
         run: |
           $sdk = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\10.*" -Directory |
               Where-Object { Test-Path "$($_.FullName)\x64\signtool.exe" } | Sort-Object { [version]$_.Name } -Descending | Select-Object -First 1
-          $test = "out/test.msix"
-          Copy-Item (Get-ChildItem out/*-Store.msix).FullName $test
+          $test = Join-Path $env:RUNNER_TEMP 'wallcraft-signed.msix'
+          Copy-Item (Get-ChildItem out/*.msix).FullName $test
           $cert = New-SelfSignedCertificate -Type Custom -Subject $env:PUBLISHER -KeyUsage DigitalSignature `
               -FriendlyName "WallCraft MSIX test" -CertStoreLocation "Cert:\CurrentUser\My" `
               -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
@@ -110,8 +144,13 @@ jobs:
           if (-not $r.startup_after_enable) { throw "La tâche de démarrage ne s'active pas." }
           if ($r.startup_after_disable) { throw "La tâche de démarrage ne se désactive pas." }
           if ($r.launched_at_startup) { throw "Un lancement en ligne de commande est pris pour un lancement au démarrage." }
-          if (-not $r.wallpaper_set) { Write-Host "::warning::Le fond d'écran n'a pas pu être appliqué sur le runner." }
-          elseif (-not ($r.wallpaper_now | Where-Object { $_ -like "$($r.data_dir)*" })) { throw "Windows n'affiche pas le fond depuis le dossier réel." }
+          if (-not $r.wide_render) { throw "Le rendu d’une composition au-delà de la limite GPU a échoué." }
+          if ($r.native_applied -lt 1 -or $r.native_applied -ne $r.native_expected -or $r.native_status -ne 'Ok') {
+            throw "L’application du fond par écran a échoué."
+          }
+          if (-not $r.wallpaper_set -or -not ($r.wallpaper_now | Where-Object { $_ -like "$($r.data_dir)\*" })) {
+            throw "Windows n'affiche pas le panorama depuis le dossier réel."
+          }
       - name: L'application s'ouvre depuis le menu Démarrer
         run: |
           $pfn = (Get-AppxPackage -Name $env:IDENTITY_NAME).PackageFamilyName
@@ -124,5 +163,10 @@ jobs:
             throw "WallCraft ne démarre pas ou s'arrête aussitôt dans le paquet."
           }
           $p | Format-Table Id, MainWindowTitle, Responding
-          if (-not ($p | Where-Object MainWindowTitle)) { throw "WallCraft tourne mais n'affiche pas de fenêtre." }
+          if (-not ($p | Where-Object { $_.MainWindowTitle -and $_.Responding })) { throw "La fenêtre WallCraft est absente ou ne répond pas." }
           $p | Stop-Process -Force
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wallcraft-${{ steps.v.outputs.channel }}-msix
+          path: out/*.msix
+          if-no-files-found: error

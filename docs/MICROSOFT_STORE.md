@@ -1,12 +1,12 @@
 # Publier WallCraft Pro sur le Microsoft Store
 
-C'est la **version C# (WinUI 3)** qui est publiée sur le Store, sous forme de **paquet MSIX** :
+C’est la **version C# (WinUI 3)** qui est destinée au Store, sous forme de **paquet MSIX x64**.
 
 - le Store **signe le paquet lui-même**, il n'y a pas de certificat à acheter ;
 - le Store héberge le paquet et installe les mises à jour ;
 - l'exe de GitHub (version Python) reste disponible à côté.
 
-**Avant la première soumission** : tester la version C# sur un vrai PC à plusieurs écrans et cocher la liste de parité de `MIGRATION_CSHARP.md`. Une application qui plante à l'ouverture est refusée à la certification.
+Avant la première soumission, déroulez la [recette de parité](MIGRATION_CSHARP.md) sur un poste multi-écrans et sur une VM Windows propre. Vérifiez aussi l’installation, la mise à jour des données et le lancement après ouverture de session. Exécutez le [Windows App Certification Kit](https://learn.microsoft.com/windows/uwp/debug-test-perf/windows-app-certification-kit) sur le paquet retenu.
 
 ## Ce qui est déjà prêt dans le dépôt
 
@@ -15,16 +15,17 @@ C'est la **version C# (WinUI 3)** qui est publiée sur le Store, sous forme de *
 | Manifeste du paquet | `csharp/src/WallCraft.App/Package.appxmanifest` |
 | Icônes du paquet | `csharp/src/WallCraft.App/Images/` (générées par `tools/make_msix_assets.py`) |
 | Construction du paquet | workflow **Microsoft Store (MSIX)** (`.github/workflows/store.yml`) |
-| Vérification automatique | Le workflow installe le paquet sur un PC Windows de GitHub et vérifie : le dossier de données, le fond d'écran, la tâche de démarrage et l'ouverture de la fenêtre. |
+| Vérification automatique | Le workflow installe une copie signée, vérifie le rendu au-delà de la limite GPU, l’application par écran, le repli « Étendre », la tâche de démarrage et l’ouverture de la fenêtre. |
 | Politique de confidentialité | https://wallcraft.archi-it.fr/fr/privacy/ (et `/en/privacy/`, `/es/privacy/`, `/de/privacy/`), en ligne après l'envoi du site |
 | Logo carré 300 × 300 | `docs/store/logo-300.png` |
-| Captures pour la fiche | **à faire** sur votre PC une fois la version C# validée : 4 par langue, PNG, 1366 × 768 au minimum (Win + Maj + S) |
+| Captures pour la fiche | Captures de l’application C# installée, en PNG d’au moins 1 366 × 768 px. Montrez d’abord un panorama aligné sur des écrans de tailles différentes. [Exigences et recommandations de Microsoft](https://learn.microsoft.com/windows/apps/publish/publish-your-app/msix/screenshots-and-images) |
 
 Ce qui change dans un paquet, et que l'application gère :
 
 - **Fonds d'écran** (`AppPaths`) : ils sont enregistrés dans le dossier réel du paquet, pour que Windows les affiche.
 - **Lancement au démarrage** (`StoreStartup`) : il passe par la tâche de démarrage du paquet. L'utilisateur la retrouve aussi dans Paramètres > Applications > Démarrage, et WallCraft s'ouvre alors directement dans la zone de notification.
-- **Réglages** : ceux de l'exe GitHub sont repris au premier lancement.
+- **Données Python**. Les réglages sont copiés au premier lancement. Les fonds mémorisés et leur panorama de secours sont importés à la première utilisation de chaque configuration d’écrans, avec leur état de réapplication. Les projets restent des fichiers à ouvrir depuis l’application.
+- **Grandes compositions**. L’application et l’export par écran peuvent rendre chaque écran séparément. L’export en une seule image et le repli « Étendre » restent limités par la taille maximale d’une texture du GPU.
 
 ## Étapes (une seule fois)
 
@@ -42,22 +43,22 @@ Ce qui change dans un paquet, et que l'application gère :
    | `MSIX_PUBLISHER_DISPLAY_NAME` | `Package/Properties/PublisherDisplayName` |
 
    Ces valeurs ne sont pas secrètes.
-4. **Construire le paquet** : dans Actions > Microsoft Store (MSIX) > Run workflow, entrez la version (ex. `2026.11.13`).
-   - Une fois le workflow terminé, téléchargez l'artefact `wallcraft-store-msix` et dézippez-le pour obtenir `WallCraft-Pro-v2026.11.13-Store.msix`.
-   - Pour les versions suivantes, il est construit automatiquement à chaque tag `Tag_v…`.
+4. **Construire le paquet**. Dans Actions > Microsoft Store (MSIX) > Run workflow, sélectionnez la branche et la version à publier, puis cochez **Construire avec l’identité définitive de Partner Center**. Le workflow exige les trois variables d’identité pour ce mode.
+   - Après les contrôles, téléchargez `wallcraft-store-msix`. Il contient `WallCraft-Pro-v<version>-store.msix`, à déposer dans Partner Center.
+   - Les PR et les lancements manuels ordinaires produisent `wallcraft-test-msix` avec l’identité `WallCraftPro.Dev`. Un tag produit l’artefact Store si les trois variables sont configurées. Une configuration partielle fait échouer le build du tag.
 5. **Créer la soumission** dans Partner Center, section par section :
-   - **Tarification et disponibilité** : Gratuit, tous les marchés, visibilité publique.
+   - **Tarification et disponibilité**. Pour la bêta, sélectionnez **Audience privée** et ajoutez les comptes Microsoft personnels des testeurs. Après validation, passez en audience publique. [Options de visibilité](https://learn.microsoft.com/windows/apps/publish/publish-your-app/msix/visibility-options)
    - **Propriétés** :
      - Catégorie *Personnalisation*, sous-catégorie *Fonds d'écran et écrans de verrouillage*.
-     - Politique de confidentialité : https://wallcraft.archi-it.fr/en/privacy/
+     - Renseignez la [politique de confidentialité](https://wallcraft.archi-it.fr/en/privacy/) après avoir publié le site et vérifié l’URL depuis une session sans connexion à votre compte.
      - Site web : https://wallcraft.archi-it.fr/
      - Contact support : https://github.com/rangornrar/MultiScreenWallpaper/issues
-   - **Classification par âge** : remplissez le questionnaire en répondant « non » partout ; le résultat attendu est 3+ ou PEGI 3.
+   - **Classification par âge**. Remplissez le questionnaire selon les fonctionnalités du paquet soumis.
    - **Paquets** : déposez le fichier `.msix`.
    - **Fiches du Store** : ajoutez les 4 langues (fr-FR, en-US, es-ES, de-DE), puis copiez les textes ci-dessous et ajoutez les captures de la langue.
    - **Options de soumission** :
      - Collez la justification de `runFullTrust` et les notes pour la certification (ci-dessous).
-6. **Envoyer à la certification** : il faut compter de quelques heures à 3 jours ouvrés.
+6. **Envoyer à la certification**, puis vérifier l’installation depuis la fiche privée avec un compte testeur.
 
 ## Justification de la capacité restreinte `runFullTrust`
 
@@ -74,7 +75,7 @@ Mots-clés (7 au maximum) : wallpaper, multi-monitor, dual monitor, triple monit
 ### Français (fr-FR)
 
 **Description courte**
-Composez un fond d'écran pour plusieurs écrans, même de tailles et de résolutions différentes, sans déformation ni image coupée.
+Alignez un panorama sur des écrans de tailles et de résolutions différentes. Le mode Ajuster garde vos photos entières.
 
 **Description**
 WallCraft Pro compose et applique des fonds d'écran sur les bureaux multi-écrans : double, triple, écran vertical, ultrawide, écrans de tailles différentes.
@@ -105,7 +106,7 @@ Tout se passe sur votre PC : aucun compte, aucune publicité, aucune donnée col
 ### English (en-US)
 
 **Short description**
-Compose one wallpaper across several monitors, even with different sizes and resolutions, without stretching or cut-off images.
+Align a panorama across monitors of different sizes and resolutions. Fit mode keeps each photo whole.
 
 **Description**
 WallCraft Pro composes and applies wallpapers for multi-monitor desks: dual, triple, vertical, ultrawide and mixed-size screens.
@@ -136,7 +137,7 @@ Everything happens on your PC: no account, no ads, no data collected.
 ### Español (es-ES)
 
 **Descripción corta**
-Componga un fondo de pantalla para varios monitores, incluso de tamaños y resoluciones distintos, sin deformar ni cortar las imágenes.
+Alinee una panorámica en monitores de tamaños y resoluciones distintos. El modo Ajustar mantiene cada foto completa.
 
 **Descripción**
 WallCraft Pro compone y aplica fondos de pantalla en escritorios con varios monitores: doble, triple, vertical, ultrawide y pantallas de distinto tamaño.
@@ -167,7 +168,7 @@ Todo ocurre en su PC: sin cuenta, sin publicidad, sin recopilación de datos.
 ### Deutsch (de-DE)
 
 **Kurzbeschreibung**
-Gestalten Sie ein Hintergrundbild über mehrere Monitore, auch mit unterschiedlichen Größen und Auflösungen, ohne Verzerrung oder abgeschnittene Bilder.
+Richten Sie ein Panorama auf Monitoren mit unterschiedlichen Größen und Auflösungen aus. Im Modus Einpassen bleibt jedes Foto vollständig sichtbar.
 
 **Beschreibung**
 WallCraft Pro gestaltet und setzt Hintergrundbilder für Multi-Monitor-Arbeitsplätze: zwei, drei, hochkant, Ultrawide und unterschiedlich große Bildschirme.
@@ -199,5 +200,5 @@ Alles geschieht auf Ihrem PC: kein Konto, keine Werbung, keine Datenerhebung.
 
 1. Créez le tag `Tag_vAAAA.MM.JJ` comme d'habitude.
    - Le workflow Release publie l'exe sur GitHub.
-   - Le workflow Microsoft Store (MSIX) construit le paquet.
+   - Le workflow Microsoft Store (MSIX) construit le paquet avec l’identité configurée et publie l’artefact après validation.
 2. Dans Partner Center, sur WallCraft Pro, ouvrez **Mettre à jour** puis **Paquets**, déposez le nouveau `.msix` et envoyez.

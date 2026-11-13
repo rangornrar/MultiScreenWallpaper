@@ -307,6 +307,9 @@
   <data name="msg_optimal_warn_title" xml:space="preserve">
     <value>Optimization Engine</value>
   </data>
+  <data name="msg_render_too_large" xml:space="preserve">
+    <value>A single {0} × {1} px image exceeds this graphics device’s limit of {2} px per side. Try exporting one image per monitor.</value>
+  </data>
   <data name="msg_rotation_empty" xml:space="preserve">
     <value>The rotation folder contains no images.</value>
   </data>

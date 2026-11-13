@@ -4,7 +4,7 @@
 
 🌍 **[English](README_en.md)** | **[Français](README.md)** | **[Español](README_es.md)** | **[Deutsch](README_de.md)**
 
-**WallCraft Pro** est une application Python conçue pour créer, organiser et appliquer des fonds d'écran sur des configurations multi-écrans complexes.
+**WallCraft Pro** crée, organise et applique des fonds d’écran sur des configurations multi-écrans Windows. La version C# et WinUI 3 est destinée au Microsoft Store. GitHub Releases distribue la version Python.
 
 Elle résout le problème des résolutions et des bordures de moniteurs disparates grâce à son moteur de placement : elle permet de fusionner de multiples photos sans **jamais les déformer ni les rogner**, en conservant l’intégralité de chaque image dans les modes de placement décrits ("Fit Inside").
 
@@ -45,7 +45,7 @@ Le programme garantit la règle du 100% :
 
 ---
 
-## 📦 Installation
+## 📦 Exécuter la version Python depuis les sources
 
 ### Prérequis
 - Python 3.10 ou supérieur.
@@ -58,6 +58,9 @@ python -m pip install -r requirements.txt
 ```
 
 ## 📥 Télécharger
+
+La [procédure Microsoft Store](docs/MICROSOFT_STORE.md) décrit la préparation du MSIX C# et du premier lancement.
+
 L'exécutable Windows est publié sur la page [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest). Son empreinte SHA-256 figure dans les notes de chaque version.
 
 ## 🛠️ Utilisation
@@ -74,8 +77,8 @@ L'exécutable Windows est publié sur la page [GitHub Releases](https://github.c
 ## 📂 Organisation du dépôt
 | Dossier | Contenu |
 |---|---|
-| `python/` | Version actuelle de l'application (Python/Tkinter), ses tests et la recette PyInstaller |
-| `csharp/` | Nouvelle version en cours (C# / WinUI 3), voir [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
+| `python/` | Version GitHub Releases (Python/Tkinter), tests et recette PyInstaller |
+| `csharp/` | Version Microsoft Store (C# / WinUI 3), voir [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
 | `site/` | Générateur du site wallcraft.archi-it.fr (`site_builder.py`), captures (`assets/`) et site prêt à publier (`html/`) |
 | `docs/` | Architecture, qualité, migration, procédure de publication |
 | `tools/` | Scripts : résultats de référence pour la version C#, traductions, maquettes |

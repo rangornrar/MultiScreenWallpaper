@@ -20,9 +20,20 @@ public sealed class WallpaperStore
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, // accents lisibles, comme ensure_ascii=False
     };
 
+    private readonly string? _legacyRoot;
+
     public WallpaperStore(string? root = null)
+        : this(root ?? Path.Combine(AppPaths.DataDirectory(), "configs"),
+               root is null && !string.IsNullOrEmpty(AppPaths.PackageFamilyName)
+                   ? Path.Combine(AppPaths.LegacyDataDirectory(), "configs")
+                   : null)
     {
-        Root = root ?? Path.Combine(AppPaths.DataDirectory(), "configs");
+    }
+
+    internal WallpaperStore(string root, string? legacyRoot)
+    {
+        Root = root;
+        _legacyRoot = legacyRoot;
         Directory.CreateDirectory(Root);
     }
 
@@ -31,6 +42,7 @@ public sealed class WallpaperStore
     public string DirectoryFor(IEnumerable<MonitorInfo> monitors)
     {
         var path = Path.Combine(Root, CompositionLayout.Signature(monitors));
+        ImportConfiguration(path);
         Directory.CreateDirectory(path);
         return path;
     }
@@ -66,17 +78,21 @@ public sealed class WallpaperStore
 
     private JsonObject? ReadManifest(IEnumerable<MonitorInfo> monitors)
     {
-        try { return JsonNode.Parse(File.ReadAllText(ManifestPath(monitors))) as JsonObject; }
+        string path = ManifestPath(monitors);
+        ImportConfiguration(Path.GetDirectoryName(path)!);
+        try { return JsonNode.Parse(File.ReadAllText(path)) as JsonObject; }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or JsonException) { return null; }
     }
 
     /// <summary>L'utilisateur a choisi un autre fond : plus de réapplication automatique pour cette configuration.</summary>
-    public void Release(IEnumerable<MonitorInfo> monitors)
+    public void Release(IEnumerable<MonitorInfo> monitors) => SetReleased(monitors, true);
+
+    public void SetReleased(IEnumerable<MonitorInfo> monitors, bool released)
     {
         var list = monitors.ToList();
         var manifest = ReadManifest(list);
         if (manifest is null) return;
-        manifest["released"] = true;
+        manifest["released"] = released;
         try { File.WriteAllText(ManifestPath(list), manifest.ToJsonString(WriteOptions)); }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException) { }
     }
@@ -94,9 +110,10 @@ public sealed class WallpaperStore
         foreach (var node in screens)
         {
             if (node is not JsonObject s) continue;
-            string file = Json.String(s["file"]) ?? "";
-            string path = Path.Combine(folder, file);
-            if (file.Length == 0 || !File.Exists(path)) continue;
+            string? file = Json.String(s["file"]);
+            if (!IsWallpaperFile(file)) continue;
+            string path = Path.Combine(folder, file!);
+            if (!File.Exists(path)) continue;
             result.Add(new AppliedScreen(
                 (int)(Json.Number(s["x"]) ?? 0), (int)(Json.Number(s["y"]) ?? 0),
                 (int)(Json.Number(s["width"]) ?? 0), (int)(Json.Number(s["height"]) ?? 0),
@@ -104,4 +121,73 @@ public sealed class WallpaperStore
         }
         return result;
     }
+
+    /// <summary>Le panorama de secours des versions Python et C# partage le préfixe des images par écran.</summary>
+    public static string? SpanPath(string screenPath)
+    {
+        string file = Path.GetFileName(screenPath);
+        int suffix = file.LastIndexOf("_pos_", StringComparison.Ordinal);
+        if (suffix <= 0) return null;
+        string span = Path.Combine(Path.GetDirectoryName(screenPath)!, file[..suffix] + "_span.png");
+        return File.Exists(span) ? span : null;
+    }
+
+    public List<string> ExpectedPaths(IReadOnlyList<AppliedScreen> screens)
+    {
+        var expected = screens.Select(screen => screen.Path).ToList();
+        if (expected.Count == 0) return expected;
+        string? span = SpanPath(expected[0]);
+        if (span is not null) expected.Add(span);
+        if (_legacyRoot is not null)
+        {
+            // Le fond actif au moment de la migration peut encore pointer vers les fichiers Python.
+            string configuration = Path.GetFileName(Path.GetDirectoryName(expected[0]))!;
+            expected.AddRange(expected.Select(path => Path.Combine(_legacyRoot, configuration, Path.GetFileName(path))).ToArray());
+        }
+        return expected;
+    }
+
+    private void ImportConfiguration(string target)
+    {
+        if (_legacyRoot is null) return;
+        string source = Path.Combine(_legacyRoot, Path.GetFileName(target));
+        string sourceManifest = Path.Combine(source, "manifest.json");
+        if (File.Exists(Path.Combine(target, "manifest.json")) || !File.Exists(sourceManifest)) return;
+        string staging = target + "." + Guid.NewGuid().ToString("N");
+        try
+        {
+            string contents = File.ReadAllText(sourceManifest);
+            if (JsonNode.Parse(contents) is not JsonObject manifest || manifest["screens"] is not JsonArray screens || screens.Count == 0)
+                return;
+            Directory.CreateDirectory(staging);
+            string? span = null;
+            foreach (var screen in screens)
+            {
+                string? file = Json.String((screen as JsonObject)?["file"]);
+                if (!IsWallpaperFile(file)) return;
+                string path = Path.Combine(source, file!);
+                File.Copy(path, Path.Combine(staging, file!), overwrite: true);
+                span ??= SpanPath(path);
+            }
+            if (span is not null) File.Copy(span, Path.Combine(staging, Path.GetFileName(span)));
+            File.WriteAllText(Path.Combine(staging, "manifest.json"), contents);
+
+            // Un ancien échec de rendu peut avoir réservé un dossier vide. Un dossier rempli reste prioritaire.
+            if (Directory.Exists(target) && !Directory.EnumerateFileSystemEntries(target).Any()) Directory.Delete(target);
+            Directory.Move(staging, target);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or JsonException) { }
+        finally
+        {
+            if (Directory.Exists(staging))
+            {
+                try { Directory.Delete(staging, recursive: true); }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException) { }
+            }
+        }
+    }
+
+    private static bool IsWallpaperFile(string? file) => file is not null
+        && file.IndexOfAny(['/', '\\', ':']) < 0
+        && file.EndsWith(".png", StringComparison.OrdinalIgnoreCase);
 }

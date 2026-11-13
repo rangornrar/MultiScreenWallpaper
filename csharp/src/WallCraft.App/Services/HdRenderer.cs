@@ -18,53 +18,78 @@ public static class HdRenderer
 
     public static async Task<CanvasRenderTarget> ComposeAsync(
         IReadOnlyList<CompositionImage> images, int width, int height, Windows.UI.Color background, CancellationToken cancel = default)
+        => await RenderAsync(RenderPlan.Build(images), new IntRect(0, 0, width, height), width, height, background, cancel);
+
+    private static async Task<CanvasRenderTarget> RenderAsync(
+        IReadOnlyList<RenderStep> steps, IntRect area, int width, int height, Windows.UI.Color background, CancellationToken cancel)
     {
-        var target = new CanvasRenderTarget(Device, width, height, 96);
-        using (var ds = target.CreateDrawingSession()) ds.Clear(background);
-
-        foreach (var step in RenderPlan.Build(images))
+        var device = Device;
+        int limit = device.MaximumBitmapSizeInPixels;
+        var target = CreateTarget(device, width, height, limit);
+        try
         {
-            cancel.ThrowIfCancellationRequested();
-            var img = step.Image;
-            var pixels = await ImageDecoder.DecodeAsync(img.Path);
-            pixels = Filters.Apply(pixels, img.Brightness, img.Contrast, img.Saturation);
-            if (img.Angle != 0) pixels = pixels.Rotate(img.Angle);
-            var cropped = pixels.Crop(step.SourceLeft, step.SourceTop, step.SourceRight, step.SourceBottom);
-            pixels = null!; // libère la pleine résolution avant l'envoi au GPU
+            using (var ds = target.CreateDrawingSession()) ds.Clear(background);
+            double sx = (double)width / area.Width, sy = (double)height / area.Height;
+            foreach (var step in steps)
+            {
+                cancel.ThrowIfCancellationRequested();
+                if (step.DestX >= area.Right || step.DestY >= area.Bottom ||
+                    (long)step.DestX + step.DestWidth <= area.X || (long)step.DestY + step.DestHeight <= area.Y) continue;
 
-            using var bitmap = CanvasBitmap.CreateFromBytes(Device, cropped.ToBgraPremultiplied(), cropped.Width, cropped.Height,
-                DirectXPixelFormat.B8G8R8A8UIntNormalized);
-            using var blur = img.Blur > 0
-                ? new GaussianBlurEffect { Source = bitmap, BlurAmount = (float)img.Blur, BorderMode = EffectBorderMode.Hard, Optimization = EffectOptimization.Quality }
-                : null;
-            // Une session par image : le dessin est terminé avant de libérer l'image source.
-            using var ds = target.CreateDrawingSession();
-            ds.DrawImage((ICanvasImage?)blur ?? bitmap,
-                new Rect(step.DestX, step.DestY, step.DestWidth, step.DestHeight),
-                new Rect(0, 0, cropped.Width, cropped.Height),
-                1f, CanvasImageInterpolation.HighQualityCubic);
+                var img = step.Image;
+                var pixels = await ImageDecoder.DecodeAsync(img.Path);
+                pixels = Filters.Apply(pixels, img.Brightness, img.Contrast, img.Saturation);
+                if (img.Angle != 0) pixels = pixels.Rotate(img.Angle);
+                var cropped = pixels.Crop(step.SourceLeft, step.SourceTop, step.SourceRight, step.SourceBottom);
+                double blurScale = 1;
+                if (cropped.Width > limit || cropped.Height > limit)
+                {
+                    blurScale = (double)limit / Math.Max(cropped.Width, cropped.Height);
+                    cropped = Thumbnail.Fit(cropped, limit, limit);
+                }
+                using var bitmap = CanvasBitmap.CreateFromBytes(device, cropped.ToBgraPremultiplied(), cropped.Width, cropped.Height,
+                    DirectXPixelFormat.B8G8R8A8UIntNormalized);
+                using var blur = img.Blur > 0
+                    ? new GaussianBlurEffect { Source = bitmap, BlurAmount = (float)(img.Blur * blurScale), BorderMode = EffectBorderMode.Hard, Optimization = EffectOptimization.Quality }
+                    : null;
+                // La surface de sortie découpe l'image sans modifier son placement dans la composition.
+                using var ds = target.CreateDrawingSession();
+                ds.DrawImage((ICanvasImage?)blur ?? bitmap,
+                    new Rect((step.DestX - (double)area.X) * sx, (step.DestY - (double)area.Y) * sy,
+                        step.DestWidth * sx, step.DestHeight * sy),
+                    new Rect(0, 0, cropped.Width, cropped.Height), 1f, CanvasImageInterpolation.HighQualityCubic);
+            }
+            return target;
         }
-        return target;
+        catch
+        {
+            target.Dispose();
+            throw;
+        }
     }
 
-    /// <summary>Découpe la composition en une image par écran (taille native de l'écran) et l'enregistre en PNG.</summary>
+    /// <summary>Enregistre une image PNG à la taille native de chaque écran.</summary>
     public static async Task<List<(MonitorInfo Monitor, string Path)>> SplitAsync(
-        CanvasRenderTarget composite, IReadOnlyList<MonitorInfo> monitors, string outDir, string prefix)
+        IReadOnlyList<CompositionImage> images, int width, int height, IReadOnlyList<MonitorInfo> monitors,
+        Windows.UI.Color background, string outDir, string prefix, CancellationToken cancel = default)
     {
-        var size = composite.SizeInPixels;
-        var boxes = CompositionLayout.SplitBoxes(monitors, (int)size.Width, (int)size.Height);
+        if (monitors.Count == 0) return [];
+        var boxes = CompositionLayout.SplitBoxes(monitors, width, height);
+        int limit = Device.MaximumBitmapSizeInPixels;
+        var steps = RenderPlan.Build(images);
+        using var composite = width <= limit && height <= limit
+            ? await RenderAsync(steps, new IntRect(0, 0, width, height), width, height, background, cancel)
+            : null;
         var results = new List<(MonitorInfo, string)>();
         for (int i = 0; i < monitors.Count; i++)
         {
+            cancel.ThrowIfCancellationRequested();
             if (boxes[i] is not var (l, t, r, b)) continue;
             var m = monitors[i];
-            bool sameSize = r - l == m.Width && b - t == m.Height;
-            using var piece = new CanvasRenderTarget(Device, m.Width, m.Height, 96);
-            using (var ds = piece.CreateDrawingSession())
-            {
-                ds.DrawImage(composite, new Rect(0, 0, m.Width, m.Height), new Rect(l, t, r - l, b - t), 1f,
-                    sameSize ? CanvasImageInterpolation.NearestNeighbor : CanvasImageInterpolation.HighQualityCubic);
-            }
+            var area = new IntRect(l, t, r - l, b - t);
+            using var piece = composite is null
+                ? await RenderAsync(steps, area, m.Width, m.Height, background, cancel)
+                : ExtractScreen(composite, area, m.Width, m.Height, limit);
             string path = Path.Combine(outDir, $"{prefix}_pos_{i:00}.png");
             await piece.SaveAsync(path, CanvasBitmapFileFormat.Png);
             results.Add((m, path));
@@ -72,12 +97,37 @@ public static class HdRenderer
         return results;
     }
 
+    private static CanvasRenderTarget ExtractScreen(CanvasRenderTarget composite, IntRect area, int width, int height, int limit)
+    {
+        var piece = CreateTarget(Device, width, height, limit);
+        try
+        {
+            using var ds = piece.CreateDrawingSession();
+            ds.DrawImage(composite, new Rect(0, 0, width, height), new Rect(area.X, area.Y, area.Width, area.Height), 1f,
+                area.Width == width && area.Height == height ? CanvasImageInterpolation.NearestNeighbor : CanvasImageInterpolation.HighQualityCubic);
+            return piece;
+        }
+        catch
+        {
+            piece.Dispose();
+            throw;
+        }
+    }
+
+    private static CanvasRenderTarget CreateTarget(CanvasDevice device, int width, int height, int limit)
+    {
+        if (width > limit || height > limit)
+            throw new InvalidOperationException(Localizer.Current.Format("msg_render_too_large", width, height, limit));
+        return new CanvasRenderTarget(device, width, height, 96);
+    }
+
     /// <summary>Repli « Étendre » : une seule image à la géométrie du bureau Windows, reconstruite depuis les images par écran.</summary>
     public static async Task<string> BuildSpanAsync(IReadOnlyList<(MonitorInfo Monitor, string Path)> pieces, Windows.UI.Color background, string path)
     {
         int x0 = pieces.Min(p => p.Monitor.X), y0 = pieces.Min(p => p.Monitor.Y);
         int x1 = pieces.Max(p => p.Monitor.X + p.Monitor.Width), y1 = pieces.Max(p => p.Monitor.Y + p.Monitor.Height);
-        using var span = new CanvasRenderTarget(Device, x1 - x0, y1 - y0, 96);
+        var device = Device;
+        using var span = CreateTarget(device, x1 - x0, y1 - y0, device.MaximumBitmapSizeInPixels);
         using (var ds = span.CreateDrawingSession()) ds.Clear(background);
         foreach (var (m, file) in pieces)
         {
