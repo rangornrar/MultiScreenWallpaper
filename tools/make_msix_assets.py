@@ -1,5 +1,5 @@
 """
-Icônes du paquet MSIX (Microsoft Store) : python/msix/Assets/*.png
+Icônes du paquet MSIX (Microsoft Store) : csharp/src/WallCraft.App/Images/*.png
 
 Même motif que l'icône de la zone de notification (trois écrans et un pied), dessiné
 en grand puis réduit pour rester net à chaque taille demandée par Windows.
@@ -10,7 +10,7 @@ import os
 
 from PIL import Image, ImageDraw
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "python", "msix", "Assets")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "csharp", "src", "WallCraft.App", "Images")
 COLORS = [(138, 180, 248), (120, 212, 160), (255, 196, 110)]
 STAND = (200, 210, 225)
 

@@ -219,8 +219,10 @@ def layout_signature(monitors):
 # --- Réglages persistants de l'application ---
 
 def settings_path():
-    import appmodel
-    return os.path.join(appmodel.app_data_dir(), "settings.json")
+    base = os.environ.get("LOCALAPPDATA") or os.path.join(os.path.expanduser("~"), ".local", "share")
+    path = os.path.join(base, "WallCraft")
+    os.makedirs(path, exist_ok=True)
+    return os.path.join(path, "settings.json")
 
 
 def load_settings():

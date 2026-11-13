@@ -360,12 +360,18 @@ public sealed class AutomationService : IDisposable
 
     private static bool SafeAutostart()
     {
+        if (Services.StoreStartup.IsPackaged) return Services.StoreStartup.IsEnabled();
         try { return Autostart.IsEnabled(); }
         catch (Exception e) when (e is UnauthorizedAccessException or System.Security.SecurityException or IOException) { return false; }
     }
 
     private static void SetAutostart(bool enabled)
     {
+        if (Services.StoreStartup.IsPackaged)
+        {
+            Services.StoreStartup.Set(enabled);
+            return;
+        }
         string exe = Environment.ProcessPath ?? throw new InvalidOperationException("Chemin de l'exécutable inconnu.");
         Autostart.Set(enabled, exe);
     }

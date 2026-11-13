@@ -6,8 +6,7 @@ Ce qui fait vivre WallCraft après le clic sur « Appliquer » :
 - Watcher : réapplique le bon fond quand les écrans changent, ou quand Windows a remis
   un thème (synchronisation du compte, mise à jour) ;
 - rotation d'images depuis un dossier ;
-- icône dans la zone de notification (pystray) et lancement au démarrage (registre HKCU\\...\\Run,
-  ou tâche de démarrage du paquet dans la version Microsoft Store : voir appmodel).
+- icône dans la zone de notification (pystray) et lancement au démarrage (registre HKCU\\...\\Run).
 
 Aucune de ces fonctions n'appelle Tk : l'interface les pilote depuis son propre thread.
 """
@@ -18,7 +17,6 @@ import random
 import sys
 import time
 
-import appmodel
 from display_geometry import layout_signature
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff")
@@ -27,7 +25,10 @@ APP_NAME = "WallCraft"
 
 
 def app_data_dir():
-    return appmodel.app_data_dir()
+    base = os.environ.get("LOCALAPPDATA") or os.path.join(os.path.expanduser("~"), ".local", "share")
+    path = os.path.join(base, "WallCraft")
+    os.makedirs(path, exist_ok=True)
+    return path
 
 
 # --- Un fond par configuration d'écrans ---
@@ -171,8 +172,6 @@ def autostart_command():
 def get_autostart():
     if sys.platform != "win32":
         return False
-    if appmodel.is_packaged():
-        return appmodel.get_startup_task_enabled()
     import winreg
     try:
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, RUN_KEY) as key:
@@ -185,8 +184,6 @@ def get_autostart():
 def set_autostart(enabled):
     if sys.platform != "win32":
         return False
-    if appmodel.is_packaged():
-        return appmodel.set_startup_task_enabled(enabled)
     import winreg
     with winreg.OpenKey(winreg.HKEY_CURRENT_USER, RUN_KEY, 0, winreg.KEY_SET_VALUE) as key:
         if enabled:

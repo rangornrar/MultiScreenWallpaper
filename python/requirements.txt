@@ -2,9 +2,3 @@ Pillow==13.0.0
 screeninfo==0.8.1
 opencv-python-headless==4.14.0.94
 pystray==0.19.5
-# Version Microsoft Store (paquet MSIX) : tâche de démarrage via WinRT, voir appmodel.py
-winrt-runtime==4.1.0; sys_platform == "win32"
-winrt-Windows.ApplicationModel==4!10.0.28000.2957; sys_platform == "win32"
-winrt-Windows.ApplicationModel.Activation==4!10.0.28000.2957; sys_platform == "win32"
-winrt-Windows.Foundation==4!10.0.28000.2957; sys_platform == "win32"
-winrt-Windows.Foundation.Collections==4!10.0.28000.2957; sys_platform == "win32"
