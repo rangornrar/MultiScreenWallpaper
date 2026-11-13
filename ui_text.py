@@ -245,5 +245,6 @@ UI_TEXT.update({
     "prefs_section_startup": {"en": 'Startup and notification area', "fr": 'Démarrage et zone de notification', "es": 'Inicio y área de notificación', "de": 'Start und Infobereich'},
     "prefs_folder_none": {"en": 'No folder selected', "fr": 'Aucun dossier choisi', "es": 'Ninguna carpeta elegida', "de": 'Kein Ordner ausgewählt'},
     "msg_autostart_failed": {"en": 'Could not change the start with Windows setting:\n\n{}', "fr": 'Impossible de modifier le lancement au démarrage de Windows :\n\n{}', "es": 'No se pudo cambiar el inicio con Windows:\n\n{}', "de": 'Der Start mit Windows konnte nicht geändert werden:\n\n{}'},
+    "filetype_jpeg": {"en": "JPEG image", "fr": "Image JPEG", "es": "Imagen JPEG", "de": "JPEG-Bild"},
     "variants_hint": {"en": 'Click a thumbnail to use that variant.', "fr": 'Cliquez sur une miniature pour utiliser cette variante.', "es": 'Haz clic en una miniatura para usar esa variante.', "de": 'Klicke auf eine Miniatur, um diese Variante zu verwenden.'},
 })
