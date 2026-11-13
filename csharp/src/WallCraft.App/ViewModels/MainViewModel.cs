@@ -369,11 +369,11 @@ public sealed partial class MainViewModel : ObservableObject
     /// Exécute <paramref name="work"/> hors du fil d'interface (<c>_run_in_background</c>) : un seul à la fois, statut
     /// « Traitement… » et curseur occupé. Une exception est montrée à l'utilisateur ; renvoie alors default.
     /// </summary>
-    private async Task<(bool Ok, T? Result)> RunBusyAsync<T>(Func<Task<T>> work)
+    private async Task<(bool Ok, T? Result)> RunBusyAsync<T>(Func<Task<T>> work, string statusKey = "status_processing")
     {
         if (IsBusy) return (false, default);
         IsBusy = true;
-        StatusText = _loc["status_processing"];
+        StatusText = _loc[statusKey];
         try
         {
             return (true, await Task.Run(work));
@@ -545,11 +545,9 @@ public sealed partial class MainViewModel : ObservableObject
         int w = CompositionWidth, h = CompositionHeight;
         if (fill) await Images.EnsureFocusAsync(Document.Images);
         var images = Snapshot();
-        var (ok, variants) = await RunBusyAsync(() => Task.FromResult(_engine.Variants(mode, w, h, images, fill)));
+        var (ok, variants) = await RunBusyAsync(() => Task.FromResult(_engine.Variants(mode, w, h, images, fill)), "variants_computing");
         if (!ok || variants is null || variants.Count == 0) return;
-        StatusText = _loc["variants_computing"];
         int? chosen = await _ui.ChooseVariantAsync(variants.Select(v => (IReadOnlyList<Placement>)v).ToList());
-        StatusText = _loc["status_ready"];
         if (chosen is int i && i >= 0 && i < variants.Count && SameImages(images)) Document.ApplyPlacement(variants[i]);
     }
 
