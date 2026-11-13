@@ -8,7 +8,7 @@
 
 Sie löst das Problem unterschiedlicher Monitorauflösungen und Bildschirmränder durch ihre intelligente Engine vollständig: Sie ermöglicht das Zusammenfügen mehrerer Fotos, **ohne diese jemals zu verzerren oder zuzuschneiden**, und garantiert so eine **absolute 100%ige Sichtbarkeit** Ihrer Bilder ("Fit Inside"-Prinzip).
 
-![WallCraft-Benutzeroberfläche](site/assets/wallcraft_app_ui_1773221294829.png)
+![WallCraft-Benutzeroberfläche](site/assets/screens/de/main.webp)
 
 ---
 
@@ -36,7 +36,7 @@ Das Programm hält sich strikt an die 100 % Regel:
 - **Regelmäßiges Raster**: Ein mathematisch gleichmäßiges Raster.
 - **Vertikale & Horizontale Streifen**: Panorama-Slicing über die volle Höhe oder volle Breite.
 
-![Maximale Optimierungsheuristik](site/assets/wallcraft_optimal_layout_1773221310533.png)
+![Maximale Optimierungsheuristik](site/assets/screens/desk.webp)
 
 ### ⚡ Leistung & Bearbeitung
 - **Proxy-System**: Verwendet Miniaturansichten für eine extrem flüssige Benutzeroberfläche, selbst bei 8K-Bildern.

@@ -109,6 +109,8 @@ class ViewsMixin:
                         continue
                     sx0, sy0 = self.logic_to_screen(x0, y0)
                     sx1, sy1 = self.logic_to_screen(x1, y1)
+                    if sx1 - sx0 < 1 or sy1 - sy0 < 1:
+                        continue  # bande de moins d'un pixel à ce zoom (ex. joint entre deux dalles)
                     draw.rectangle([sx0, sy0, sx1 - 1, sy1 - 1], fill=(4, 7, 14, 175))
             self._dim_image = ImageTk.PhotoImage(overlay)
             self._dim_key = key

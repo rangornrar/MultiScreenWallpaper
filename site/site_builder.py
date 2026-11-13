@@ -4,19 +4,21 @@ import posixpath
 import shutil
 from html import escape
 
-TODAY = "2026-11-08"
+TODAY = "2026-11-13"
 BASE_URL = "https://wallcraft.archi-it.fr/"
 PROJECT_BASE_URL = BASE_URL.removesuffix("html/")
 REPO_URL = "https://github.com/rangornrar/MultiScreenWallpaper"
 RELEASES_URL = f"{REPO_URL}/releases"
 ARCHI_IT_URL = "https://www.archi-it.fr/#labs"
 ARCHI_IT_HOME_URL = "https://www.archi-it.fr/"
-PRODUCT_VERSION = "2026.11.8"
+PRODUCT_VERSION = "2026.11.13"
 # Tag de la release GitHub qui contient l'exécutable (le workflow release.yml le nomme
 # WallCraft-Pro-v<version>-Windows.exe). À mettre à jour avec PRODUCT_VERSION.
-RELEASE_TAG = "Tag_v2026.11.8"
+RELEASE_TAG = "Tag_v2026.11.13"
 DOWNLOAD_URL = f"{REPO_URL}/releases/download/{RELEASE_TAG}/WallCraft-Pro-v{PRODUCT_VERSION}-Windows.exe"
 GOOGLE_SITE_VERIFICATION = ""
+# Anciennes captures (2026.3) : ces noms ne servent plus qu'à les remplacer par les captures par langue
+# de site/assets/screens (voir apply_2026_11 et tools/make_screenshots.py).
 SCREEN_1 = "assets/wallcraft_2026_workspace.png"
 SCREEN_2 = "assets/wallcraft_2026_clean_output.png"
 SCREEN_3 = "assets/wallcraft_2026_workspace_stage.png"
@@ -159,6 +161,21 @@ a:hover { color: var(--accent-hover); }
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 .screen-card img { width: 100%; height: auto; display: block; }
+.article-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+.prose p { margin-bottom: 14px; color: var(--text); }
+.prose .feature-list { margin: 16px 0 0; }
+.note-box { background: rgba(88, 166, 255, 0.08); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 12px; padding: 24px; }
+.note-box h3 { color: #fff; margin-bottom: 8px; font-size: 1.05em; }
+.note-box p { color: var(--text-dim); margin-bottom: 8px; }
+.feature-grid.wide { grid-template-columns: 1fr; }
+.feature-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 32px; align-items: start; }
+.feature-grid .prose p, .feature-grid .prose li { color: var(--text); }
+.feature-shot { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+.feature-shot img { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.help-toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.help-toc a { border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; font-size: 0.9em; }
+section[id] { scroll-margin-top: 90px; }
 .shot-caption { padding: 20px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
 .shot-caption strong { display: block; color: #fff; margin-bottom: 4px; }
 .shot-caption p { font-size: 0.9em; color: var(--text-dim); }
@@ -232,6 +249,7 @@ a:hover { color: var(--accent-hover); }
     .hero-content h1 { font-size: 2.5em; }
     .hero-actions { justify-content: center; }
     .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .feature-grid, .article-grid { grid-template-columns: 1fr; }
     .nav, .nav-actions .button.secondary { display: none; }
 }
 """
@@ -265,10 +283,11 @@ SLUGS = {
     "use-cases": "use-cases",
     "dual-monitor-wallpaper-without-cropping": "dual-monitor-wallpaper-without-cropping",
     "mixed-monitor-wallpaper-setup": "mixed-monitor-wallpaper-setup",
+    "help": "help",
 }
 
-NAV_ORDER = ["download", "how-it-works", "dual-monitor-wallpaper-windows-11", "use-cases", "faq", "compare"]
-FOOTER_ORDER = ["download", "how-it-works", "faq", "compare", "dual-monitor-wallpaper-without-cropping", "mixed-monitor-wallpaper-setup"]
+NAV_ORDER = ["download", "how-it-works", "help", "use-cases", "faq", "compare"]
+FOOTER_ORDER = ["download", "how-it-works", "help", "faq", "compare", "dual-monitor-wallpaper-without-cropping", "mixed-monitor-wallpaper-setup"]
 LANG_ORDER = ["fr", "en", "es", "de"]
 
 LANGS = {
@@ -1586,6 +1605,78 @@ for _lang, _n in NOVEMBER_2026.items():
                                    "body": _body, "list": _items, "aside_title": _ABOUT_DOWNLOAD[_lang], "aside_body": _aside}
             break
 
+# --- Interface 2026.11 : captures par langue, nouveautés, page d'aide (contenu : content_2026_11.py) ---
+import content_2026_11 as _c
+
+
+def screen(lang, name):
+    """Capture de l'interface dans la langue de la page (site/assets/screens/<langue>/<nom>.webp)."""
+    return f"assets/screens/{lang}/{name}.webp" if name != "desk" else "assets/screens/desk.webp"
+
+
+def apply_2026_11():
+    old_shots = {SCREEN_1: "main", SCREEN_2: "preview", SCREEN_3: "main-real-size"}
+    for lang in LANG_ORDER:
+        LANGS[lang]["nav"]["help"] = _c.NAV[lang]
+        pages = PAGES[lang]
+        # Plus aucune capture de l'ancienne interface
+        for page in pages.values():
+            for section in page.get("sections", []):
+                if section.get("type") == "shot" and section.get("image") in old_shots:
+                    section["image"] = screen(lang, old_shots[section["image"]])
+
+        home = pages["home"]
+        home["hero_image"] = screen(lang, "main")
+        home["hero_caption_title"], home["hero_caption_text"] = _c.HERO_CAPTION[lang]
+        intro, cards = _c.WHATS_NEW[lang]
+        sections = [s for s in home["sections"] if s.get("type") not in ("shot", "steps")]
+        sections[0] = {"type": "cards", "title": _WHATS_NEW_TITLE[lang].format(PRODUCT_VERSION), "text": intro,
+                       "cards": [{"title": t, "text": x} for t, x in cards]}
+        shots = [{"type": "shot", "title": t, "text": x, "image": screen(lang, img), "caption_title": ct, "caption_text": cx}
+                 for t, x, img, ct, cx in _c.HOME_SHOTS[lang]]
+        steps_intro, steps = _c.STEPS[lang]
+        steps_section = {"type": "steps", "title": _c.HELP[lang]["sections"][0]["title"], "text": steps_intro,
+                         "steps": [{"title": t, "text": x} for t, x in steps]}
+        home["sections"] = [sections[0]] + shots + [steps_section] + sections[1:]
+        for s in home["sections"]:
+            if s.get("type") == "links" and "help" not in s["links"]:
+                s["links"] = ["help"] + s["links"]
+
+        for s in pages["download"]["sections"]:
+            if s.get("type") == "text" and s.get("list"):
+                s["list"] = [t + "." for t, _ in cards[:4]] + s["list"]
+            if s.get("type") == "links" and "help" not in s["links"]:
+                s["links"] = ["help"] + s["links"]
+
+        how = pages["how-it-works"]
+        how["sections"] = [steps_section] + [
+            {"type": "feature", "title": h["title"], "text": h["text"], "image": screen(lang, h["image"]), "body": h["body"], "list": h["list"]}
+            for h in _c.HELP[lang]["sections"] if h.get("type") == "feature" and h["image"] in ("main", "preview", "real-size")
+        ] + [s for s in how["sections"] if s.get("type") == "links"]
+        for s in how["sections"]:
+            if s.get("type") == "links" and "help" not in s["links"]:
+                s["links"] = ["help"] + s["links"]
+
+        help_data = _c.HELP[lang]
+        help_sections = []
+        for h in help_data["sections"]:
+            h = dict(h)
+            if h["type"] == "steps":
+                h["steps"] = [{"title": t, "text": x} for t, x in h["steps"]]
+            if h["type"] == "feature":
+                h["wide"] = h["image"] in ("main", "preview")
+                h["image"] = screen(lang, h["image"])
+            help_sections.append(h)
+        toc = {"type": "toc", "title": _c.TOC[lang][0], "text": _c.TOC[lang][1],
+               "links": [(h["id"], h["title"]) for h in help_sections if h.get("id")]}
+        pages["help"] = {k: help_data[k] for k in ("meta_title", "meta_description", "hero_badge", "hero_title", "hero_lead")}
+        pages["help"]["sections"] = [toc] + help_sections + [
+            {"type": "links", "title": LANGS[lang]["related_title"], "text": "", "links": ["download", "how-it-works", "faq"]}]
+
+
+apply_2026_11()
+
+
 def page_label(lang, key):
     return LANGS[lang]["nav"][key]
 
@@ -1693,13 +1784,39 @@ SCREENSHOT_ALT = {
 OG_LOCALES = {"en": "en_US", "fr": "fr_FR", "es": "es_ES", "de": "de_DE"}
 
 
+def image_size(relative):
+    """Taille réelle d'une image du site (pour éviter les sauts de mise en page), (640, 400) par défaut."""
+    try:
+        from PIL import Image
+        with Image.open(ROOT / relative) as im:
+            return im.size
+    except Exception:
+        return 640, 400
+
+
+def render_feature(lang, prefix, section):
+    body = "".join(f"<p>{escape(item)}</p>" for item in section.get("body", []))
+    listing = '<ul class="feature-list">' + "".join(f"<li>{escape(i)}</li>" for i in section.get("list", [])) + "</ul>" if section.get("list") else ""
+    w, h = image_size(section["image"])
+    alt = escape(section["title"])
+    wide = " wide" if section.get("wide") else ""
+    return (f'<div class="feature-grid{wide}"><div class="panel prose">{body}{listing}</div>'
+            f'<div class="feature-shot"><img src="{prefix}{escape(section["image"])}" alt="{alt}" width="{w}" height="{h}" loading="lazy" decoding="async"></div></div>')
+
+
+def render_toc(section):
+    return '<nav class="help-toc">' + "".join(f'<a href="#{escape(i)}">{escape(t)}</a>' for i, t in section["links"]) + "</nav>"
+
+
 def render_shot(lang, prefix, section):
     alt = escape(section.get("caption_title") or SCREENSHOT_ALT[lang])
-    return f'''<div class="screen-card"><img src="{prefix}{escape(section["image"])}" alt="{alt}" width="640" height="640" loading="lazy" decoding="async"><div class="shot-caption"><strong>{escape(section["caption_title"])}</strong><p>{escape(section["caption_text"])}</p></div></div>'''
+    w, h = image_size(section["image"])
+    return f'''<div class="screen-card"><img src="{prefix}{escape(section["image"])}" alt="{alt}" width="{w}" height="{h}" loading="lazy" decoding="async"><div class="shot-caption"><strong>{escape(section["caption_title"])}</strong><p>{escape(section["caption_text"])}</p></div></div>'''
 
 
 def render_section(lang, current_key, prefix, section):
-    top = f'<section class="section"><div class="section-head"><div><h2>{escape(section["title"])}</h2></div><p>{escape(section["text"])}</p></div>'
+    anchor = f' id="{escape(section["id"])}"' if section.get("id") else ""
+    top = f'<section class="section"{anchor}><div class="section-head"><div><h2>{escape(section["title"])}</h2></div><p>{escape(section["text"])}</p></div>'
     if section["type"] == "cards":
         body = render_card_grid(lang, current_key, section["cards"])
     elif section["type"] == "steps":
@@ -1714,6 +1831,10 @@ def render_section(lang, current_key, prefix, section):
         body = render_links(lang, current_key, section)
     elif section["type"] == "shot":
         body = render_shot(lang, prefix, section)
+    elif section["type"] == "feature":
+        body = render_feature(lang, prefix, section)
+    elif section["type"] == "toc":
+        body = render_toc(section)
     else:
         body = ""
     return top + body + "</section>"
@@ -1748,7 +1869,7 @@ def build_json_ld(lang, key):
             "softwareVersion": PRODUCT_VERSION,
             "url": canonical_url,
             "downloadUrl": DOWNLOAD_URL,
-            "image": f"{BASE_URL}{SCREEN_1}",
+            "image": f"{BASE_URL}assets/screens/{lang}/main.webp",
             "inLanguage": lang,
             "description": page["meta_description"],
             "isAccessibleForFree": True,
@@ -1795,7 +1916,7 @@ def render_head(lang, current_key, prefix):
     <meta property="og:title" content="{escape(page["meta_title"])}">
     <meta property="og:description" content="{escape(page["meta_description"])}">
     <meta property="og:url" content="{canonical_url}">
-    <meta property="og:image" content="{BASE_URL}{SCREEN_1}">
+    <meta property="og:image" content="{BASE_URL}assets/screens/og-image.png">
     <meta property="og:locale" content="{OG_LOCALES[lang]}">
     <meta name="twitter:card" content="summary_large_image">
     {verification_tag}
@@ -1867,9 +1988,11 @@ def render_page(lang, key):
 
     hero_image = ""
     if key == "home":
+        hero_src = page.get("hero_image", SCREEN_1)
+        hw, hh = image_size(hero_src)
         hero_image = f'''<div class="hero-image">
             <div class="screen-card">
-                <img src="{prefix}{SCREEN_1}" alt="{escape(SCREENSHOT_ALT[lang])}" width="600" height="400">
+                <img src="{prefix}{hero_src}" alt="{escape(SCREENSHOT_ALT[lang])}" width="{hw}" height="{hh}">
                 {hero_caption}
             </div>
         </div>'''

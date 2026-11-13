@@ -8,7 +8,7 @@
 
 Elle résout le problème des résolutions et des bordures de moniteurs disparates grâce à son moteur de placement : elle permet de fusionner de multiples photos sans **jamais les déformer ni les rogner**, en conservant l’intégralité de chaque image dans les modes de placement décrits ("Fit Inside").
 
-![WallCraft Interface](site/assets/wallcraft_app_ui_1773221294829.png)
+![WallCraft Interface](site/assets/screens/fr/main.webp)
 
 ---
 
@@ -36,7 +36,7 @@ Le programme garantit la règle du 100% :
 - **Grille Régulière** : Quadrillage mathématique et étendu.
 - **Bandes Verticales** et **Bandes Horizontales** : Découpage panoramique pleine hauteur ou largeur.
 
-![Optimisation Maximale Heuristique](site/assets/wallcraft_optimal_layout_1773221310533.png)
+![Optimisation Maximale Heuristique](site/assets/screens/desk.webp)
 
 ### ⚡ Performance & Édition
 - **Système de Proxy** : Utilise des miniatures pour une interface plus réactive grâce à des miniatures de 1 024 pixels maximum.
