@@ -17,6 +17,9 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <EnableMsixTooling>true</EnableMsixTooling>
     <DefaultLanguage>fr-FR</DefaultLanguage>
+    <!-- Taille de l'exe : fichier unique compressé, seulement les langues de l'interface. -->
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <SatelliteResourceLanguages>en;fr;es;de</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
