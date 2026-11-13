@@ -97,22 +97,23 @@ a:hover { color: var(--accent-hover); }
 .nav a:hover, .nav a.active { color: var(--accent); }
 
 .hero {
-    padding: 80px 20px;
+    padding: 48px 20px 40px;
     max-width: 1100px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 48px;
     align-items: center;
 }
-.hero-content h1 { font-size: 3.5em; line-height: 1.1; margin-bottom: 24px; color: #fff; font-weight: 800; }
-.hero-content .lead { font-size: 1.25em; color: var(--text-dim); margin-bottom: 32px; }
+.hero.no-image { grid-template-columns: minmax(0, 760px); padding-bottom: 16px; }
+.hero-content h1 { font-size: clamp(1.8em, 3.2vw, 2.5em); line-height: 1.15; margin-bottom: 18px; color: #fff; font-weight: 800; }
+.hero-content .lead { font-size: 1.08em; color: var(--text-dim); margin-bottom: 24px; }
 .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
 
-.section { padding: 80px 20px; max-width: 1100px; margin: 0 auto; }
-.section-head { margin-bottom: 48px; max-width: 700px; }
-.section-head h2 { font-size: 2.2em; color: #fff; margin-bottom: 16px; }
-.section-head p { font-size: 1.1em; color: var(--text-dim); }
+.section { padding: 52px 20px; max-width: 1100px; margin: 0 auto; }
+.section-head { margin-bottom: 28px; max-width: 700px; }
+.section-head h2 { font-size: 1.65em; line-height: 1.25; color: #fff; margin-bottom: 10px; }
+.section-head p { font-size: 1.02em; color: var(--text-dim); }
 
 .card-grid, .step-grid {
     display: grid;
@@ -127,7 +128,7 @@ a:hover { color: var(--accent-hover); }
     transition: border-color 0.2s, transform 0.2s;
 }
 .card:hover { border-color: var(--accent); transform: translateY(-4px); }
-.card h3 { color: #fff; margin-bottom: 12px; font-size: 1.4em; }
+.card h3 { color: #fff; margin-bottom: 10px; font-size: 1.12em; }
 .card p { color: var(--text-dim); }
 .card .meta { margin-top: 24px; font-weight: 600; }
 
@@ -242,11 +243,12 @@ section[id] { scroll-margin-top: 90px; }
     border-radius: 24px;
     text-align: center;
 }
-.highlight-panel h2 { font-size: 2.5em; color: #fff; margin-bottom: 24px; }
+.highlight-panel h2 { font-size: 1.7em; color: #fff; margin-bottom: 16px; }
 
 @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; text-align: center; padding: 40px 20px; }
-    .hero-content h1 { font-size: 2.5em; }
+    .hero-content h1 { font-size: 1.7em; }
+    .section-head h2 { font-size: 1.4em; }
     .hero-actions { justify-content: center; }
     .footer-grid { grid-template-columns: 1fr; gap: 40px; }
     .feature-grid, .article-grid { grid-template-columns: 1fr; }
@@ -2010,7 +2012,7 @@ def render_page(lang, key):
     </header>
 
     <main id="content">
-        <header class="hero">
+        <header class="hero{"" if hero_image else " no-image"}">
             <div class="hero-content">
                 {hero_badge}
                 <h1>{escape(page["hero_title"])}</h1>

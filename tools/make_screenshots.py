@@ -152,7 +152,11 @@ def main():
         img.save(path, "WEBP", quality=88, method=6)
         print(os.path.relpath(path, ROOT), img.size)
 
+    import shutil
     for lang in LANGS:
+        # Réglages remis à zéro pour chaque langue (la capture « taille réelle » de la langue précédente
+        # ne doit pas rester activée)
+        shutil.rmtree(os.environ["LOCALAPPDATA"], ignore_errors=True)
         locales.set_language(lang)
         root = tk.Tk()
         root.geometry(f"{WINDOW[0]}x{WINDOW[1]}+0+0")
