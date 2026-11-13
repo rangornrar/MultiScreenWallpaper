@@ -104,6 +104,10 @@ public static class DesktopWallpaper
     /// <summary>Mode de secours : une seule image étirée sur tout le bureau (« Étendre »).</summary>
     public static bool ApplySpan(string imagePath)
     {
+        // IDesktopWallpaper d'abord : il ne passe pas par le registre, que Windows redirige dans un paquet MSIX.
+        string full = Path.GetFullPath(imagePath);
+        if (With(w => w.SetPosition(DesktopWallpaperPosition.Span) == 0 && w.SetWallpaper(null, full) == 0, _ => false))
+            return true;
         try
         {
             using (var key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", writable: true))

@@ -15,6 +15,8 @@ Les exécutables ne sont plus versionnés dans Git : ils sont construits par Git
 - Pousser un tag `vAAAA.M.J` (par exemple `git tag v2026.11.7 && git push origin v2026.11.7`).
 - Attendre la fin du workflow **Release** : il crée la release avec l'exe et son fichier `.sha256`.
 - Compléter les notes de version avec `RELEASE_NOTES_TEMPLATE.md`.
+- Microsoft Store (version C#) : le workflow **Microsoft Store (MSIX)** construit et vérifie le paquet du même tag.
+  Télécharger l'artefact `wallcraft-store-msix` et le déposer dans Partner Center (voir `MICROSOFT_STORE.md`).
 
 ## Après publication
 - Régénérer le site : `python site/site_builder.py`, puis publier le contenu de `site/html/` sur l'hébergeur. Le lien de téléchargement est construit à partir de

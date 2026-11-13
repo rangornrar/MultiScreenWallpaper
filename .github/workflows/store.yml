@@ -1,0 +1,128 @@
+name: Microsoft Store (MSIX)
+# Construit le paquet MSIX de la version C# pour le Microsoft Store, l'installe sur le runner avec un certificat
+# de test et vérifie qu'il fonctionne dans un paquet (dossier réel, fond d'écran, tâche de démarrage, ouverture).
+# Le paquet non signé est publié en artefact : c'est lui qu'on dépose dans Partner Center, qui le signe.
+#
+# Identité du paquet : variables du dépôt (Settings > Secrets and variables > Actions > Variables)
+# MSIX_IDENTITY_NAME, MSIX_PUBLISHER, MSIX_PUBLISHER_DISPLAY_NAME, recopiées depuis
+# Partner Center > WallCraft Pro > Identité du produit. Sans elles : identité de test.
+on:
+  push:
+    tags: ['v*', 'Tag_v*']
+  pull_request:
+    paths: ['csharp/**', '.github/workflows/store.yml']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (ex. 2026.11.14)'
+        required: false
+permissions:
+  contents: read
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME || 'WallCraftPro.Dev' }}
+  PUBLISHER: ${{ vars.MSIX_PUBLISHER || 'CN=WallCraftDev' }}
+  PUBLISHER_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME || 'rangornrar' }}
+jobs:
+  store:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('csharp/**/*.csproj', 'csharp/Directory.Build.props') }}
+          restore-keys: nuget-${{ runner.os }}-
+      - name: Version et identité du paquet
+        id: v
+        run: |
+          $v = "${{ github.ref_name }}" -replace '^(Tag_)?v', ''
+          if ("${{ github.ref_type }}" -ne "tag") {
+            $v = "${{ inputs.version }}"
+            if (-not $v) { $v = Get-Date -Format "yyyy.M.d" }
+          }
+          $parts = @($v.Split(".")); while ($parts.Count -lt 3) { $parts += "0" }
+          $msix = ($parts[0..2] -join ".") + ".0"   # le Store exige un 4e nombre à 0
+          $file = "csharp/src/WallCraft.App/Package.appxmanifest"
+          [xml]$m = Get-Content $file -Raw -Encoding UTF8
+          $m.Package.Identity.Name = $env:IDENTITY_NAME
+          $m.Package.Identity.Publisher = $env:PUBLISHER
+          $m.Package.Identity.Version = $msix
+          $m.Package.Properties.PublisherDisplayName = $env:PUBLISHER_DISPLAY_NAME
+          $m.Save((Resolve-Path $file))
+          "version=$v" >> $env:GITHUB_OUTPUT
+          Write-Host "Paquet $env:IDENTITY_NAME $msix"
+      - name: Paquet du Store (non signé)
+        run: >
+          dotnet build csharp/src/WallCraft.App -c Release -r win-x64 -p:Platform=x64
+          -p:WindowsPackageType=MSIX -p:GenerateAppxPackageOnBuild=true
+          -p:UapAppxPackageBuildMode=SideloadOnly
+          -p:AppxPackageDir=${{ github.workspace }}\store\
+      - name: Nommer le paquet
+        run: |
+          $msix = Get-ChildItem store -Recurse -Filter *.msix | Where-Object { $_.Name -notlike "*Microsoft.WindowsAppRuntime*" } | Select-Object -First 1
+          if (-not $msix) { Get-ChildItem store -Recurse | Format-Table FullName; throw "Aucun .msix produit." }
+          New-Item -ItemType Directory out -Force | Out-Null
+          Copy-Item $msix.FullName "out/WallCraft-Pro-v${{ steps.v.outputs.version }}-Store.msix"
+          Get-ChildItem out | Format-Table Name, Length
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wallcraft-store-msix
+          path: out/*.msix
+          if-no-files-found: error
+
+      # --- Vérification du paquet installé ---
+      - name: Paquet de test signé et installé
+        run: |
+          $sdk = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\10.*" -Directory |
+              Where-Object { Test-Path "$($_.FullName)\x64\signtool.exe" } | Sort-Object { [version]$_.Name } -Descending | Select-Object -First 1
+          $test = "out/test.msix"
+          Copy-Item (Get-ChildItem out/*-Store.msix).FullName $test
+          $cert = New-SelfSignedCertificate -Type Custom -Subject $env:PUBLISHER -KeyUsage DigitalSignature `
+              -FriendlyName "WallCraft MSIX test" -CertStoreLocation "Cert:\CurrentUser\My" `
+              -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
+          & "$($sdk.FullName)\x64\signtool.exe" sign /fd SHA256 /sha1 $cert.Thumbprint /s My $test
+          if ($LASTEXITCODE) { throw "signtool a échoué." }
+          Export-Certificate -Cert $cert -FilePath out/test.cer | Out-Null
+          Import-Certificate -FilePath out/test.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople | Out-Null
+          Add-AppxPackage -Path (Resolve-Path $test)
+          Get-AppxPackage -Name $env:IDENTITY_NAME | Format-List Name, PackageFamilyName, InstallLocation, Version
+      - name: Dossier réel, fond d'écran et tâche de démarrage dans le paquet
+        run: |
+          $report = Join-Path $env:RUNNER_TEMP "selftest.json"
+          & "$env:LOCALAPPDATA\Microsoft\WindowsApps\wallcraft.exe" --selftest $report
+          for ($i = 0; $i -lt 90 -and -not (Test-Path $report); $i++) { Start-Sleep 1 }
+          if (-not (Test-Path $report)) { throw "Pas de rapport : l'application n'a pas démarré dans le paquet." }
+          Start-Sleep 2
+          $r = Get-Content $report -Raw | ConvertFrom-Json
+          $r | ConvertTo-Json -Depth 4
+          if ($r.error) { throw "Erreur dans le paquet." }
+          if (-not $r.packaged) { throw "L'application ne se voit pas dans un paquet." }
+          if ($r.data_dir -notlike "*\Packages\*\LocalCache\Local\WallCraft") { throw "Dossier de données inattendu." }
+          if (-not $r.startup_after_enable) { throw "La tâche de démarrage ne s'active pas." }
+          if ($r.startup_after_disable) { throw "La tâche de démarrage ne se désactive pas." }
+          if ($r.launched_at_startup) { throw "Un lancement en ligne de commande est pris pour un lancement au démarrage." }
+          if (-not $r.wallpaper_set) { Write-Host "::warning::Le fond d'écran n'a pas pu être appliqué sur le runner." }
+          elseif (-not ($r.wallpaper_now | Where-Object { $_ -like "$($r.data_dir)*" })) { throw "Windows n'affiche pas le fond depuis le dossier réel." }
+      - name: L'application s'ouvre depuis le menu Démarrer
+        run: |
+          $pfn = (Get-AppxPackage -Name $env:IDENTITY_NAME).PackageFamilyName
+          Start-Process "shell:AppsFolder\$pfn!App"
+          for ($i = 0; $i -lt 60 -and -not (Get-Process WallCraft -ErrorAction SilentlyContinue); $i++) { Start-Sleep 1 }
+          Start-Sleep 15
+          $p = Get-Process WallCraft -ErrorAction SilentlyContinue
+          if (-not $p) {
+            Get-WinEvent -LogName Application -MaxEvents 20 -ErrorAction SilentlyContinue | Where-Object { $_.LevelDisplayName -eq "Error" } | Format-List TimeCreated, ProviderName, Message
+            throw "WallCraft ne démarre pas ou s'arrête aussitôt dans le paquet."
+          }
+          $p | Format-Table Id, MainWindowTitle, Responding
+          if (-not ($p | Where-Object MainWindowTitle)) { throw "WallCraft tourne mais n'affiche pas de fenêtre." }
+          $p | Stop-Process -Force

@@ -360,4 +360,40 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://wallcraft.archi-it.fr/de/help/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://wallcraft.archi-it.fr/en/help/" />
   </url>
+  <url>
+    <loc>https://wallcraft.archi-it.fr/fr/privacy/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://wallcraft.archi-it.fr/fr/privacy/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wallcraft.archi-it.fr/en/privacy/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://wallcraft.archi-it.fr/es/privacy/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://wallcraft.archi-it.fr/de/privacy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wallcraft.archi-it.fr/en/privacy/" />
+  </url>
+  <url>
+    <loc>https://wallcraft.archi-it.fr/en/privacy/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://wallcraft.archi-it.fr/fr/privacy/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wallcraft.archi-it.fr/en/privacy/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://wallcraft.archi-it.fr/es/privacy/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://wallcraft.archi-it.fr/de/privacy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wallcraft.archi-it.fr/en/privacy/" />
+  </url>
+  <url>
+    <loc>https://wallcraft.archi-it.fr/es/privacy/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://wallcraft.archi-it.fr/fr/privacy/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wallcraft.archi-it.fr/en/privacy/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://wallcraft.archi-it.fr/es/privacy/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://wallcraft.archi-it.fr/de/privacy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wallcraft.archi-it.fr/en/privacy/" />
+  </url>
+  <url>
+    <loc>https://wallcraft.archi-it.fr/de/privacy/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://wallcraft.archi-it.fr/fr/privacy/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wallcraft.archi-it.fr/en/privacy/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://wallcraft.archi-it.fr/es/privacy/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://wallcraft.archi-it.fr/de/privacy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://wallcraft.archi-it.fr/en/privacy/" />
+  </url>
 </urlset>
