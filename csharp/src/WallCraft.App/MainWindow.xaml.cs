@@ -291,7 +291,8 @@ public sealed partial class MainWindow : Window, IMainWindowServices, IAutomatio
 
     private void OnToolClick(object sender, RoutedEventArgs e)
     {
-        ViewModel.Mode = sender == ScaleToolButton ? EditMode.Scale : sender == CropToolButton ? EditMode.Crop : EditMode.Move;
+        ViewModel.Mode = ReferenceEquals(sender, ScaleToolButton) ? EditMode.Scale
+                       : ReferenceEquals(sender, CropToolButton) ? EditMode.Crop : EditMode.Move;
         UpdateToggles();
     }
 
@@ -309,7 +310,7 @@ public sealed partial class MainWindow : Window, IMainWindowServices, IAutomatio
 
     private void OnViewSelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
     {
-        bool preview = ViewSelector.SelectedItem == PreviewTab;
+        bool preview = ReferenceEquals(ViewSelector.SelectedItem, PreviewTab);
         ViewModel.IsPreview = preview;
         CompositionCanvas.Visibility = preview ? Visibility.Collapsed : Visibility.Visible;
         PreviewCanvas.Visibility = preview ? Visibility.Visible : Visibility.Collapsed;
