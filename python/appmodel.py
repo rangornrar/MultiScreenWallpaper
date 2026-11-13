@@ -179,6 +179,12 @@ def selftest(report_path):
         report["wallpaper_set"] = screen_splitter.set_wallpaper_span(image)
         report["wallpaper_now"] = [w["path"] for w in screen_splitter.get_current_wallpapers()]
         report["activation_kind"] = activation_kind()
+        try:
+            from winrt.windows.applicationmodel import AppInstance
+            args = AppInstance.get_activated_event_args()
+            report["activation_args"] = repr(args)
+        except Exception:
+            report["activation_error"] = traceback.format_exc()
         report["launched_at_startup"] = launched_at_startup()
         from winrt.windows.applicationmodel import StartupTask
         report["startup_tasks"] = [t.task_id for t in _run(StartupTask.get_for_current_package_async())]
