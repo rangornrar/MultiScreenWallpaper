@@ -15,7 +15,8 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.System;
+using VirtualKey = Windows.System.VirtualKey;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 using WallCraft.App.Automation;
 using WallCraft.App.Dialogs;
 using WallCraft.App.Rendering;
@@ -560,9 +561,9 @@ public sealed partial class MainWindow : Window, IMainWindowServices, IAutomatio
     }
 
     public Task<string?> PickExportFileAsync()
-        => PickSaveAsync("wallcraft", (_loc["filetype_png"], [".png"]), (_loc["filetype_jpeg"], [".jpg", ".jpeg"]));
+        => PickSaveAsync("wallcraft", (_loc["filetype_png"], new[] { ".png" }), (_loc["filetype_jpeg"], new[] { ".jpg", ".jpeg" }));
 
-    public Task<string?> PickProjectToSaveAsync() => PickSaveAsync("projet.wallcraft", (_loc["filetype_project"], [".json"]));
+    public Task<string?> PickProjectToSaveAsync() => PickSaveAsync("projet.wallcraft", (_loc["filetype_project"], new[] { ".json" }));
 
     public async Task<string?> PickProjectToOpenAsync()
     {
@@ -599,9 +600,9 @@ public sealed partial class MainWindow : Window, IMainWindowServices, IAutomatio
 
     private async void OnAutomationPrefsClick(object sender, RoutedEventArgs e)
     {
-        if (_automation is null) return;
-        var prefs = await RunDialogAsync(root => AutomationDialog.ShowAsync(root, this, _automation.CurrentPrefs(), ViewModel.Monitors.Count));
-        if (prefs is not null) _automation.ApplyPrefs(prefs);
+        if (_automation is not { } automation) return;
+        var prefs = await RunDialogAsync(root => AutomationDialog.ShowAsync(root, this, automation.CurrentPrefs(), ViewModel.Monitors.Count));
+        if (prefs is not null) automation.ApplyPrefs(prefs);
     }
 
     // --- IAutomationHost ---

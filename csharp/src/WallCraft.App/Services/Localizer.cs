@@ -54,7 +54,8 @@ public sealed class Localizer
         Language = lang.Code;
         EnsureLoaded();
         if (_context is not null) _context.QualifierValues["Language"] = lang.Culture;
-        CultureInfo.CurrentUICulture = CultureInfo.DefaultThreadCurrentUICulture = Culture;
+        CultureInfo.CurrentUICulture = Culture;
+        CultureInfo.DefaultThreadCurrentUICulture = Culture;
         LanguageChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -79,9 +80,10 @@ public sealed class Localizer
     public string Get(string key)
     {
         EnsureLoaded();
+        if (_map is null || _context is null) return key;
         try
         {
-            var value = _map?.TryGetValue(key, _context)?.ValueAsString;
+            var value = _map.TryGetValue(key, _context)?.ValueAsString;
             return string.IsNullOrEmpty(value) ? key : value;
         }
         catch (Exception)

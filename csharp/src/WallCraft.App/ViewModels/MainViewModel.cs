@@ -592,8 +592,7 @@ public sealed partial class MainViewModel : ObservableObject
     private async Task ExportImageAsync()
     {
         if (IsBusy || !await RequireImagesAsync()) return;
-        string? path = await _ui.PickExportFileAsync();
-        if (path is null) return;
+        if (await _ui.PickExportFileAsync() is not { } path) return;
         var images = Snapshot();
         int w = CompositionWidth, h = CompositionHeight;
         var bg = BackgroundColor;
@@ -612,8 +611,7 @@ public sealed partial class MainViewModel : ObservableObject
     private async Task ExportSplitAsync()
     {
         if (IsBusy || !await RequireImagesAsync() || !await RequireMonitorsAsync()) return;
-        string? folder = await _ui.PickFolderAsync();
-        if (folder is null) return;
+        if (await _ui.PickFolderAsync() is not { } folder) return;
         var images = Snapshot();
         var monitors = MonitorSnapshot();
         int w = CompositionWidth, h = CompositionHeight;
