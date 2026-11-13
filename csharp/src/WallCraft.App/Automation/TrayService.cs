@@ -70,9 +70,10 @@ public sealed class TrayService : IDisposable
                 ContextFlyout = menu,
                 DoubleClickCommand = new RelayCommand(() => Raise(TrayAction.Open)),
                 NoLeftClickDelay = true,
+                // Exécutée au relâchement du clic droit, juste avant la construction du menu natif :
+                // les cases reflètent ainsi l'état au moment de l'ouverture.
+                RightClickCommand = new RelayCommand(RefreshChecks),
             };
-            // Les cases sont lues juste avant la construction du menu natif.
-            icon.PreviewTrayContextMenuOpen += (_, _) => RefreshChecks();
             icon.Icon = new System.Drawing.Icon(new MemoryStream(TrayIconArt.CreateIco()), 32, 32);
             icon.ForceCreate(enablesEfficiencyMode: false);
             _icon = icon;
