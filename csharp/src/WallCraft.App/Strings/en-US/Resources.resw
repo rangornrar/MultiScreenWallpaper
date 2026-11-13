@@ -282,6 +282,11 @@
 
 {0}</value>
   </data>
+  <data name="msg_autostart_failed" xml:space="preserve">
+    <value>Could not change the start with Windows setting:
+
+{0}</value>
+  </data>
   <data name="msg_exported" xml:space="preserve">
     <value>Exported: {0}</value>
   </data>
@@ -408,6 +413,9 @@ The image was applied in Windows "Span" mode instead.</value>
   <data name="prefs_folder" xml:space="preserve">
     <value>Image folder</value>
   </data>
+  <data name="prefs_folder_none" xml:space="preserve">
+    <value>No folder selected</value>
+  </data>
   <data name="prefs_keep" xml:space="preserve">
     <value>Reapply the wallpaper when screens change or when Windows restores a theme</value>
   </data>
@@ -416,6 +424,15 @@ The image was applied in Windows "Span" mode instead.</value>
   </data>
   <data name="prefs_rotation" xml:space="preserve">
     <value>Change images automatically</value>
+  </data>
+  <data name="prefs_section_rotation" xml:space="preserve">
+    <value>Image rotation</value>
+  </data>
+  <data name="prefs_section_startup" xml:space="preserve">
+    <value>Startup and notification area</value>
+  </data>
+  <data name="prefs_section_wallpaper" xml:space="preserve">
+    <value>Wallpaper</value>
   </data>
   <data name="prefs_title" xml:space="preserve">
     <value>Automatic wallpaper</value>
@@ -491,6 +508,9 @@ The image was applied in Windows "Span" mode instead.</value>
   </data>
   <data name="variants_computing" xml:space="preserve">
     <value>Computing variants…</value>
+  </data>
+  <data name="variants_hint" xml:space="preserve">
+    <value>Click a thumbnail to use that variant.</value>
   </data>
   <data name="variants_title" xml:space="preserve">
     <value>Choose a variant</value>
