@@ -10,7 +10,8 @@ Dans un paquet, Windows redirige vers un dossier privé les écritures dans
   affiche le fond, ne voit pas la vue redirigée ;
 - la clé HKCU\\...\\Run est ignorée : le lancement au démarrage passe par la
   tâche de démarrage déclarée dans le manifeste (StartupTask), que l'utilisateur
-  retrouve aussi dans Paramètres > Applications > Démarrage.
+  retrouve aussi dans Paramètres > Applications > Démarrage. Windows ne passe pas
+  d'argument « --tray » à ce lancement : WallCraft le reconnaît à son type d'activation.
 
 Hors paquet (exe de GitHub, sources), tout reste comme avant.
 """
@@ -86,6 +87,24 @@ def _import_settings_once(path):
 
 _ENABLED_STATES = (2, 4)      # Enabled, EnabledByPolicy
 _DISABLED_BY_USER = 1
+_ACTIVATION_STARTUP_TASK = 1020
+
+
+def activation_kind():
+    """Type d'activation du paquet (ActivationKind), ou None hors paquet ou en cas d'erreur."""
+    if not is_packaged():
+        return None
+    try:
+        from winrt.windows.applicationmodel import AppInstance
+        args = AppInstance.get_activated_event_args()
+        return int(args.kind) if args is not None else None
+    except Exception:
+        return None
+
+
+def launched_at_startup():
+    """True si Windows a lancé WallCraft par la tâche de démarrage (ouverture dans la zone de notification)."""
+    return activation_kind() == _ACTIVATION_STARTUP_TASK
 
 
 def _run(awaitable):
@@ -159,6 +178,10 @@ def selftest(report_path):
         Image.new("RGB", (64, 36), (40, 90, 160)).save(image, "PNG")
         report["wallpaper_set"] = screen_splitter.set_wallpaper_span(image)
         report["wallpaper_now"] = [w["path"] for w in screen_splitter.get_current_wallpapers()]
+        report["activation_kind"] = activation_kind()
+        report["launched_at_startup"] = launched_at_startup()
+        from winrt.windows.applicationmodel import StartupTask
+        report["startup_tasks"] = [t.task_id for t in _run(StartupTask.get_for_current_package_async())]
         report["startup_before"] = get_startup_task_enabled()
         report["startup_enable"] = set_startup_task_enabled(True)
         report["startup_after_enable"] = get_startup_task_enabled()

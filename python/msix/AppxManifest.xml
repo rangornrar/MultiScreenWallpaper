@@ -8,10 +8,9 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
-  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap uap3 uap10 desktop rescap">
+  IgnorableNamespaces="uap uap3 desktop rescap">
 
   <Identity Name="$IDENTITY_NAME$" Publisher="$PUBLISHER$" Version="$VERSION$" ProcessorArchitecture="x64" />
 
@@ -33,7 +32,6 @@
   </Resources>
 
   <Applications>
-    <!-- L'application, dans le menu Démarrer -->
     <Application Id="WallCraft" Executable="WallCraft.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements DisplayName="WallCraft Pro"
                           Description="Wallpapers for multi-monitor setups"
@@ -49,20 +47,9 @@
             <desktop:ExecutionAlias Alias="wallcraft.exe" />
           </uap3:AppExecutionAlias>
         </uap3:Extension>
-      </Extensions>
-    </Application>
-
-    <!-- Lancement au démarrage de Windows, directement dans la zone de notification (paramètre « tray »).
-         Invisible dans le menu Démarrer ; l'utilisateur l'active depuis WallCraft ou depuis
-         Paramètres > Applications > Démarrage. -->
-    <Application Id="WallCraftTray" Executable="WallCraft.exe" EntryPoint="Windows.FullTrustApplication" uap10:Parameters="--tray">
-      <uap:VisualElements DisplayName="WallCraft Pro"
-                          Description="Wallpapers for multi-monitor setups"
-                          BackgroundColor="transparent"
-                          Square150x150Logo="Assets\Square150x150Logo.png"
-                          Square44x44Logo="Assets\Square44x44Logo.png"
-                          AppListEntry="none" />
-      <Extensions>
+        <!-- Lancement au démarrage de Windows : désactivé tant que l'utilisateur ne l'a pas demandé
+             (dans WallCraft ou dans Paramètres > Applications > Démarrage). WallCraft reconnaît ce
+             lancement et s'ouvre directement dans la zone de notification. -->
         <desktop:Extension Category="windows.startupTask" Executable="WallCraft.exe" EntryPoint="Windows.FullTrustApplication">
           <desktop:StartupTask TaskId="WallCraftStartup" Enabled="false" DisplayName="WallCraft Pro" />
         </desktop:Extension>

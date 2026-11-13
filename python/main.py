@@ -28,8 +28,10 @@ def main():
         return
     enable_dpi_awareness()
     root = tk.Tk()
-    # --tray : lancement au démarrage de Windows, directement dans la zone de notification
-    WallpaperApp(root, start_hidden="--tray" in sys.argv)
+    # Lancement au démarrage de Windows : directement dans la zone de notification.
+    # Exe GitHub : argument --tray (clé Run) ; version Store : tâche de démarrage du paquet.
+    import appmodel
+    WallpaperApp(root, start_hidden="--tray" in sys.argv or appmodel.launched_at_startup())
     root.mainloop()
 
 

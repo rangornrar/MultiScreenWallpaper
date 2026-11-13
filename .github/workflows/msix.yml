@@ -77,19 +77,16 @@ jobs:
           if ($r.data_dir -notlike "*\Packages\*\LocalCache\Local\WallCraft") { throw "Dossier de données inattendu." }
           if (-not $r.startup_after_enable) { throw "La tâche de démarrage ne s'active pas." }
           if ($r.startup_after_disable) { throw "La tâche de démarrage ne se désactive pas." }
+          if ($r.launched_at_startup) { throw "Un lancement en ligne de commande est pris pour un lancement au démarrage." }
           if (-not $r.wallpaper_set) { Write-Host "::warning::Le fond d'écran n'a pas pu être appliqué sur le runner." }
           elseif (-not ($r.wallpaper_now | Where-Object { $_ -like "$($r.data_dir)*" })) { throw "Windows n'affiche pas le fond depuis le dossier réel." }
-      - name: Le lancement au démarrage ouvre WallCraft dans la zone de notification
+      - name: L'application démarre depuis le menu Démarrer
         run: |
           $pfn = (Get-AppxPackage -Name $env:IDENTITY_NAME).PackageFamilyName
-          Start-Process "shell:AppsFolder\$pfn!WallCraftTray"
-          for ($i = 0; $i -lt 60; $i++) {
-            $p = Get-CimInstance Win32_Process -Filter "Name='WallCraft.exe'" | Where-Object CommandLine -like "*--tray*"
-            if ($p) { break }
-            Start-Sleep 1
-          }
-          Get-CimInstance Win32_Process -Filter "Name='WallCraft.exe'" | Select-Object ProcessId, CommandLine | Format-List
-          if (-not $p) { throw "WallCraftTray n'a pas lancé WallCraft avec --tray." }
-          Start-Sleep 10
-          if (-not (Get-Process -Id $p[0].ProcessId -ErrorAction SilentlyContinue)) { throw "WallCraft s'est arrêté." }
-          Get-Process WallCraft -ErrorAction SilentlyContinue | Stop-Process -Force
+          Start-Process "shell:AppsFolder\$pfn!WallCraft"
+          for ($i = 0; $i -lt 60 -and -not (Get-Process WallCraft -ErrorAction SilentlyContinue); $i++) { Start-Sleep 1 }
+          Start-Sleep 15
+          $p = Get-Process WallCraft -ErrorAction SilentlyContinue
+          if (-not $p) { throw "WallCraft ne démarre pas ou s'arrête aussitôt dans le paquet." }
+          $p | Format-Table Id, MainWindowTitle
+          $p | Stop-Process -Force

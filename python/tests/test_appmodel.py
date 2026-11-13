@@ -59,11 +59,20 @@ class AutostartTests(unittest.TestCase):
             get.assert_called_once()
             set_.assert_called_once_with(False)
 
+    def test_lancement_au_demarrage_reconnu_a_son_activation(self):
+        with mock.patch.object(appmodel, "activation_kind", return_value=1020):
+            self.assertTrue(appmodel.launched_at_startup())
+        with mock.patch.object(appmodel, "activation_kind", return_value=1021):  # ligne de commande
+            self.assertFalse(appmodel.launched_at_startup())
+        self.assertIsNone(appmodel.activation_kind())  # hors paquet
+
     @unittest.skipUnless(sys.platform == "win32", "Windows uniquement")
     def test_projection_winrt_installee(self):
         from winrt.windows.applicationmodel import StartupTask, StartupTaskState
         self.assertEqual(int(StartupTaskState.ENABLED), 2)
         self.assertTrue(hasattr(StartupTask, "get_for_current_package_async"))
+        from winrt.windows.applicationmodel.activation import ActivationKind
+        self.assertEqual(int(ActivationKind.STARTUP_TASK), 1020)
 
 
 if __name__ == "__main__":
