@@ -191,3 +191,49 @@ UI_TEXT.update({
     "status_rotation": {"en": "Rotation: {} image(s) applied", "fr": "Rotation : {} image(s) appliquée(s)", "es": "Rotación: {} imagen(es) aplicada(s)", "de": "Wechsel: {} Bild(er) angewendet"},
     "status_screens_changed": {"en": "Screen layout changed", "fr": "Disposition des écrans modifiée", "es": "Disposición de pantallas modificada", "de": "Bildschirmanordnung geändert"},
 })
+
+# Ergonomie 2026.11 : une seule zone de travail, barre d'état, noms d'écrans, pluriels
+UI_TEXT.update({
+    # Pluriels : (singulier, pluriel)
+    "n_screens": {"en": ("{} screen", "{} screens"), "fr": ("{} écran", "{} écrans"), "es": ("{} pantalla", "{} pantallas"), "de": ("{} Bildschirm", "{} Bildschirme")},
+    "n_images": {"en": ("{} image", "{} images"), "fr": ("{} image", "{} images"), "es": ("{} imagen", "{} imágenes"), "de": ("{} Bild", "{} Bilder")},
+    "library_title": {"en": "Images", "fr": "Images", "es": "Imágenes", "de": "Bilder"},
+    "view_compose": {"en": "Composition", "fr": "Composition", "es": "Composición", "de": "Komposition"},
+    "view_preview": {"en": "Preview on screens", "fr": "Aperçu sur les écrans", "es": "Vista en las pantallas", "de": "Bildschirmvorschau"},
+    "lbl_fit": {"en": "Framing", "fr": "Cadrage", "es": "Encuadre", "de": "Ausschnitt"},
+    "lbl_tool": {"en": "Tool", "fr": "Outil", "es": "Herramienta", "de": "Werkzeug"},
+    "btn_layer_back": {"en": "Send backward", "fr": "Envoyer derrière", "es": "Enviar atrás", "de": "Nach hinten"},
+    "btn_layer_front": {"en": "Bring forward", "fr": "Mettre devant", "es": "Traer adelante", "de": "Nach vorne"},
+    "menu_language": {"en": "Language / Langue", "fr": "Langue / Language", "es": "Idioma / Language", "de": "Sprache / Language"},
+    "pos_left": {"en": "Left", "fr": "Gauche", "es": "Izquierda", "de": "Links"},
+    "pos_center": {"en": "Center", "fr": "Centre", "es": "Centro", "de": "Mitte"},
+    "pos_right": {"en": "Right", "fr": "Droite", "es": "Derecha", "de": "Rechts"},
+    "pos_top": {"en": "Top", "fr": "Haut", "es": "Arriba", "de": "Oben"},
+    "pos_bottom": {"en": "Bottom", "fr": "Bas", "es": "Abajo", "de": "Unten"},
+    "pos_screen": {"en": "Screen {}", "fr": "Écran {}", "es": "Pantalla {}", "de": "Bildschirm {}"},
+    "lowres_badge": {"en": "Low resolution ×{}", "fr": "Basse résolution ×{}", "es": "Baja resolución ×{}", "de": "Geringe Auflösung ×{}"},
+    "lowres_tip": {
+        "en": "stretched {} times, will look blurry",
+        "fr": "agrandie {} fois, elle sera floue",
+        "es": "ampliada {} veces, se verá borrosa",
+        "de": "{}-fach vergrößert, wirkt unscharf",
+    },
+    "selection_summary": {
+        "en": "{}  •  {} × {}  •  layer {}/{}",
+        "fr": "{}  •  {} × {}  •  calque {}/{}",
+        "es": "{}  •  {} × {}  •  capa {}/{}",
+        "de": "{}  •  {} × {}  •  Ebene {}/{}",
+    },
+    "status_removed": {
+        "en": "Image removed (Ctrl+Z to undo)",
+        "fr": "Image supprimée (Ctrl+Z pour annuler)",
+        "es": "Imagen eliminada (Ctrl+Z para deshacer)",
+        "de": "Bild entfernt (Strg+Z zum Rückgängigmachen)",
+    },
+    "preview_hint": {
+        "en": "What each screen will show. Switch to Composition to edit.",
+        "fr": "Ce que chaque écran affichera. Passez en Composition pour modifier.",
+        "es": "Lo que mostrará cada pantalla. Cambia a Composición para editar.",
+        "de": "Das zeigt jeder Bildschirm. Zum Bearbeiten zu „Komposition“ wechseln.",
+    },
+})

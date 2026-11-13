@@ -157,13 +157,16 @@ class LoadedImage:
     def get_tk_image(self, container_w, container_h):
         # Utilise display_image (low_res) -> rapide
         if container_w <= 0 or container_h <= 0: return None
-        cache_key = (container_w, container_h, self.angle, self.crop_box_norm, id(self.display_image))
+        cache_key = ("tk", container_w, container_h, self.angle, self.crop_box_norm, id(self.display_image))
         if cache_key in self._preview_cache: return self._preview_cache[cache_key]
 
         im_final = self._rendered_proxy().resize((int(container_w), int(container_h)), Image.Resampling.BILINEAR)
 
         from PIL import ImageTk
         tk_img = ImageTk.PhotoImage(im_final)
+        # Une seule taille gardée : sinon chaque cran de zoom laisse une image en mémoire.
+        for old in [k for k in self._preview_cache if k[0] == "tk"]:
+            del self._preview_cache[old]
         self._preview_cache[cache_key] = tk_img
         return tk_img
 

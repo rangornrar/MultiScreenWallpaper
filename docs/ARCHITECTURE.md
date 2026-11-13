@@ -7,8 +7,8 @@ Composer des images pour des écrans de dimensions et de positions différentes,
 | Composant | Rôle |
 | --- | --- |
 | `main.py` | Démarrage, gestion DPI, option `--tray` (lancement au démarrage de Windows) |
-| `ui.py` | Fenêtre principale : bibliothèque, barre d'outils, édition, commandes |
-| `ui_views.py` | Dessin de la zone de composition et de l'aperçu des écrans |
+| `ui.py` | Fenêtre principale : barre d'outils sur une ligne, bibliothèque compacte, zone de travail unique (Composition / Aperçu sur les écrans), barre d'état |
+| `ui_views.py` | Dessin de la zone de composition (zones hors écran assombries, alerte basse résolution) et de l'aperçu des écrans |
 | `ui_automation.py` | Détection des écrans, taille réelle, fond automatique, rotation, icône de notification |
 | `dialogs.py` | Fenêtres secondaires : retouches, taille réelle, variantes, fond automatique |
 | `ui_text.py`, `locales.py` | Textes d'interface en 4 langues |
@@ -49,3 +49,11 @@ Seule la miniature (1 024 px) reste en mémoire ; l'original est relu depuis le 
 ## Évolutions utiles
 
 Extraire les algorithmes de placement de `image_tools.py` si leur évolution devient indépendante des opérations d’image ; mesurer temps de calcul et mémoire sur des jeux représentatifs ; définir les versions de schéma avant toute évolution incompatible des projets JSON.
+
+## Ergonomie de la fenêtre principale
+
+- Une seule zone de travail : on bascule entre **Composition** (édition) et **Aperçu sur les écrans** au lieu d'empiler deux petites vues.
+- Les écrans portent un nom lisible (`monitor_labels` : position + fabricant EDID + diagonale), jamais `\\.\DISPLAYn`.
+- `upscale_factor` mesure l'agrandissement d'une image ; au-delà de ×1,3 une alerte apparaît dans la liste, sur l'image et dans la barre d'état.
+- À fort zoom, seule la partie visible d'une image est rendue, et une seule taille est gardée en cache par image.
+- La largeur minimale de la fenêtre suit la barre d'outils, qui dépend de la langue.

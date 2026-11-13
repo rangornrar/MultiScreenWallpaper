@@ -1,6 +1,6 @@
 # ui_views.py
 """Dessin de la zone de composition et de l'aperçu « vue réelle » des écrans (mixin de WallpaperApp)."""
-from PIL import Image, ImageTk
+from PIL import Image, ImageDraw, ImageTk
 
 
 class ViewsMixin:
@@ -38,24 +38,31 @@ class ViewsMixin:
             y += grid_step
 
         self.canvas.create_rectangle(bx, by, bx + bw, by + bh, fill="", outline=self.colors["border"], width=2)
-        self.canvas.create_text(
-            bx + 16,
-            by + 14,
-            text="STAGE",
-            fill=self.colors["text_muted"],
-            anchor="nw",
-            font=("Segoe UI", 9, "bold"),
-        )
 
         cw, ch = self.canvas.winfo_width(), self.canvas.winfo_height()
+        self._stage_slices = []
         for idx, img in sorted(enumerate(self.images), key=lambda x:x[1].z_index):
             sw, sh = int(img.w*self.zoom), int(img.h*self.zoom)
             sx, sy = self.logic_to_screen(img.x, img.y)
             if sx>cw or sy>ch or sx+sw<0 or sy+sh<0: continue
-            tk_img = img.get_tk_image(sw, sh)
+            if sw * sh <= 4 * cw * ch:
+                tk_img = img.get_tk_image(sw, sh)
+                ix, iy = sx, sy
+            else:
+                # Fort zoom : seule la partie visible est rendue (une image entière pèserait des centaines de Mo).
+                vx0, vy0 = max(0, sx), max(0, sy)
+                vx1, vy1 = min(cw, sx + sw), min(ch, sy + sh)
+                l, t = (vx0 - sx) / self.zoom, (vy0 - sy) / self.zoom
+                r, b = (vx1 - sx) / self.zoom, (vy1 - sy) / self.zoom
+                tk_img = img.get_tk_image_slice(l, t, r, b, int(vx1 - vx0), int(vy1 - vy0))
+                self._stage_slices.append(tk_img)
+                ix, iy = vx0, vy0
             if tk_img:
                 self.canvas.create_rectangle(sx + 4, sy + 6, sx + sw + 4, sy + sh + 6, fill="#04070d", outline="", stipple="gray50")
-                self.canvas.create_image(sx, sy, image=tk_img, anchor="nw")
+                self.canvas.create_image(ix, iy, image=tk_img, anchor="nw")
+                low = self.lowres_text(img)
+                if low and sw > 90 and sh > 30:
+                    self._draw_chip(self.canvas, sx + 8, sy + sh - 8, "⚠ ×" + low, "#3a2a10", self.colors["warning"], anchor="sw")
                 if idx==self.active_idx:
                     self.canvas.create_rectangle(sx - 3, sy - 3, sx + sw + 3, sy + sh + 3, outline=self.colors["accent_line"], width=1)
                     self.canvas.create_rectangle(sx, sy, sx+sw, sy+sh, outline=self.colors["accent"], width=2)
@@ -63,13 +70,13 @@ class ViewsMixin:
                         self._draw_handles(sx, sy, sw, sh)
 
         if self.show_monitors.get() and self.monitor_layout:
+            self._dim_outside_screens(bx, by)
             for m in self.monitor_layout:
                 cx, cy, cw_, ch_ = m["canvas"]
                 mx, my = self.logic_to_screen(cx, cy)
                 mw, mh = cw_*self.zoom, ch_*self.zoom
                 self.canvas.create_rectangle(mx, my, mx+mw, my+mh, outline=self.colors["monitor"], dash=(6, 4), width=2)
-                self.canvas.create_rectangle(mx + 10, my + 10, mx + 110, my + 30, fill="#0e2236", outline="")
-                self.canvas.create_text(mx+16, my+20, text=m.get("name",""), fill=self.colors["monitor"], anchor="w", font=("Segoe UI", 8, "bold"))
+                self._draw_chip(self.canvas, mx + 8, my + 8, self.monitor_label(m), "#0e2236", self.colors["monitor"], max_w=mw - 16)
 
         if not self.images:
             self.canvas.create_text(
@@ -80,6 +87,53 @@ class ViewsMixin:
                 font=("Segoe UI", 12),
                 width=max(260, cw - 160),
             )
+
+    def _dim_outside_screens(self, bx, by):
+        """
+        Assombrit ce qui ne sera visible sur aucun écran (marges du bureau virtuel, espaces entre dalles).
+        Calque semi-transparent rendu par Pillow : le pointillé (stipple) de Tk est laid et mal géré selon les systèmes.
+        """
+        cw, ch = self.canvas.winfo_width(), self.canvas.winfo_height()
+        rects = [m["canvas"] for m in self.monitor_layout]
+        key = (cw, ch, round(self.zoom, 6), round(self.pan_x, 1), round(self.pan_y, 1), tuple(map(tuple, rects)),
+               self.target_w, self.target_h)
+        if getattr(self, "_dim_key", None) != key:
+            overlay = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+            draw = ImageDraw.Draw(overlay)
+            xs = sorted({0, self.target_w, *[r[0] for r in rects], *[r[0] + r[2] for r in rects]})
+            ys = sorted({0, self.target_h, *[r[1] for r in rects], *[r[1] + r[3] for r in rects]})
+            for x0, x1 in zip(xs, xs[1:]):
+                for y0, y1 in zip(ys, ys[1:]):
+                    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+                    if any(r[0] <= cx <= r[0] + r[2] and r[1] <= cy <= r[1] + r[3] for r in rects):
+                        continue
+                    sx0, sy0 = self.logic_to_screen(x0, y0)
+                    sx1, sy1 = self.logic_to_screen(x1, y1)
+                    draw.rectangle([sx0, sy0, sx1 - 1, sy1 - 1], fill=(4, 7, 14, 175))
+            self._dim_image = ImageTk.PhotoImage(overlay)
+            self._dim_key = key
+        self.canvas.create_image(0, 0, image=self._dim_image, anchor="nw")
+
+    def _draw_chip(self, canvas, x, y, text, bg, fg, anchor="nw", max_w=None):
+        """Étiquette arrondie à la taille de son texte (tronquée si l'écran est trop étroit)."""
+        font = ("Segoe UI", 8, "bold")
+        item = canvas.create_text(0, 0, text=text, font=font, anchor="nw")
+        x0, y0, x1, y1 = canvas.bbox(item)
+        canvas.delete(item)
+        w, h = (x1 - x0) + 12, (y1 - y0) + 6
+        if max_w is not None and w > max_w:
+            if max_w < 40:
+                return
+            while len(text) > 3 and w > max_w:
+                text = text[:-2] + "…"
+                item = canvas.create_text(0, 0, text=text, font=font, anchor="nw")
+                x0, y0, x1, y1 = canvas.bbox(item)
+                canvas.delete(item)
+                w = (x1 - x0) + 12
+        if anchor == "sw":
+            y -= h
+        canvas.create_rectangle(x, y, x + w, y + h, fill=bg, outline="")
+        canvas.create_text(x + 6, y + h / 2, text=text, fill=fg, anchor="w", font=font)
 
     def _auto_fit(self):
         """Automatically adjusts zoom and offset to fit the virtual desktop in the canvas."""
@@ -160,10 +214,12 @@ class ViewsMixin:
                     cx1 = min(img.w, mx1 - ix0)
                     cy1 = min(img.h, my1 - iy0)
 
-                    tx = sx0 + max(0, ix0 - mx0) * scale
-                    ty = sy0 + max(0, iy0 - my0) * scale
-                    tw = (cx1 - cx0) * scale
-                    th = (cy1 - cy0) * scale
+                    # Échelle de la dalle (cadre de 4 px retiré) : l'image ne déborde pas sur le bord de l'écran.
+                    kx, ky = (sx1 - sx0) / max(1, mcw), (sy1 - sy0) / max(1, mch)
+                    tx = sx0 + max(0, ix0 - mx0) * kx
+                    ty = sy0 + max(0, iy0 - my0) * ky
+                    tw = (cx1 - cx0) * kx
+                    th = (cy1 - cy0) * ky
 
                     tk_slice = img.get_tk_image_slice(cx0, cy0, cx1, cy1, int(tw), int(th))
                     if tk_slice:
@@ -173,9 +229,7 @@ class ViewsMixin:
             self.sim_canvas.create_line(sx0, sy0 + 1, sx1, sy0 + 1, fill="#5f6979")
             self.sim_canvas.create_rectangle(sx0, sy0, sx1, sy1, outline="#0b0e13", width=1)
 
-            chip_w = min(120, max(74, mw * 0.32))
-            self.sim_canvas.create_rectangle(mx + 12, my + 12, mx + 12 + chip_w, my + 30, fill="#232b36", outline="")
-            self.sim_canvas.create_text(mx + 18, my + 21, text=m.get("name", ""), fill="#cfd6e0", anchor="w", font=("Segoe UI", 8, "bold"))
+            self._draw_chip(self.sim_canvas, mx + 12, my + 12, self.monitor_label(m), "#232b36", "#cfd6e0", max_w=mw - 24)
 
             stand_x = mx + mw / 2
             self.sim_canvas.create_rectangle(stand_x - 7, sy1 + 4, stand_x + 7, desk_y - 7, fill="#171b22", outline="#0c0f14")
