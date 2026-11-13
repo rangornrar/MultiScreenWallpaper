@@ -10,7 +10,7 @@ import sys
 from xml.sax.saxutils import escape
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.join(ROOT, "python"))
 
 import locales  # noqa: E402
 import ui_text  # noqa: E402

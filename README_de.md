@@ -8,7 +8,7 @@
 
 Sie löst das Problem unterschiedlicher Monitorauflösungen und Bildschirmränder durch ihre intelligente Engine vollständig: Sie ermöglicht das Zusammenfügen mehrerer Fotos, **ohne diese jemals zu verzerren oder zuzuschneiden**, und garantiert so eine **absolute 100%ige Sichtbarkeit** Ihrer Bilder ("Fit Inside"-Prinzip).
 
-![WallCraft-Benutzeroberfläche](assets/wallcraft_app_ui_1773221294829.png)
+![WallCraft-Benutzeroberfläche](site/assets/wallcraft_app_ui_1773221294829.png)
 
 ---
 
@@ -36,7 +36,7 @@ Das Programm hält sich strikt an die 100 % Regel:
 - **Regelmäßiges Raster**: Ein mathematisch gleichmäßiges Raster.
 - **Vertikale & Horizontale Streifen**: Panorama-Slicing über die volle Höhe oder volle Breite.
 
-![Maximale Optimierungsheuristik](assets/wallcraft_optimal_layout_1773221310533.png)
+![Maximale Optimierungsheuristik](site/assets/wallcraft_optimal_layout_1773221310533.png)
 
 ### ⚡ Leistung & Bearbeitung
 - **Proxy-System**: Verwendet Miniaturansichten für eine extrem flüssige Benutzeroberfläche, selbst bei 8K-Bildern.
@@ -53,6 +53,7 @@ Das Programm hält sich strikt an die 100 % Regel:
 
 ### Abhängigkeiten
 ```bash
+cd python
 pip install pillow screeninfo
 ```
 
@@ -60,7 +61,7 @@ pip install pillow screeninfo
 Die Windows-EXE wird auf der Seite [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest) veröffentlicht. Ihre SHA-256-Prüfsumme steht in den Notizen jeder Version.
 
 ## 🛠️ Verwendung
-1. Starten Sie die App: `python main.py` (oder die EXE aus der [neuesten Release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
+1. Starten Sie die App: `python main.py` (im Ordner `python/`) (oder die EXE aus der [neuesten Release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
 2. **Bilder hinzufügen**: Schaltfläche „+ Bilder hinzufügen“ oder Menü *Datei*. Smartphone-Fotos werden automatisch richtig gedreht.
 3. **Sprache**: Wählen Sie EN/FR/ES/DE direkt in der Oberfläche.
 4. **Layout wählen**: Wählen Sie einen der 6 Modi („Maximale Optimierung“ empfohlen, um schwarze Balken zu minimieren).
@@ -70,7 +71,16 @@ Die Windows-EXE wird auf der Seite [GitHub Releases](https://github.com/rangornr
     * Gesamtbild exportieren (`Strg+E`) oder ein Bild pro Bildschirm.
     * 🖥️ Hintergrundbild anwenden: ändert Ihren Windows-Desktop, Bildschirm für Bildschirm.
 
-## 📂 Projektstruktur
+## 📂 Aufbau des Repositorys
+| Ordner | Inhalt |
+|---|---|
+| `python/` | Aktuelle App (Python/Tkinter), ihre Tests und das PyInstaller-Rezept |
+| `csharp/` | Kommende Version (C# / WinUI 3), siehe [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
+| `site/` | Generator der Website wallcraft.archi-it.fr (`site_builder.py`), Screenshots (`assets/`) und die fertige Website (`html/`) |
+| `docs/` | Architektur, Qualität, Migration, Veröffentlichung |
+| `tools/` | Skripte: Referenzergebnisse für die C#-Version, Übersetzungen, Mockups |
+
+### Python-Version (`python/`)
 * `main.py`: Einstiegspunkt, koppelt Windows High-DPI-Einstellungen.
 * `ui.py`: Fenster, interaktive Arbeitsfläche, Menüs.
 * `locales.py`: Mehrsprachiges Register.

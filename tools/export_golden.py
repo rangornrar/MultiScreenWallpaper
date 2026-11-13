@@ -24,7 +24,7 @@ import tempfile
 from contextlib import contextmanager
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.join(ROOT, "python"))
 
 import PIL  # noqa: E402
 from PIL import Image  # noqa: E402

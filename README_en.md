@@ -8,7 +8,7 @@
 
 It completely solves the issue of disparate monitor resolutions and borders through its intelligent engine: it merges multiple photos **without ever distorting or cropping them**, guaranteeing **100% absolute visibility** of your images ("Fit Inside" principle).
 
-![WallCraft Interface](assets/wallcraft_app_ui_1773221294829.png)
+![WallCraft Interface](site/assets/wallcraft_app_ui_1773221294829.png)
 
 ---
 
@@ -36,7 +36,7 @@ The program adheres to the 100% rule:
 - **Regular Grid**: A mathematically uniform grid.
 - **Vertical Strips** & **Horizontal Strips**: Full height or full width panoramic slicing.
 
-![Maximum Optimization Heuristic](assets/wallcraft_optimal_layout_1773221310533.png)
+![Maximum Optimization Heuristic](site/assets/wallcraft_optimal_layout_1773221310533.png)
 
 ### ⚡ Performance & Editing
 - **Proxy System**: Uses thumbnails for a hyper-fluid UI even with 8K images.
@@ -53,6 +53,7 @@ The program adheres to the 100% rule:
 
 ### Dependencies
 ```bash
+cd python
 pip install pillow screeninfo
 ```
 
@@ -60,7 +61,7 @@ pip install pillow screeninfo
 The Windows executable is published on the [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest) page. Its SHA-256 checksum is listed in each release's notes.
 
 ## 🛠️ Usage
-1. Launch the app: `python main.py` (or the executable from the [latest release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
+1. Launch the app: `python main.py` (in `python/`) (or the executable from the [latest release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
 2. **Add images**: "+ Add Images" button or the *File* menu. Smartphone photos are automatically turned upright.
 3. **Language**: choose EN/FR/ES/DE directly from the UI.
 4. **Choose a layout**: select one of the 6 modes ("Maximum Optimization" is recommended to limit black bars).
@@ -70,7 +71,16 @@ The Windows executable is published on the [GitHub Releases](https://github.com/
     * Export the full image (`Ctrl+E`) or one image per screen.
     * 🖥️ Apply wallpaper: updates your Windows desktop, screen by screen.
 
-## 📂 Project Structure
+## 📂 Repository layout
+| Folder | Contents |
+|---|---|
+| `python/` | Current app (Python/Tkinter), its tests and the PyInstaller recipe |
+| `csharp/` | Upcoming version (C# / WinUI 3), see [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
+| `site/` | Website generator for wallcraft.archi-it.fr (`site_builder.py`), screenshots (`assets/`) and the ready-to-publish site (`html/`) |
+| `docs/` | Architecture, quality, migration, release process |
+| `tools/` | Scripts: reference results for the C# version, translations, mockups |
+
+### Python version (`python/`)
 * `main.py`: Entry point, hooks High-DPI Windows settings.
 * `ui.py`: Window, interactive canvas, menus and mouse event loop.
 * `locales.py`: Multilingual registry string dictionary.

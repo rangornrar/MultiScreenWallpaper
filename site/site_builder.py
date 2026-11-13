@@ -251,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 """
 
+# Dossier site/ du dépôt : assets/ (captures) en entrée, html/ (le site à publier sur l'hébergeur) en sortie.
 ROOT = Path(__file__).resolve().parent
 HTML_ROOT = ROOT / "html"
 
@@ -2028,20 +2029,6 @@ def build_router():
     </ul>
 </body>
 </html>'''
-    root_router = '''<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex,follow">
-    <title>WallCraft Pro</title>
-    <script>window.location.replace("./html/");</script>
-</head>
-<body>
-    <p>Open the site: <a href="./html/">WallCraft Pro website</a></p>
-</body>
-</html>'''
-    (ROOT / "index.html").write_text(root_router, encoding="utf-8")
     (HTML_ROOT / "index.html").write_text(html_router, encoding="utf-8")
 
 
@@ -2050,9 +2037,7 @@ def build_google_package():
     robots = build_robots_txt()
     guide = build_search_console_guide()
 
-    (ROOT / "sitemap.xml").write_text(sitemap, encoding="utf-8")
     (HTML_ROOT / "sitemap.xml").write_text(sitemap, encoding="utf-8")
-    (ROOT / "robots.txt").write_text(robots, encoding="utf-8")
     (HTML_ROOT / "robots.txt").write_text(robots, encoding="utf-8")
     (ROOT / "GOOGLE_SEARCH_CONSOLE_SETUP.md").write_text(guide, encoding="utf-8")
 

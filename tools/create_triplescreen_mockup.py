@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUTPUT = ROOT / "html" / "assets" / "wallcraft_triplescreen_mockup.png"
+DEFAULT_OUTPUT = ROOT / "site" / "html" / "assets" / "wallcraft_triplescreen_mockup.png"
 
 
 def parse_args() -> argparse.Namespace:

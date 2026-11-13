@@ -10,7 +10,7 @@ import sys
 import PIL
 from PIL import Image, ImageDraw, ImageEnhance
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "python"))
 import facefocus  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "csharp", "tests", "fixtures", "imaging.json")

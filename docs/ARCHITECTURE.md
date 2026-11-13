@@ -4,6 +4,8 @@
 
 Composer des images pour des écrans de dimensions et de positions différentes, préserver l’intégralité des photos dans les modes de placement et appliquer le résultat au bureau Windows.
 
+Les modules de la version Python sont dans `python/` ; la version C# est décrite dans [MIGRATION_CSHARP.md](MIGRATION_CSHARP.md).
+
 | Composant | Rôle |
 | --- | --- |
 | `main.py` | Démarrage, gestion DPI, option `--tray` (lancement au démarrage de Windows) |
