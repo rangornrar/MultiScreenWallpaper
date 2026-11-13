@@ -288,10 +288,11 @@ SLUGS = {
     "dual-monitor-wallpaper-without-cropping": "dual-monitor-wallpaper-without-cropping",
     "mixed-monitor-wallpaper-setup": "mixed-monitor-wallpaper-setup",
     "help": "help",
+    "privacy": "privacy",
 }
 
 NAV_ORDER = ["download", "how-it-works", "help", "use-cases", "faq", "compare"]
-FOOTER_ORDER = ["download", "how-it-works", "help", "faq", "compare", "dual-monitor-wallpaper-without-cropping", "mixed-monitor-wallpaper-setup"]
+FOOTER_ORDER = ["download", "how-it-works", "help", "faq", "compare", "dual-monitor-wallpaper-without-cropping", "mixed-monitor-wallpaper-setup", "privacy"]
 LANG_ORDER = ["fr", "en", "es", "de"]
 
 LANGS = {
@@ -1679,6 +1680,19 @@ def apply_2026_11():
 
 
 apply_2026_11()
+
+
+import content_privacy as _p  # noqa: E402
+
+
+def apply_privacy():
+    """Politique de confidentialité : demandée par le Microsoft Store, liée en pied de page."""
+    for lang in LANG_ORDER:
+        LANGS[lang]["nav"]["privacy"] = _p.NAV[lang]
+        PAGES[lang]["privacy"] = dict(_p.PRIVACY[lang])
+
+
+apply_privacy()
 
 
 def page_label(lang, key):

@@ -52,7 +52,7 @@
       </Extensions>
     </Application>
 
-    <!-- Lancement au démarrage de Windows, directement dans la zone de notification (--tray).
+    <!-- Lancement au démarrage de Windows, directement dans la zone de notification (paramètre « tray »).
          Invisible dans le menu Démarrer ; l'utilisateur l'active depuis WallCraft ou depuis
          Paramètres > Applications > Démarrage. -->
     <Application Id="WallCraftTray" Executable="WallCraft.exe" EntryPoint="Windows.FullTrustApplication" uap10:Parameters="--tray">
