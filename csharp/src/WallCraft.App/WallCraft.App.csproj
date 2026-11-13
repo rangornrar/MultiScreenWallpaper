@@ -20,6 +20,7 @@
     <!-- Taille de l'exe : fichier unique compressé, seulement les langues de l'interface. -->
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <SatelliteResourceLanguages>en;fr;es;de</SatelliteResourceLanguages>
+    <ApplicationIcon>Assets\WallCraft.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +34,11 @@
   <ItemGroup>
     <ProjectReference Include="..\WallCraft.Core\WallCraft.Core.csproj" />
     <ProjectReference Include="..\WallCraft.Platform.Windows\WallCraft.Platform.Windows.csproj" />
+  </ItemGroup>
+
+  <!-- Icône de la fenêtre : à côté de l'exe (hors du fichier unique) pour AppWindow.SetIcon. -->
+  <ItemGroup>
+    <Content Include="Assets\WallCraft.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
   </ItemGroup>
 
   <!-- Traductions : Strings\(langue)\Resources.resw, inclus automatiquement par le SDK (générés par tools/export_resw.py). -->

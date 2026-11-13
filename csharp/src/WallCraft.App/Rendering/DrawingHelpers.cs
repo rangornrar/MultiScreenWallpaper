@@ -62,6 +62,15 @@ internal static class DrawingHelpers
         double w = img.W ?? 0, h = img.H ?? 0;
         if (w <= 0 || h <= 0 || dest.Width <= 0 || dest.Height <= 0) return false;
         var bitmap = cache.Bitmap(ds, img);
+        return DrawBitmapPart(ds, bitmap, img, dest, left, top, right, bottom);
+    }
+
+    /// <summary>Comme <see cref="DrawImagePart"/>, avec la vignette GPU déjà obtenue (null : cadre vide).</summary>
+    public static bool DrawBitmapPart(CanvasDrawingSession ds, CanvasBitmap? bitmap, CompositionImage img, Rect dest,
+                                      double left, double top, double right, double bottom)
+    {
+        double w = img.W ?? 0, h = img.H ?? 0;
+        if (w <= 0 || h <= 0 || dest.Width <= 0 || dest.Height <= 0) return false;
         if (bitmap is null)
         {
             ds.FillRectangle(dest, Palette.Placeholder);

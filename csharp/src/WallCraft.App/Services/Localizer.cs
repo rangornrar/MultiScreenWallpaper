@@ -54,6 +54,7 @@ public sealed class Localizer
         Language = lang.Code;
         EnsureLoaded();
         if (_context is not null) _context.QualifierValues["Language"] = lang.Culture;
+        CultureInfo.CurrentUICulture = CultureInfo.DefaultThreadCurrentUICulture = Culture;
         LanguageChanged?.Invoke(this, EventArgs.Empty);
     }
 
