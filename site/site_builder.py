@@ -102,11 +102,13 @@ a:hover { color: var(--accent-hover); }
     margin: 0 auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-    gap: 48px;
+    column-gap: 48px;
+    row-gap: 28px;
     align-items: center;
 }
 .hero.no-image { grid-template-columns: minmax(0, 760px); padding-bottom: 16px; }
-.hero-content h1 { font-size: clamp(1.8em, 3.2vw, 2.5em); line-height: 1.15; margin-bottom: 18px; color: #fff; font-weight: 800; }
+.hero-head { grid-column: 1 / -1; }
+.hero-head h1 { font-size: clamp(1.6em, 2.6vw, 2.1em); line-height: 1.2; color: #fff; font-weight: 800; margin-top: 14px; }
 .hero-content .lead { font-size: 1.08em; color: var(--text-dim); margin-bottom: 24px; }
 .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
 
@@ -247,7 +249,7 @@ section[id] { scroll-margin-top: 90px; }
 
 @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; text-align: center; padding: 40px 20px; }
-    .hero-content h1 { font-size: 1.7em; }
+    .hero-head h1 { font-size: 1.55em; }
     .section-head h2 { font-size: 1.4em; }
     .hero-actions { justify-content: center; }
     .footer-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -2013,9 +2015,11 @@ def render_page(lang, key):
 
     <main id="content">
         <header class="hero{"" if hero_image else " no-image"}">
-            <div class="hero-content">
+            <div class="hero-head">
                 {hero_badge}
                 <h1>{escape(page["hero_title"])}</h1>
+            </div>
+            <div class="hero-content">
                 <p class="lead">{escape(page["hero_lead"])}</p>
                 {hero_points_html}
                 <div class="hero-actions">
