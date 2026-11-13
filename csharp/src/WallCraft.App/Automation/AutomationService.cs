@@ -189,7 +189,7 @@ public sealed class AutomationService : IDisposable
         if (monitors.Count == 0 || _store.IsReleased(monitors)) return;
         var saved = _store.Load(monitors);
         if (saved.Count == 0) return;
-        var expected = saved.Select(s => s.Path).ToList();
+        var expected = _store.ExpectedPaths(saved);
         RunExclusive(
             () => Task.FromResult(WallpaperWatch.Detect(expected, DesktopWallpaper.Current().Select(c => (string?)c.Path).ToList())),
             change =>
@@ -215,11 +215,19 @@ public sealed class AutomationService : IDisposable
         }
         var pieces = saved.Select(s => (new MonitorInfo { Name = s.Name, X = s.X, Y = s.Y, Width = s.Width, Height = s.Height }, s.Path)).ToList();
         var bg = _host.BackgroundColor;
+        string? span = WallpaperStore.SpanPath(saved[0].Path);
         RunExclusive(
-            () => Task.FromResult(DesktopWallpaper.Apply(pieces, (bg.R, bg.G, bg.B))),
-            result =>
+            () =>
             {
-                if (result.Applied > 0) _host.ShowStatus(UiStrings.Get("status_reapplied"));
+                var result = DesktopWallpaper.Apply(pieces, (bg.R, bg.G, bg.B));
+                bool applied = result.Success || (result.Applied == 0 && span is not null && DesktopWallpaper.ApplySpan(span));
+                return Task.FromResult(applied);
+            },
+            applied =>
+            {
+                if (!applied) return;
+                if (force) _store.SetReleased(monitors, false);
+                _host.ShowStatus(UiStrings.Get("status_reapplied"));
             });
     }
 

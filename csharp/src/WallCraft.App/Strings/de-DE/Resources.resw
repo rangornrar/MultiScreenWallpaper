@@ -307,6 +307,9 @@
   <data name="msg_optimal_warn_title" xml:space="preserve">
     <value>Heuristik</value>
   </data>
+  <data name="msg_render_too_large" xml:space="preserve">
+    <value>Ein einzelnes Bild mit {0} × {1} px überschreitet das Limit des Grafikgeräts von {2} px pro Seite. Versuchen Sie den Export pro Bildschirm.</value>
+  </data>
   <data name="msg_rotation_empty" xml:space="preserve">
     <value>Der Wechselordner enthält keine Bilder.</value>
   </data>

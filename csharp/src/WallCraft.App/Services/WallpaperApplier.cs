@@ -19,11 +19,10 @@ public static class WallpaperApplier
         IReadOnlyList<CompositionImage> images, int width, int height, IReadOnlyList<MonitorInfo> monitors,
         Windows.UI.Color background, WallpaperStore store, CancellationToken cancel = default)
     {
-        using var composite = await HdRenderer.ComposeAsync(images, width, height, background, cancel);
         string outDir = store.DirectoryFor(monitors);
         // Nom unique à chaque application : Windows ne garde pas en cache une ancienne version.
-        string prefix = "wallcraft_" + DateTime.Now.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture);
-        var pieces = await HdRenderer.SplitAsync(composite, monitors, outDir, prefix);
+        string prefix = "wallcraft_" + Guid.NewGuid().ToString("N");
+        var pieces = await HdRenderer.SplitAsync(images, width, height, monitors, background, outDir, prefix, cancel);
         if (pieces.Count == 0) return new ApplyOutcome(ApplyStatus.NoMonitors, [], pieces);
         return await ApplyPiecesAsync(pieces, monitors, background, store, prefix, outDir);
     }

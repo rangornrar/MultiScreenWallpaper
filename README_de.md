@@ -4,13 +4,7 @@
 
 🌍 **[English](README_en.md)** | **[Français](README.md)** | **[Español](README_es.md)** | **[Deutsch](README_de.md)**
 
-**WallCraft Pro** ist eine leistungsstarke Python-Anwendung, mit der Sie Hintergrundbilder in komplexen Multi-Monitor-Setups erstellen, organisieren und anwenden können.
-
-Sie löst das Problem unterschiedlicher Monitorauflösungen und Bildschirmränder durch ihre intelligente Engine vollständig: Sie ermöglicht das Zusammenfügen mehrerer Fotos, **ohne diese jemals zu verzerren oder zuzuschneiden**, und garantiert so eine **absolute 100%ige Sichtbarkeit** Ihrer Bilder ("Fit Inside"-Prinzip).
-
-![WallCraft-Benutzeroberfläche](site/assets/screens/de/main.webp)
-
----
+**WallCraft Pro** ist eine Windows-Anwendung mit **C# und WinUI 3**, die Hintergrundbilder für mehrere Monitore gestaltet, organisiert und anwendet. Der Modus für reale Bildschirmgrößen richtet ein Panorama über Monitore mit unterschiedlichen Größen und Auflösungen aus.
 
 ## 🚀 Hauptfunktionen
 
@@ -39,30 +33,33 @@ Das Programm hält sich strikt an die 100 % Regel:
 ![Maximale Optimierungsheuristik](site/assets/screens/desk.webp)
 
 ### ⚡ Leistung & Bearbeitung
-- **Proxy-System**: Verwendet Miniaturansichten für eine extrem flüssige Benutzeroberfläche, selbst bei 8K-Bildern.
+- **Vorschaubilder**. Der Editor verwendet Vorschaubilder mit bis zu 1.024 Pixeln.
 - **Integrierte Bildbearbeitung**: Helligkeit, Kontrast, Sättigung, Unschärfe und Drehung.
 - **HD-Rendering**: Der endgültige Export verwendet die originalen Ultra-HD-Dateien für absolut maximale Qualität.
 
----
+## Voraussetzungen und Installation
 
-## 📦 Installation
+- **Nutzung**. Windows x64. Windows 11 wird empfohlen. Das Paket setzt technisch mindestens Windows 10, Version 2004 (Build 19041), voraus.
+- **Kompilierung**. Windows x64, das .NET-10-SDK und Zugriff auf NuGet für das Windows App SDK und die weiteren Abhängigkeiten.
 
-### Voraussetzungen
-- Python 3.10 oder höher.
-- Windows 10/11 (Erforderlich aufgrund der Windows-Wallpaper-API).
+Das MSIX-Paket und der eigenständige Build enthalten die Laufzeitkomponenten für .NET und das Windows App SDK. Python wird nur für einige Skripte im Repository verwendet.
 
-### Abhängigkeiten
-```bash
-cd python
-pip install pillow screeninfo
+## WallCraft Pro beziehen
+
+- Das MSIX-Paket ist für den Microsoft Store vorgesehen. Die [Anleitung zum Microsoft Store](docs/MICROSOFT_STORE.md) beschreibt die Vorbereitung und Einreichung.
+- Um den C#-Entwicklungsbuild auszuprobieren, laden Sie `WallCraft-win-x64` aus einem erfolgreichen Lauf des [C#-Workflows](https://github.com/rangornrar/MultiScreenWallpaper/actions/workflows/csharp.yml) herunter. Entpacken Sie das gesamte Archiv in einen Ordner und starten Sie `WallCraft.exe`.
+
+### Aus dem Quellcode erstellen
+
+```powershell
+dotnet publish csharp/src/WallCraft.App -c Release -r win-x64 -p:Platform=x64 --self-contained true -p:PublishSingleFile=true -o publish/win-x64
 ```
 
-## 📥 Download
-Die Windows-EXE wird auf der Seite [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest) veröffentlicht. Ihre SHA-256-Prüfsumme steht in den Notizen jeder Version.
+Starten Sie `publish/win-x64/WallCraft.exe`. Lassen Sie die übrigen Dateien im selben Ordner.
 
 ## 🛠️ Verwendung
-1. Starten Sie die App: `python main.py` (im Ordner `python/`) (oder die EXE aus der [neuesten Release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
-2. **Bilder hinzufügen**: Schaltfläche „+ Bilder hinzufügen“ oder Menü *Datei*. Smartphone-Fotos werden automatisch richtig gedreht.
+
+1. Öffnen Sie **WallCraft Pro** nach der Installation im Startmenü oder starten Sie `WallCraft.exe` im Ausgabeordner.
 3. **Sprache**: Wählen Sie EN/FR/ES/DE direkt in der Oberfläche.
 4. **Layout wählen**: Wählen Sie einen der 6 Modi („Maximale Optimierung“ empfohlen, um schwarze Balken zu minimieren).
 5. **Auto-Anordnen**, dann von Hand verfeinern: Modi *Bewegen*, *Skalieren* und *Zuschneiden*, Ebenen vor/zurück, *90° drehen* und *Anpassen…* (Helligkeit, Kontrast, Sättigung, Unschärfe).
@@ -72,29 +69,24 @@ Die Windows-EXE wird auf der Seite [GitHub Releases](https://github.com/rangornr
     * 🖥️ Hintergrundbild anwenden: ändert Ihren Windows-Desktop, Bildschirm für Bildschirm.
 
 ## 📂 Aufbau des Repositorys
+
 | Ordner | Inhalt |
 |---|---|
-| `python/` | Aktuelle App (Python/Tkinter), ihre Tests und das PyInstaller-Rezept |
-| `csharp/` | Kommende Version (C# / WinUI 3), siehe [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
-| `site/` | Generator der Website wallcraft.archi-it.fr (`site_builder.py`), Screenshots (`assets/`) und die fertige Website (`html/`) |
-| `docs/` | Architektur, Qualität, Migration, Veröffentlichung |
-| `tools/` | Skripte: Referenzergebnisse für die C#-Version, Übersetzungen, Mockups |
-
-### Python-Version (`python/`)
-* `main.py`: Einstiegspunkt, koppelt Windows High-DPI-Einstellungen.
-* `ui.py`: Fenster, interaktive Arbeitsfläche, Menüs.
-* `locales.py`: Mehrsprachiges Register.
-* `image_tools.py`: Kerngeschäftslogik. Tiefe Bildmanipulation und Layout-Engine (`AutoLayoutStrategy`).
-* `screen_splitter.py`: `ctypes` Systemaufrufe für die native Windows-Verknüpfung.
+| `csharp/` | WinUI-3-Anwendung, Kompositionslogik und Windows-Integration |
+| `python/` | Frühere Python/Tkinter-Implementierung als Referenz für die Migration |
+| `site/` | Generator, Ressourcen und Seiten der Website |
+| `docs/` | Architektur, Tests und Veröffentlichung |
+| `tools/` | Skripte für Website, Übersetzungen und Referenzdaten |
 
 ## 🐛 Fehlerbehebung
-* **Ist die Anwendung unscharf?** Führen Sie sie über das Standard-Terminal von Windows (cmd/powershell) und nicht über eine Entwicklungsumgebung (IDE) aus. 
-* **Sind schwarze Balken sichtbar?** Im Modus *Einpassen* ist das erwartet: kein Bild wird zugeschnitten, der restliche Platz bleibt schwarz. Wählen Sie *Füllen*, um die Bildschirme zu bedecken, oder „Maximale Optimierung“, um die Balken zu verringern.
 
+- **Schwarze Balken im Modus Einpassen**. Dieser Modus erhält die Fotos vollständig. Mit *Füllen* werden die Fotos zugeschnitten, um die Bildschirme auszufüllen.
+- **Das Gesamtbild überschreitet das Grafiklimit**. Exportieren Sie ein Bild pro Monitor, wenn die Komposition die maximale Texturgröße der GPU überschreitet.
 
 ## 📄 Lizenz
+
 Veröffentlicht unter der [MIT-Lizenz](LICENSE).
 
-## Architecture & validation
+## Architektur und Validierung
 
-[Architecture and trade-offs](docs/ARCHITECTURE.md) · [Quality and test scope](docs/QUALITY.md).
+[Architektur](docs/ARCHITECTURE.md) · [Tests und Validierung](docs/QUALITY.md) · [Migration und Kompatibilität](docs/MIGRATION_CSHARP.md).

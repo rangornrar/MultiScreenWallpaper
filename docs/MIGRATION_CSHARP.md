@@ -1,54 +1,52 @@
 # Migration de WallCraft Pro vers C# / WinUI 3
 
-Plan de migration de la version Python (Tkinter) vers une application Windows native en C#.
-La version Python reste la version publiée jusqu'à ce que la version C# fasse tout ce qu'elle fait.
+WallCraft Pro est désormais développé en C# avec WinUI 3. Ce document décrit la compatibilité avec l’ancienne implémentation Python/Tkinter et les vérifications à faire sur le paquet x64. Les [prérequis et la compilation](../README.md#prérequis-et-installation) figurent dans le README. La [procédure Store](MICROSOFT_STORE.md) décrit la soumission.
 
 ## 1. Objectifs
 
 - **Interface Windows 11 native** : effet Mica, barre de titre et menus sombres, coins arrondis, icônes Fluent, mise à l'échelle parfaite sur chaque écran (DPI par écran).
-- **Mêmes résultats qu'aujourd'hui** : pour les mêmes images, le même écran et le même numéro de variante, la version C# produit exactement la même disposition que la version Python.
-- **Compatibilité des données** : les projets enregistrés, les réglages (`settings.json`) et les fonds mémorisés par configuration d'écrans (`%LOCALAPPDATA%\WallCraft\configs\…`) restent lisibles par les deux versions.
-- **Un exe autonome**, sans installation de .NET ni du Windows App SDK, signé SHA-256 par le workflow de release comme aujourd'hui.
+- **Reproductibilité des dispositions**. Les tests de référence vérifient que le moteur C# retrouve les placements de l’ancienne version pour les entrées couvertes.
+- **Compatibilité des données**. Les deux versions lisent le même format de projet. Le MSIX reprend les réglages au premier lancement et importe les fonds Python à mesure que leurs configurations d’écrans sont utilisées.
+- **Distribution autonome**. Le workflow C# produit un exécutable de développement et le workflow Store produit un MSIX que Microsoft signe après certification.
 
-Hors périmètre de la première version : macOS/Linux, Microsoft Store, nouvelles fonctions.
+Le portage cible Windows. Les tests du cœur tournent également sous Linux.
 
 ## 2. Choix techniques
 
 | Sujet | Choix | Pourquoi |
 |---|---|---|
 | Runtime | **.NET 10** (LTS) | Support long, performances, AOT possible plus tard |
-| Interface | **WinUI 3** (Windows App SDK), application **non empaquetée**, autonome | Le seul moyen d'avoir le rendu Windows 11 natif ; pas de Store, un simple exe |
+| Interface | **WinUI 3**, Windows App SDK 2.6.5 | Intégration Windows et compilation autonome, avec ou sans MSIX |
 | Architecture UI | MVVM avec **CommunityToolkit.Mvvm** | Vues XAML fines, logique testable |
 | Zone de composition | **Win2D** (`CanvasControl`) | Rendu GPU : zoom et glisser fluides même avec de grandes images |
-| Rendu HD et enregistrement | Win2D (`CanvasRenderTarget`) → PNG | Même pipeline que l'affichage, sans dépendance supplémentaire |
+| Rendu HD et enregistrement | Win2D (`CanvasRenderTarget`) | Rendu direct par écran quand la composition dépasse la taille maximale d’une texture |
 | Détection de visages | **`Windows.Media.FaceAnalysis.FaceDetector`** (intégré à Windows) | Supprime OpenCV (≈ 70 Mo) ; repli sur la « zone la plus détaillée » comme aujourd'hui |
 | Fond d'écran | COM `IDesktopWallpaper` via `[GeneratedComInterface]` | Interop générée à la compilation, compatible AOT |
 | Taille réelle des écrans | `EnumDisplayDevicesW` + EDID dans le registre | Portage direct de `display_geometry.py` |
 | Zone de notification | **H.NotifyIcon.WinUI** (MIT) | Icône, menu, double-clic, en WinUI 3 |
-| Démarrage avec Windows | `HKCU\…\Run` avec `--tray` | Identique à la version Python |
+| Démarrage avec Windows | `StartupTask` sous MSIX, clé `HKCU\…\Run` avec `--tray` hors paquet | Le démarrage Store est désactivé par défaut et se règle aussi dans Windows |
 | Traductions | Fichiers `.resw` (en-US, fr-FR, es-ES, de-DE) | Format standard WinUI ; langue changeable sans redémarrage |
 
 ## 3. Structure de la solution
 
 ```
 csharp/
-  WallCraft.sln
+  WallCraft.slnx
   src/
     WallCraft.Core/              net10.0, AUCUNE dépendance : tout ce qui se teste sans Windows
       Geometry/                  rectangles, taille réelle (mm), noms d'écrans, empreinte de configuration
       Layout/                    PythonRandom, moteur de disposition (6 modes), Ajuster/Remplir, variantes
       Model/                     image de composition (taille, rotation, rognage, point d'intérêt, filtres)
-      Persistence/               projets JSON, settings.json, ConfigStore et manifest.json
-      Services/                  logique « thème ou choix de l'utilisateur », rotation d'images
-    WallCraft.Platform.Windows/  net10.0-windows : COM IDesktopWallpaper, EDID, surveillance des écrans,
-                                 démarrage auto, détection de visages, rendu HD
+      Persistence/               projets JSON et settings.json
+      Services/                  fonds mémorisés, reprise Python, suivi des fonds et rotation
+    WallCraft.Platform.Windows/  COM IDesktopWallpaper, EDID, identité du paquet et démarrage hors MSIX
     WallCraft.App/               WinUI 3 : fenêtres, dialogues, zone de composition Win2D, icône de notification
   tests/
     WallCraft.Core.Tests/        tests du cœur + comparaison aux résultats de référence Python
     fixtures/                    résultats de référence produits par tools/export_golden.py
 ```
 
-`WallCraft.Core` n'a volontairement aucune dépendance NuGet : il se compile et se teste partout (y compris sur Linux et dans la CI Ubuntu). Les tests utilisent un petit lanceur maison sans paquet (`dotnet run --project tests/WallCraft.Core.Tests`) ; on pourra passer à xUnit plus tard sans réécrire les tests.
+`WallCraft.Core` se compile et se teste avec le SDK .NET 10 sur Windows ou Linux. Depuis la racine du dépôt, lancez `dotnet run --project csharp/tests/WallCraft.Core.Tests -c Release`.
 
 ## 4. Garder exactement les mêmes dispositions
 
@@ -61,23 +59,7 @@ La disposition « optimale » et la « mosaïque » utilisent un générateur al
 
 Risque connu : `x ** 0.15` peut différer au dernier bit entre bibliothèques mathématiques. En cas d'égalité quasi parfaite entre deux arbres, l'ordre peut changer ; les tests le signaleront et on tranchera cas par cas.
 
-## 5. Phases, modèle et effort
-
-| # | Phase | Qui | Modèle · effort | Dépend de |
-|---|---|---|---|---|
-| 0 | Plan + squelette de la solution | conversation principale | Opus 5.5 · high | — |
-| 1 | Résultats de référence Python (`tools/export_golden.py`, `tests/fixtures/`) | agent | Sonnet 5.5 · medium | 0 |
-| 2 | Traductions → `.resw` (4 langues) + script de vérification des clés | agent | Sonnet 5.5 · medium | 0 |
-| 3 | CI GitHub Actions .NET (cœur sur Ubuntu, application sur Windows, exe en artefact) | agent | Sonnet 5.5 · medium | 0 |
-| 4 | Cœur : `PythonRandom`, moteur de disposition, géométrie, projets, ConfigStore | conversation principale | Opus 5.5 · high | 1 |
-| 5 | Plateforme Windows : fond d'écran COM, EDID, surveillance des écrans, visages, rendu HD | conversation principale | Opus 5.5 · high | 3, 4 |
-| 6 | Interface WinUI 3 : fenêtre principale, zone de composition, dialogues (un agent par écran) | agents | Opus 5.5 · medium | 2, 4, 5 |
-| 7 | Icône de notification, démarrage auto, release (exe autonome + SHA-256), site | agent | Sonnet 5.5 · medium | 6 |
-| 8 | Recette sur le PC à 3 écrans, comparaison avec la version Python, bascule | conversation principale + Patrick | Opus 5.5 · high | 7 |
-
-Chaque phase livre une PR. Les phases 1, 2 et 3 tournent en parallèle dès que le squelette existe. Le code des agents est relu dans la conversation principale avant fusion.
-
-## 6. Liste de parité (à cocher avant de publier la version C#)
+## 5. Recette de parité sur le MSIX installé
 
 - [ ] Import d'images (dialogue + glisser-déposer), rotation EXIF, formats JPG/PNG/WebP/BMP/TIFF
 - [ ] 6 dispositions, Ajuster/Remplir, variantes, mêmes résultats que Python
@@ -86,15 +68,14 @@ Chaque phase livre une PR. Les phases 1, 2 et 3 tournent en parallèle dès que 
 - [ ] Aperçu sur les écrans, zones hors écran assombries, alerte basse résolution
 - [ ] Taille réelle des écrans (EDID, bordures, décalages), noms d'écrans lisibles
 - [ ] Application par écran (`IDesktopWallpaper`), repli « Étendre », rapport d'erreurs
-- [ ] Un fond par configuration d'écrans, réapplication au branchement et après un thème Windows, jamais par-dessus un choix de l'utilisateur
-- [ ] Rotation depuis un dossier, icône de notification, démarrage avec Windows
+- [ ] Reprise des fonds Python par configuration et réapplication après branchement ou changement de thème Windows
+- [ ] Choix manuel d’un autre fond dans Windows, attente d’un cycle de surveillance, puis réapplication explicite depuis l’icône
+- [ ] Rotation depuis un dossier, icône de notification, fermeture de session puis lancement réel avec Windows
 - [ ] Projets : ouverture des projets créés par la version Python
-- [ ] Export de l'image complète et par écran
+- [ ] Export complet et par écran sur un bureau standard, puis application et export par écran sur un bureau qui dépasse la taille maximale de texture du GPU
 - [ ] 4 langues, pluriels, langue changeable à chaud
-- [ ] Exe autonome, release GitHub avec SHA-256, site mis à jour
+- [ ] Installation puis mise à jour du MSIX avec l’identité Partner Center et conservation des données
 
-## 7. Bascule
+## 6. Diffusion
 
-1. Les deux versions coexistent ; la version C# est publiée en « préversion » sur GitHub.
-2. Recette sur le poste à 3 écrans (phase 8) avec les mêmes projets dans les deux versions.
-3. Quand la liste de parité est complète : la version C# devient la version principale, le code Python est conservé dans un dossier `legacy/` le temps d'une version, puis retiré.
+La recette associe un poste à trois écrans, dont un avec un DPI ou une orientation différente, et une VM propre. Après cette recette, la première soumission peut être distribuée à une audience privée. L’ouverture au public suit la validation de ce paquet.

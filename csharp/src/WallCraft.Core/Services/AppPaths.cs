@@ -13,6 +13,8 @@ public static class AppPaths
 
     private static bool _settingsImported;
 
+    internal static string LegacyDataDirectory() => Path.Combine(LocalAppData(), "WallCraft");
+
     public static string LocalAppData()
     {
         string? baseDir = Environment.GetEnvironmentVariable("LOCALAPPDATA");
@@ -34,7 +36,7 @@ public static class AppPaths
         if (!string.IsNullOrEmpty(PackageFamilyName) && !_settingsImported)
         {
             _settingsImported = true;
-            ImportSettingsOnce(Path.Combine(LocalAppData(), "WallCraft", "settings.json"), Path.Combine(path, "settings.json"));
+            ImportSettingsOnce(Path.Combine(LegacyDataDirectory(), "settings.json"), Path.Combine(path, "settings.json"));
         }
         return path;
     }

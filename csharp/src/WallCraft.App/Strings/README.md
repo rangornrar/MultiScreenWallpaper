@@ -1,6 +1,6 @@
 # Traductions (`Strings/`)
 
-Les fichiers `<culture>/Resources.resw` (en-US, fr-FR, es-ES, de-DE) sont **générés** à partir des textes de l'application Python : `locales.py` (dictionnaire `_STRINGS`) et `ui_text.py` (dictionnaire `UI_TEXT`). Ne les modifiez pas à la main : vos changements seraient écrasés à la prochaine génération.
+L’interface WinUI 3 utilise les ressources `<culture>/Resources.resw` (en-US, fr-FR, es-ES, de-DE). Le générateur lit encore les catalogues de l’ancienne implémentation dans `python/locales.py` et `python/ui_text.py`. Modifiez ces catalogues puis régénérez les `.resw`. Python est utilisé pour cette étape de maintenance.
 
 ## Régénérer et vérifier
 
@@ -23,4 +23,4 @@ La sortie est déterministe (ressources triées par nom, UTF-8 avec BOM) : relan
 
 ## Source de vérité
 
-Tant que l'application Python existe, la source de vérité reste `locales.py` / `ui_text.py`. Toute nouvelle chaîne ou correction s'y fait, puis on régénère les `.resw`. Après la bascule vers C#, les `.resw` deviendront la source et ce script pourra être retiré.
+Les catalogues `python/locales.py` et `python/ui_text.py` restent les entrées du générateur. Après une modification de texte, versionnez les catalogues modifiés et les quatre fichiers `.resw` régénérés.

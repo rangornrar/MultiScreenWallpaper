@@ -307,6 +307,9 @@
   <data name="msg_optimal_warn_title" xml:space="preserve">
     <value>Heuristique</value>
   </data>
+  <data name="msg_render_too_large" xml:space="preserve">
+    <value>Une image unique de {0} × {1} px dépasse la limite de {2} px par côté de cet appareil graphique. Essayez l’export par écran.</value>
+  </data>
   <data name="msg_rotation_empty" xml:space="preserve">
     <value>Le dossier de rotation ne contient aucune image.</value>
   </data>

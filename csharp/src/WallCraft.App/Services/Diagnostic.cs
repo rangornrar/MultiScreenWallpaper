@@ -68,10 +68,11 @@ public static class Diagnostic
                 }
                 else
                 {
-                    using var composite = await HdRenderer.ComposeAsync(loaded, pixels.Width, pixels.Height, Windows.UI.Color.FromArgb(255, 0, 0, 0));
-                    await composite.SaveAsync(Path.Combine(outDir, "composition.png"));
-                    var pieces = await HdRenderer.SplitAsync(composite, monitors, outDir, "ecran");
+                    var background = Windows.UI.Color.FromArgb(255, 0, 0, 0);
+                    var pieces = await HdRenderer.SplitAsync(loaded, pixels.Width, pixels.Height, monitors, background, outDir, "ecran");
                     Line($"RENDU {pieces.Count} écran(s) en {clock.Elapsed.TotalSeconds:F1} s, sans application");
+                    using var composite = await HdRenderer.ComposeAsync(loaded, pixels.Width, pixels.Height, background);
+                    await composite.SaveAsync(Path.Combine(outDir, "composition.png"));
                 }
             }
             Line("TERMINÉ");
