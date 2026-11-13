@@ -6,7 +6,8 @@ Les exécutables ne sont plus versionnés dans Git : ils sont construits par Git
 ## Avant de publier
 - Mettre à jour `PRODUCT_VERSION`, `RELEASE_TAG` et `TODAY` dans `site/site_builder.py`.
 - Vérifier que les tests passent (`cd python && python -m unittest discover -s tests -v`).
-- Vérifier que les captures du README correspondent toujours à l'interface.
+- Si l'interface a changé, refaire les captures du site et des README dans les 4 langues :
+  `xvfb-run -a -s "-screen 0 1920x1080x24" python tools/make_screenshots.py` (Linux).
 - Tester sur Windows 10 et 11 : détection des écrans, écrans de tailles et DPI différents,
   coordonnées négatives, application par écran et repli « Étendre ».
 

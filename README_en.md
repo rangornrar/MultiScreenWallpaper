@@ -8,7 +8,7 @@
 
 It completely solves the issue of disparate monitor resolutions and borders through its intelligent engine: it merges multiple photos **without ever distorting or cropping them**, guaranteeing **100% absolute visibility** of your images ("Fit Inside" principle).
 
-![WallCraft Interface](site/assets/wallcraft_app_ui_1773221294829.png)
+![WallCraft Interface](site/assets/screens/en/main.webp)
 
 ---
 
@@ -36,7 +36,7 @@ The program adheres to the 100% rule:
 - **Regular Grid**: A mathematically uniform grid.
 - **Vertical Strips** & **Horizontal Strips**: Full height or full width panoramic slicing.
 
-![Maximum Optimization Heuristic](site/assets/wallcraft_optimal_layout_1773221310533.png)
+![Maximum Optimization Heuristic](site/assets/screens/desk.webp)
 
 ### ⚡ Performance & Editing
 - **Proxy System**: Uses thumbnails for a hyper-fluid UI even with 8K images.

@@ -8,7 +8,7 @@
 
 Resuelve completamente el problema de las resoluciones de monitores dispares mediante su motor inteligente: permite fusionar múltiples fotos **sin distorsionarlas ni recortarlas nunca**, garantizando una **visibilidad absoluta del 100%** de sus imágenes (principio "Encuadre exacto" / Fit Inside).
 
-![Interfaz de WallCraft](site/assets/wallcraft_app_ui_1773221294829.png)
+![Interfaz de WallCraft](site/assets/screens/es/main.webp)
 
 ---
 
@@ -36,7 +36,7 @@ El programa se adhiere a la regla del 100%:
 - **Cuadrícula Regular**: Una cuadrícula matemáticamente uniforme.
 - **Bandas Verticales** y **Bandas Horizontales**: Rebanado panorámico de altura o anchura completa.
 
-![Heurística de Optimización Máxima](site/assets/wallcraft_optimal_layout_1773221310533.png)
+![Heurística de Optimización Máxima](site/assets/screens/desk.webp)
 
 ### ⚡ Rendimiento y Edición
 - **Sistema de Proxy**: Utiliza miniaturas para una interfaz de usuario extremadamente fluida incluso con imágenes 8K.
