@@ -237,3 +237,13 @@ UI_TEXT.update({
         "de": "Das zeigt jeder Bildschirm. Zum Bearbeiten zu „Komposition“ wechseln.",
     },
 })
+
+# Textes ajoutés pour la version C# (dialogues), gardés ici pour que tools/export_resw.py ne les perde pas
+UI_TEXT.update({
+    "prefs_section_wallpaper": {"en": 'Wallpaper', "fr": "Fond d'écran", "es": 'Fondo de pantalla', "de": 'Hintergrundbild'},
+    "prefs_section_rotation": {"en": 'Image rotation', "fr": 'Rotation des images', "es": 'Rotación de imágenes', "de": 'Bildwechsel'},
+    "prefs_section_startup": {"en": 'Startup and notification area', "fr": 'Démarrage et zone de notification', "es": 'Inicio y área de notificación', "de": 'Start und Infobereich'},
+    "prefs_folder_none": {"en": 'No folder selected', "fr": 'Aucun dossier choisi', "es": 'Ninguna carpeta elegida', "de": 'Kein Ordner ausgewählt'},
+    "msg_autostart_failed": {"en": 'Could not change the start with Windows setting:\n\n{}', "fr": 'Impossible de modifier le lancement au démarrage de Windows :\n\n{}', "es": 'No se pudo cambiar el inicio con Windows:\n\n{}', "de": 'Der Start mit Windows konnte nicht geändert werden:\n\n{}'},
+    "variants_hint": {"en": 'Click a thumbnail to use that variant.', "fr": 'Cliquez sur une miniature pour utiliser cette variante.', "es": 'Haz clic en una miniatura para usar esa variante.', "de": 'Klicke auf eine Miniatur, um diese Variante zu verwenden.'},
+})
