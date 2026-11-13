@@ -1,28 +1,19 @@
-# Release Checklist
+# Liste de publication
 
-Les exécutables ne sont plus versionnés dans Git : ils sont construits par GitHub Actions
-(`.github/workflows/release.yml`) depuis le code du tag (dossier `python/`), puis joints à la release avec leur SHA-256.
+## Préparer la version C#
 
-## Avant de publier
-
-- Mettre à jour `PRODUCT_VERSION`, `RELEASE_TAG` et `TODAY` dans `site/site_builder.py`.
-- Vérifier que les tests passent (`cd python && python -m unittest discover -s tests -v`).
 - Exécuter `dotnet run --project csharp/tests/WallCraft.Core.Tests -c Release` et `python tools/check_resw.py`.
-- Si l'interface a changé, refaire les captures du site et des README dans les 4 langues :
-  `xvfb-run -a -s "-screen 0 1920x1080x24" python tools/make_screenshots.py` (Linux).
-- Tester sur Windows 10 et 11 : détection des écrans, écrans de tailles et DPI différents,
-  coordonnées négatives, application par écran et repli « Étendre ».
-- Pour le Store, appliquer la [recette MSIX](MIGRATION_CSHARP.md), vérifier les variables `MSIX_*` et préparer les captures C# et l’URL de confidentialité publique.
+- Vérifier le build Windows x64 et dérouler la [recette sur le MSIX installé](MIGRATION_CSHARP.md), notamment l’import des données, les écrans de tailles et DPI différents, le branchement et le démarrage à l’ouverture de session.
+- Prendre les captures de la version WinUI 3 dans les langues de la fiche. Publier les pages de confidentialité et vérifier leur URL publique.
 
-## Publier
+## Construire et soumettre le MSIX
 
-- Pousser un tag `vAAAA.M.J` (par exemple `git tag v2026.11.7 && git push origin v2026.11.7`).
-- Attendre la fin du workflow **Release** : il crée la release avec l'exe et son fichier `.sha256`.
-- Compléter les notes de version avec `RELEASE_NOTES_TEMPLATE.md`.
-- Pour le Microsoft Store, attendre le succès du workflow **Microsoft Store (MSIX)**. Vérifier le numéro de version et l’identité Partner Center, puis télécharger `wallcraft-store-msix` et suivre la [procédure Store](MICROSOFT_STORE.md).
+- Renseigner les variables `MSIX_*` avec l’identité du produit Partner Center.
+- Dans GitHub Actions, lancer **Microsoft Store (MSIX)** avec la version prévue et l’option de construction avec l’identité Partner Center. Un tag `Tag_vAAAA.MM.JJ` construit aussi ce paquet lorsque les variables sont renseignées.
+- Attendre le succès des vérifications. Télécharger `wallcraft-store-msix` et contrôler son identité et sa version. Exécuter le Windows App Certification Kit et suivre le [guide Microsoft Store](MICROSOFT_STORE.md).
+- Compléter les [notes de version](RELEASE_NOTES_TEMPLATE.md) et vérifier l’installation depuis la fiche après certification.
 
-## Après publication
+## Site et autres téléchargements
 
-- Régénérer le site : `python site/site_builder.py`, puis publier le contenu de `site/html/` sur l'hébergeur. Le lien de téléchargement est construit à partir de
-  `RELEASE_TAG` et `PRODUCT_VERSION` ; vérifier qu'il répond bien.
-- Vérifier la page de téléchargement sur https://wallcraft.archi-it.fr/.
+- Mettre à jour la page de téléchargement avec l’URL Store après publication. Depuis la racine du dépôt, générer le site avec `python site/site_builder.py`, déployer `site/html/` et vérifier les liens.
+- Pour un téléchargement de développement C#, utiliser l’artefact `WallCraft-win-x64` du [workflow C#](../.github/workflows/csharp.yml). Le workflow historique [Release](../.github/workflows/release.yml) construit encore l’ancien exécutable Python à partir des tags. Les liens qui pointent vers ces archives doivent l’indiquer.

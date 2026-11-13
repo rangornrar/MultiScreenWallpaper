@@ -1,11 +1,11 @@
 # Migration de WallCraft Pro vers C# / WinUI 3
 
-WallCraft Pro est porté de Python/Tkinter vers C# et WinUI 3. GitHub Releases distribue l’exécutable Python. Le workflow MSIX produit le paquet C# x64 destiné au Microsoft Store. La [procédure Store](MICROSOFT_STORE.md) décrit la recette et la soumission.
+WallCraft Pro est désormais développé en C# avec WinUI 3. Ce document décrit la compatibilité avec l’ancienne implémentation Python/Tkinter et les vérifications à faire sur le paquet x64. Les [prérequis et la compilation](../README.md#prérequis-et-installation) figurent dans le README. La [procédure Store](MICROSOFT_STORE.md) décrit la soumission.
 
 ## 1. Objectifs
 
 - **Interface Windows 11 native** : effet Mica, barre de titre et menus sombres, coins arrondis, icônes Fluent, mise à l'échelle parfaite sur chaque écran (DPI par écran).
-- **Mêmes résultats qu'aujourd'hui** : pour les mêmes images, le même écran et le même numéro de variante, la version C# produit exactement la même disposition que la version Python.
+- **Reproductibilité des dispositions**. Les tests de référence vérifient que le moteur C# retrouve les placements de l’ancienne version pour les entrées couvertes.
 - **Compatibilité des données**. Les deux versions lisent le même format de projet. Le MSIX reprend les réglages au premier lancement et importe les fonds Python à mesure que leurs configurations d’écrans sont utilisées.
 - **Distribution autonome**. Le workflow C# produit un exécutable de développement et le workflow Store produit un MSIX que Microsoft signe après certification.
 
@@ -46,7 +46,7 @@ csharp/
     fixtures/                    résultats de référence produits par tools/export_golden.py
 ```
 
-`WallCraft.Core` n'a volontairement aucune dépendance NuGet : il se compile et se teste partout (y compris sur Linux et dans la CI Ubuntu). Les tests utilisent un petit lanceur maison sans paquet (`dotnet run --project tests/WallCraft.Core.Tests`) ; on pourra passer à xUnit plus tard sans réécrire les tests.
+`WallCraft.Core` se compile et se teste avec le SDK .NET 10 sur Windows ou Linux. Depuis la racine du dépôt, lancez `dotnet run --project csharp/tests/WallCraft.Core.Tests -c Release`.
 
 ## 4. Garder exactement les mêmes dispositions
 
@@ -78,4 +78,4 @@ Risque connu : `x ** 0.15` peut différer au dernier bit entre bibliothèques ma
 
 ## 6. Diffusion
 
-La recette associe un poste à trois écrans, dont un avec un DPI ou une orientation différente, et une VM propre. Après cette recette, la première soumission peut être distribuée à une audience privée. L’ouverture au public suit la validation de ce paquet. Le canal GitHub distribue l’exécutable Python pendant cette phase.
+La recette associe un poste à trois écrans, dont un avec un DPI ou une orientation différente, et une VM propre. Après cette recette, la première soumission peut être distribuée à une audience privée. L’ouverture au public suit la validation de ce paquet.

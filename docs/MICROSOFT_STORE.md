@@ -1,10 +1,9 @@
 # Publier WallCraft Pro sur le Microsoft Store
 
-C’est la **version C# (WinUI 3)** qui est destinée au Store, sous forme de **paquet MSIX x64**.
+WallCraft Pro est une application **C# et WinUI 3** destinée au Microsoft Store sous forme de **paquet MSIX x64**. Le manifeste déclare Windows 10 version 2004 (build 19041) comme minimum technique. Windows 11 est recommandé. Le paquet inclut les runtimes .NET et Windows App SDK.
 
 - le Store **signe le paquet lui-même**, il n'y a pas de certificat à acheter ;
 - le Store héberge le paquet et installe les mises à jour ;
-- l'exe de GitHub (version Python) reste disponible à côté.
 
 Avant la première soumission, déroulez la [recette de parité](MIGRATION_CSHARP.md) sur un poste multi-écrans et sur une VM Windows propre. Vérifiez aussi l’installation, la mise à jour des données et le lancement après ouverture de session. Exécutez le [Windows App Certification Kit](https://learn.microsoft.com/windows/uwp/debug-test-perf/windows-app-certification-kit) sur le paquet retenu.
 
@@ -24,7 +23,7 @@ Ce qui change dans un paquet, et que l'application gère :
 
 - **Fonds d'écran** (`AppPaths`) : ils sont enregistrés dans le dossier réel du paquet, pour que Windows les affiche.
 - **Lancement au démarrage** (`StoreStartup`) : il passe par la tâche de démarrage du paquet. L'utilisateur la retrouve aussi dans Paramètres > Applications > Démarrage, et WallCraft s'ouvre alors directement dans la zone de notification.
-- **Données Python**. Les réglages sont copiés au premier lancement. Les fonds mémorisés et leur panorama de secours sont importés à la première utilisation de chaque configuration d’écrans, avec leur état de réapplication. Les projets restent des fichiers à ouvrir depuis l’application.
+- **Données de l’ancienne installation**. Les réglages sont copiés au premier lancement. Les fonds mémorisés et leur panorama de secours sont importés à la première utilisation de chaque configuration d’écrans, avec leur état de réapplication. Les projets restent des fichiers à ouvrir depuis l’application.
 - **Grandes compositions**. L’application et l’export par écran peuvent rendre chaque écran séparément. L’export en une seule image et le repli « Étendre » restent limités par la taille maximale d’une texture du GPU.
 
 ## Étapes (une seule fois)
@@ -199,6 +198,5 @@ Alles geschieht auf Ihrem PC: kein Konto, keine Werbung, keine Datenerhebung.
 ## Versions suivantes
 
 1. Créez le tag `Tag_vAAAA.MM.JJ` comme d'habitude.
-   - Le workflow Release publie l'exe sur GitHub.
    - Le workflow Microsoft Store (MSIX) construit le paquet avec l’identité configurée et publie l’artefact après validation.
 2. Dans Partner Center, sur WallCraft Pro, ouvrez **Mettre à jour** puis **Paquets**, déposez le nouveau `.msix` et envoyez.

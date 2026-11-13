@@ -1,36 +1,24 @@
 # Qualité et validation
 
+## Application C#
+
+Depuis la racine du dépôt, avec le SDK .NET 10 sous Windows ou Linux, lancez les tests du moteur de composition.
+
 ```bash
-cd python
-python -m pip install -r requirements.txt
-python -m unittest discover -s tests -v
+dotnet run --project csharp/tests/WallCraft.Core.Tests -c Release
 ```
 
-Les tests de `python/tests/test_image_tools.py` vérifient les six modes de placement sur un jeu de ratios variés, leurs limites et absence de recouvrement, le cas vide, la rotation et l’invalidation du cache, le clonage, un aller-retour de projet et l’utilisation des pixels originaux lors de l’export. Les cas non déterministes utilisent une graine fixée ; ils ne démontrent pas toutes les combinaisons possibles.
+Les tests couvrent les six dispositions, les variantes, la géométrie multi-écrans, l’appariement des moniteurs, les projets, les retouches et la reprise des fonds mémorisés. Les fichiers dans `csharp/tests/fixtures/` permettent de comparer le cœur C# aux résultats de l’ancienne implémentation.
 
-`python/tests/test_audit_fixes.py` couvre l’orientation EXIF, le chargement différé des originaux, les erreurs de chargement signalées, le ratio après rognage, l’équilibre du mode optimal, l’absence de liseré à l’export, le découpage par écran, l’appariement des écrans empilés et la validation des projets JSON.
+La CI compile l’application WinUI 3 sur Windows et publie le dossier autonome x64. Le workflow MSIX installe une copie signée, teste un bureau synthétique plus large que la limite GPU, vérifie l’application par écran et en mode « Étendre », puis contrôle la tâche de démarrage et l’ouverture de la fenêtre.
 
-La CI exécute pyflakes et les tests sous Ubuntu et Windows, avec Python 3.11 et 3.14 (version embarquée dans l’exécutable). Avant une version Windows, vérifier manuellement la détection des moniteurs, les coordonnées négatives, les DPI mixtes, l’application native et son repli, puis mesurer mémoire et temps d’export avec des images réelles.
+Sur un poste de test Windows, lancez `WallCraft.exe --selftest rapport.json --render-only` pour contrôler le rendu synthétique sans changer le fond ni le démarrage. La [recette matérielle](MIGRATION_CSHARP.md) couvre les DPI mixtes, les coordonnées négatives, le branchement réel et le démarrage à l’ouverture de session.
 
-Aucun résultat de benchmark, test d’installation ou taux de couverture global n’est revendiqué.
+## Traductions et site
 
-## Version C#
-
-```bash
-cd csharp
-dotnet run --project tests/WallCraft.Core.Tests
-```
-
-Les tests du cœur C# comparent la nouvelle version aux résultats de la version Python (`csharp/tests/fixtures/`, produits par `tools/export_golden*.py`).
-
-Les tests de reprise couvrent les réglages, les images et le panorama de secours d’une configuration, ainsi que la conservation d’un fond déjà mémorisé par le Store. Le workflow MSIX installe une copie signée, teste un bureau synthétique plus large que la limite GPU, vérifie l’application par écran et en mode « Étendre », puis contrôle la tâche de démarrage et l’ouverture de la fenêtre.
-
-Sur un poste de test, `WallCraft.exe --selftest rapport.json --render-only` génère et contrôle les images du bureau synthétique sans changer le fond ni les paramètres de démarrage. La [recette matérielle](MIGRATION_CSHARP.md) couvre les DPI mixtes, le branchement réel et le démarrage à l’ouverture de session.
-
-## Site
+Python sert à exécuter les scripts de maintenance ci-dessous. Le site généré est vérifié par la CI.
 
 ```bash
+python tools/check_resw.py
 python site/site_builder.py
 ```
-
-La CI vérifie que `site/html/` est à jour par rapport au générateur.

@@ -4,13 +4,7 @@
 
 🌍 **[English](README_en.md)** | **[Français](README.md)** | **[Español](README_es.md)** | **[Deutsch](README_de.md)**
 
-**WallCraft Pro** crea, organiza y aplica fondos de pantalla en varios monitores de Windows. La edición C# y WinUI 3 está destinada a Microsoft Store. GitHub Releases distribuye la edición Python.
-
-Resuelve completamente el problema de las resoluciones de monitores dispares mediante su motor inteligente: permite fusionar múltiples fotos **sin distorsionarlas ni recortarlas nunca**, garantizando una **visibilidad absoluta del 100%** de sus imágenes (principio "Encuadre exacto" / Fit Inside).
-
-![Interfaz de WallCraft](site/assets/screens/es/main.webp)
-
----
+**WallCraft Pro** es una aplicación de Windows desarrollada con **C# y WinUI 3** para componer, organizar y aplicar fondos de pantalla en varios monitores. El modo Tamaño real alinea una panorámica entre pantallas de distintos tamaños y resoluciones.
 
 ## 🚀 Características Clave
 
@@ -39,33 +33,33 @@ El programa se adhiere a la regla del 100%:
 ![Heurística de Optimización Máxima](site/assets/screens/desk.webp)
 
 ### ⚡ Rendimiento y Edición
-- **Sistema de Proxy**: Utiliza miniaturas para una interfaz de usuario extremadamente fluida incluso con imágenes 8K.
+- **Miniaturas de vista previa**. El editor usa miniaturas de hasta 1024 píxeles.
 - **Edición Integrada**: Brillo, Contraste, Saturación, Desenfoque y Rotación.
 - **Renderizado HD**: La exportación final aprovecha los archivos originales Ultra HD para máxima calidad absoluta.
 
----
+## Requisitos e instalación
 
-## 📦 Ejecutar la edición Python desde el código fuente
+- **Uso de la aplicación**. Windows x64. Se recomienda Windows 11. El paquete declara Windows 10 versión 2004 (compilación 19041) como mínimo técnico.
+- **Compilación**. Windows x64, SDK de .NET 10 y acceso a NuGet para restaurar el Windows App SDK y las demás dependencias.
 
-### Requisitos previos
-- Python 3.10 o superior.
-- Windows 10/11 (Requerido debido a la API de fondos de pantalla).
+El paquete MSIX y la compilación autónoma incluyen los entornos de ejecución de .NET y Windows App SDK. Python se usa solo en algunos scripts del repositorio.
 
-### Dependencias
-```bash
-cd python
-pip install pillow screeninfo
+## Obtener WallCraft Pro
+
+- El paquete MSIX está destinado a Microsoft Store. La [guía de Microsoft Store](docs/MICROSOFT_STORE.md) explica cómo preparar y enviar el paquete.
+- Para probar la compilación de desarrollo en C#, descargue `WallCraft-win-x64` de una ejecución correcta del [flujo de trabajo de C#](https://github.com/rangornrar/MultiScreenWallpaper/actions/workflows/csharp.yml). Extraiga todo el archivo en una carpeta y ejecute `WallCraft.exe`.
+
+### Compilar desde el código fuente
+
+```powershell
+dotnet publish csharp/src/WallCraft.App -c Release -r win-x64 -p:Platform=x64 --self-contained true -p:PublishSingleFile=true -o publish/win-x64
 ```
 
-## 📥 Descargar
-
-La [guía de Microsoft Store](docs/MICROSOFT_STORE.md) describe la compilación y preparación del MSIX en C#.
-
-El ejecutable de Windows se publica en la página [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest). Su huella SHA-256 figura en las notas de cada versión.
+Ejecute `publish/win-x64/WallCraft.exe`. Conserve junto al ejecutable los demás archivos de esa carpeta.
 
 ## 🛠️ Uso
-1. Inicie la aplicación: `python main.py` (en `python/`) (o el ejecutable de la [última versión](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
-2. **Añadir imágenes**: botón «+ Añadir Imágenes» o menú *Archivo*. Las fotos de smartphone se enderezan automáticamente.
+
+1. Abra **WallCraft Pro** desde el menú Inicio tras instalarlo, o ejecute `WallCraft.exe` desde la carpeta de compilación.
 3. **Idioma**: elija EN/FR/ES/DE directamente desde la interfaz.
 4. **Elija una disposición**: seleccione uno de los 6 modos («Optimización Máxima» recomendada para limitar las bandas negras).
 5. **Auto-Organizar** y luego ajuste a mano: modos *Mover*, *Escalar* y *Recortar*, capas adelante/atrás, *Girar 90°* y *Ajustes…* (brillo, contraste, saturación, desenfoque).
@@ -75,29 +69,24 @@ El ejecutable de Windows se publica en la página [GitHub Releases](https://gith
     * 🖥️ Aplicar fondo: modifica su escritorio de Windows, pantalla por pantalla.
 
 ## 📂 Organización del repositorio
+
 | Carpeta | Contenido |
 |---|---|
-| `python/` | Edición de GitHub Releases (Python/Tkinter), pruebas y receta PyInstaller |
-| `csharp/` | Edición de Microsoft Store (C# / WinUI 3), ver [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
-| `site/` | Generador del sitio wallcraft.archi-it.fr (`site_builder.py`), capturas (`assets/`) y sitio listo para publicar (`html/`) |
-| `docs/` | Arquitectura, calidad, migración, proceso de publicación |
-| `tools/` | Scripts: resultados de referencia para la versión C#, traducciones, maquetas |
+| `csharp/` | Aplicación WinUI 3, motor de composición e integración con Windows |
+| `python/` | Implementación anterior en Python/Tkinter, conservada como referencia para la migración |
+| `site/` | Generador, recursos y páginas del sitio web |
+| `docs/` | Arquitectura, pruebas y publicación |
+| `tools/` | Scripts del sitio web, traducciones y datos de referencia |
 
-### Versión Python (`python/`)
-* `main.py`: Punto de entrada, gestiona el High-DPI de Windows.
-* `ui.py`: Ventana, lienzo interactivo y bucle de eventos.
-* `locales.py`: Diccionario multilingüe de cadenas.
-* `image_tools.py`: Lógica principal, matemáticas y diseño.
-* `screen_splitter.py`: Llamadas `ctypes` a Windows.
+## 🐛 Solución de problemas
 
-## 🐛 Solución de Problemas
-* **¿La aplicación se ve borrosa?** Ejecútela a través de la terminal estándar (cmd/powershell) en lugar de la IDE para garantizar que Windows utilice la alta fidelidad visual nativa.
-* **¿Bandas negras visibles?** En modo *Ajustar* es lo esperado: ninguna imagen se recorta y el espacio restante queda negro. Elija *Rellenar* para cubrir las pantallas, u «Optimización Máxima» para reducir las bandas.
-
+- **Bandas negras en el modo Ajustar**. Este modo conserva las fotos completas. Use *Rellenar* para cubrir las pantallas mediante recorte.
+- **La exportación completa supera el límite gráfico**. Exporte una imagen por pantalla si la composición supera el tamaño máximo de textura de la GPU.
 
 ## 📄 Licencia
+
 Distribuido bajo la [licencia MIT](LICENSE).
 
-## Architecture & validation
+## Arquitectura y validación
 
-[Architecture and trade-offs](docs/ARCHITECTURE.md) · [Quality and test scope](docs/QUALITY.md).
+[Arquitectura](docs/ARCHITECTURE.md) · [Pruebas y validación](docs/QUALITY.md) · [Migración y compatibilidad](docs/MIGRATION_CSHARP.md).
