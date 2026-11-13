@@ -154,6 +154,10 @@
   <data name="filetype_images" xml:space="preserve">
     <value>Images</value>
   </data>
+  <data name="filetype_jpeg" xml:space="preserve">
+    <value>Image JPEG</value>
+    <comment>Propre à la version C# (export JPEG)</comment>
+  </data>
   <data name="filetype_png" xml:space="preserve">
     <value>Image PNG</value>
   </data>
