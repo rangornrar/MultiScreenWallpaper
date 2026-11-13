@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Manifeste du paquet MSIX de WallCraft Pro (Microsoft Store).
+  Les valeurs entre $…$ sont remplacées par build_msix.ps1 : l'identité vient de
+  Partner Center (Gestion des produits > Identité du produit), la version du tag.
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 uap10 desktop rescap">
+
+  <Identity Name="$IDENTITY_NAME$" Publisher="$PUBLISHER$" Version="$VERSION$" ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>WallCraft Pro</DisplayName>
+    <PublisherDisplayName>$PUBLISHER_DISPLAY_NAME$</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-US" />
+    <Resource Language="fr-FR" />
+    <Resource Language="es-ES" />
+    <Resource Language="de-DE" />
+  </Resources>
+
+  <Applications>
+    <!-- L'application, dans le menu Démarrer -->
+    <Application Id="WallCraft" Executable="WallCraft.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="WallCraft Pro"
+                          Description="Wallpapers for multi-monitor setups"
+                          BackgroundColor="transparent"
+                          Square150x150Logo="Assets\Square150x150Logo.png"
+                          Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <!-- « wallcraft » en ligne de commande ; sert aussi à la vérification du paquet en CI -->
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="WallCraft.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="wallcraft.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+
+    <!-- Lancement au démarrage de Windows, directement dans la zone de notification (--tray).
+         Invisible dans le menu Démarrer ; l'utilisateur l'active depuis WallCraft ou depuis
+         Paramètres > Applications > Démarrage. -->
+    <Application Id="WallCraftTray" Executable="WallCraft.exe" EntryPoint="Windows.FullTrustApplication" uap10:Parameters="--tray">
+      <uap:VisualElements DisplayName="WallCraft Pro"
+                          Description="Wallpapers for multi-monitor setups"
+                          BackgroundColor="transparent"
+                          Square150x150Logo="Assets\Square150x150Logo.png"
+                          Square44x44Logo="Assets\Square44x44Logo.png"
+                          AppListEntry="none" />
+      <Extensions>
+        <desktop:Extension Category="windows.startupTask" Executable="WallCraft.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="WallCraftStartup" Enabled="false" DisplayName="WallCraft Pro" />
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

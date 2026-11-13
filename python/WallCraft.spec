@@ -22,23 +22,41 @@ a = Analysis(
 )
 pyz = PYZ(a.pure)
 
-exe = EXE(
-    pyz,
-    a.scripts,
-    a.binaries,
-    a.datas,
-    [],
-    name='WallCraft',
-    debug=False,
-    bootloader_ignore_signals=False,
-    strip=False,
-    upx=False,  # UPX augmente les faux positifs antivirus
-    upx_exclude=[],
-    runtime_tmpdir=None,
-    console=False,
-    disable_windowed_traceback=False,
-    argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
-)
+# WALLCRAFT_ONEDIR=1 : dossier au lieu d'un exe unique, pour le paquet MSIX du Microsoft Store
+# (démarrage plus rapide, rien à extraire dans %TEMP%, mises à jour différentielles).
+ONEDIR = os.environ.get("WALLCRAFT_ONEDIR") == "1"
+
+if ONEDIR:
+    exe = EXE(
+        pyz,
+        a.scripts,
+        [],
+        exclude_binaries=True,
+        name='WallCraft',
+        debug=False,
+        strip=False,
+        upx=False,
+        console=False,
+    )
+    coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name='WallCraft')
+else:
+    exe = EXE(
+        pyz,
+        a.scripts,
+        a.binaries,
+        a.datas,
+        [],
+        name='WallCraft',
+        debug=False,
+        bootloader_ignore_signals=False,
+        strip=False,
+        upx=False,  # UPX augmente les faux positifs antivirus
+        upx_exclude=[],
+        runtime_tmpdir=None,
+        console=False,
+        disable_windowed_traceback=False,
+        argv_emulation=False,
+        target_arch=None,
+        codesign_identity=None,
+        entitlements_file=None,
+    )

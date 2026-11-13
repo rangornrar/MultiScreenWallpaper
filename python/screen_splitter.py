@@ -40,6 +40,7 @@ CLSID_DesktopWallpaper = GUID("{C2CF3110-460E-4fc1-B9D0-8A1C0C9CC4BD}")
 IID_IDesktopWallpaper  = GUID("{B92B56A9-8B55-4E14-9A89-0199BBB6F93B}")
 
 DWPOS_FILL = 4
+DWPOS_SPAN = 5
 
 _FUNC = ctypes.WINFUNCTYPE if IS_WINDOWS else ctypes.CFUNCTYPE
 
@@ -325,8 +326,12 @@ def set_wallpaper_span(image_path):
     """Applique une seule image étirée sur tout le bureau (mode Étendre de Windows)."""
     if not IS_WINDOWS:
         return False
-    import winreg
     path = os.path.abspath(image_path)
+    # IDesktopWallpaper d'abord : il ne passe pas par le registre, que Windows redirige
+    # dans un paquet MSIX (version Microsoft Store).
+    if _set_span_com(path):
+        return True
+    import winreg
     try:
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Control Panel\\Desktop", 0, winreg.KEY_SET_VALUE)
         winreg.SetValueEx(key, "WallpaperStyle", 0, winreg.REG_SZ, "22")
@@ -335,3 +340,24 @@ def set_wallpaper_span(image_path):
         return bool(ctypes.windll.user32.SystemParametersInfoW(20, 0, path, 3))
     except Exception:
         return False
+
+
+def _set_span_com(path):
+    ole32 = ctypes.windll.ole32
+    hr_init = ole32.CoInitialize(None)
+    p = ctypes.POINTER(IDesktopWallpaper)()
+    try:
+        if ole32.CoCreateInstance(ctypes.byref(CLSID_DesktopWallpaper), None, 4,
+                                  ctypes.byref(IID_IDesktopWallpaper), ctypes.byref(p)) != 0 or not p:
+            return False
+        v = p.contents.lpVtbl.contents
+        if v.SetPosition(p, DWPOS_SPAN) != 0:
+            return False
+        return v.SetWallpaper(p, None, path) == 0  # None : tous les écrans
+    except Exception:
+        return False
+    finally:
+        if p:
+            p.contents.lpVtbl.contents.Release(p)
+        if hr_init in (0, 1):
+            ole32.CoUninitialize()

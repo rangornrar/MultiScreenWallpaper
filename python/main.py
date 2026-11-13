@@ -22,6 +22,10 @@ def enable_dpi_awareness():
 
 
 def main():
+    if "--selftest" in sys.argv[:-1]:  # vérification du paquet MSIX par la CI, sans interface
+        import appmodel
+        appmodel.selftest(sys.argv[sys.argv.index("--selftest") + 1])
+        return
     enable_dpi_awareness()
     root = tk.Tk()
     # --tray : lancement au démarrage de Windows, directement dans la zone de notification
