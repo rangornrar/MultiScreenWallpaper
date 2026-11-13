@@ -286,6 +286,11 @@
 
 {0}</value>
   </data>
+  <data name="msg_autostart_failed" xml:space="preserve">
+    <value>No se pudo cambiar el inicio con Windows:
+
+{0}</value>
+  </data>
   <data name="msg_exported" xml:space="preserve">
     <value>Exportado: {0}</value>
   </data>
@@ -412,6 +417,9 @@ La imagen se aplicó en el modo «Extender» de Windows.</value>
   <data name="prefs_folder" xml:space="preserve">
     <value>Carpeta de imágenes</value>
   </data>
+  <data name="prefs_folder_none" xml:space="preserve">
+    <value>Ninguna carpeta elegida</value>
+  </data>
   <data name="prefs_keep" xml:space="preserve">
     <value>Volver a aplicar el fondo cuando cambian las pantallas o Windows restaura un tema</value>
   </data>
@@ -420,6 +428,15 @@ La imagen se aplicó en el modo «Extender» de Windows.</value>
   </data>
   <data name="prefs_rotation" xml:space="preserve">
     <value>Cambiar las imágenes automáticamente</value>
+  </data>
+  <data name="prefs_section_rotation" xml:space="preserve">
+    <value>Rotación de imágenes</value>
+  </data>
+  <data name="prefs_section_startup" xml:space="preserve">
+    <value>Inicio y área de notificación</value>
+  </data>
+  <data name="prefs_section_wallpaper" xml:space="preserve">
+    <value>Fondo de pantalla</value>
   </data>
   <data name="prefs_title" xml:space="preserve">
     <value>Fondo automático</value>
@@ -495,6 +512,9 @@ La imagen se aplicó en el modo «Extender» de Windows.</value>
   </data>
   <data name="variants_computing" xml:space="preserve">
     <value>Calculando variantes…</value>
+  </data>
+  <data name="variants_hint" xml:space="preserve">
+    <value>Haz clic en una miniatura para usar esa variante.</value>
   </data>
   <data name="variants_title" xml:space="preserve">
     <value>Elegir una variante</value>

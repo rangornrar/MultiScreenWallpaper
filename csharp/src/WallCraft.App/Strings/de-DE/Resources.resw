@@ -286,6 +286,11 @@
 
 {0}</value>
   </data>
+  <data name="msg_autostart_failed" xml:space="preserve">
+    <value>Der Start mit Windows konnte nicht geändert werden:
+
+{0}</value>
+  </data>
   <data name="msg_exported" xml:space="preserve">
     <value>Exportiert: {0}</value>
   </data>
@@ -412,6 +417,9 @@ Das Bild wurde stattdessen im Windows-Modus „Strecken“ angewendet.</value>
   <data name="prefs_folder" xml:space="preserve">
     <value>Bildordner</value>
   </data>
+  <data name="prefs_folder_none" xml:space="preserve">
+    <value>Kein Ordner ausgewählt</value>
+  </data>
   <data name="prefs_keep" xml:space="preserve">
     <value>Hintergrund erneut anwenden, wenn sich Bildschirme ändern oder Windows ein Design wiederherstellt</value>
   </data>
@@ -420,6 +428,15 @@ Das Bild wurde stattdessen im Windows-Modus „Strecken“ angewendet.</value>
   </data>
   <data name="prefs_rotation" xml:space="preserve">
     <value>Bilder automatisch wechseln</value>
+  </data>
+  <data name="prefs_section_rotation" xml:space="preserve">
+    <value>Bildwechsel</value>
+  </data>
+  <data name="prefs_section_startup" xml:space="preserve">
+    <value>Start und Infobereich</value>
+  </data>
+  <data name="prefs_section_wallpaper" xml:space="preserve">
+    <value>Hintergrundbild</value>
   </data>
   <data name="prefs_title" xml:space="preserve">
     <value>Automatisches Hintergrundbild</value>
@@ -495,6 +512,9 @@ Das Bild wurde stattdessen im Windows-Modus „Strecken“ angewendet.</value>
   </data>
   <data name="variants_computing" xml:space="preserve">
     <value>Varianten werden berechnet…</value>
+  </data>
+  <data name="variants_hint" xml:space="preserve">
+    <value>Klicke auf eine Miniatur, um diese Variante zu verwenden.</value>
   </data>
   <data name="variants_title" xml:space="preserve">
     <value>Variante wählen</value>

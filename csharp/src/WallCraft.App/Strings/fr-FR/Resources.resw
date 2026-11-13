@@ -286,6 +286,11 @@
 
 {0}</value>
   </data>
+  <data name="msg_autostart_failed" xml:space="preserve">
+    <value>Impossible de modifier le lancement au démarrage de Windows :
+
+{0}</value>
+  </data>
   <data name="msg_exported" xml:space="preserve">
     <value>Exporté : {0}</value>
   </data>
@@ -412,6 +417,9 @@ L'image a été appliquée en mode « Étendre » de Windows à la place.</value
   <data name="prefs_folder" xml:space="preserve">
     <value>Dossier d'images</value>
   </data>
+  <data name="prefs_folder_none" xml:space="preserve">
+    <value>Aucun dossier choisi</value>
+  </data>
   <data name="prefs_keep" xml:space="preserve">
     <value>Réappliquer le fond quand les écrans changent ou quand Windows remet un thème</value>
   </data>
@@ -420,6 +428,15 @@ L'image a été appliquée en mode « Étendre » de Windows à la place.</value
   </data>
   <data name="prefs_rotation" xml:space="preserve">
     <value>Changer les images automatiquement</value>
+  </data>
+  <data name="prefs_section_rotation" xml:space="preserve">
+    <value>Rotation des images</value>
+  </data>
+  <data name="prefs_section_startup" xml:space="preserve">
+    <value>Démarrage et zone de notification</value>
+  </data>
+  <data name="prefs_section_wallpaper" xml:space="preserve">
+    <value>Fond d'écran</value>
   </data>
   <data name="prefs_title" xml:space="preserve">
     <value>Fond automatique</value>
@@ -495,6 +512,9 @@ L'image a été appliquée en mode « Étendre » de Windows à la place.</value
   </data>
   <data name="variants_computing" xml:space="preserve">
     <value>Calcul des variantes…</value>
+  </data>
+  <data name="variants_hint" xml:space="preserve">
+    <value>Cliquez sur une miniature pour utiliser cette variante.</value>
   </data>
   <data name="variants_title" xml:space="preserve">
     <value>Choisir une variante</value>
