@@ -12,6 +12,9 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
+    defaults:
+      run:
+        working-directory: python   # version Python de l'application
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -35,14 +38,14 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: wallcraft-windows
-          path: dist/WallCraft-Pro-*
+          path: python/dist/WallCraft-Pro-*
       - name: Publier la release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/${{ steps.pack.outputs.name }}
-            dist/${{ steps.pack.outputs.name }}.sha256
+            python/dist/${{ steps.pack.outputs.name }}
+            python/dist/${{ steps.pack.outputs.name }}.sha256
           append_body: true
           body: |
             SHA-256 de `${{ steps.pack.outputs.name }}` :

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WallCraft.App/WallCraft.App.csproj" />
+    <Project Path="src/WallCraft.Core/WallCraft.Core.csproj" />
+    <Project Path="src/WallCraft.Platform.Windows/WallCraft.Platform.Windows.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WallCraft.Core.Tests/WallCraft.Core.Tests.csproj" />
+  </Folder>
+</Solution>

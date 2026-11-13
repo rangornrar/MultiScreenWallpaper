@@ -1,0 +1,527 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>WallCraft Pro</value>
+  </data>
+  <data name="adjust_blur" xml:space="preserve">
+    <value>Flou</value>
+  </data>
+  <data name="adjust_brightness" xml:space="preserve">
+    <value>Luminosité</value>
+  </data>
+  <data name="adjust_close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="adjust_contrast" xml:space="preserve">
+    <value>Contraste</value>
+  </data>
+  <data name="adjust_reset" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="adjust_saturation" xml:space="preserve">
+    <value>Saturation</value>
+  </data>
+  <data name="adjust_title" xml:space="preserve">
+    <value>Retouches de l'image</value>
+  </data>
+  <data name="app_title" xml:space="preserve">
+    <value>WallCraft</value>
+  </data>
+  <data name="btn_add_images" xml:space="preserve">
+    <value>Ajouter des images</value>
+  </data>
+  <data name="btn_adjust" xml:space="preserve">
+    <value>Retouches…</value>
+  </data>
+  <data name="btn_apply" xml:space="preserve">
+    <value>Appliquer le fond d'écran</value>
+  </data>
+  <data name="btn_auto_arrange" xml:space="preserve">
+    <value>Auto-organiser</value>
+  </data>
+  <data name="btn_cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="btn_kofi" xml:space="preserve">
+    <value>☕ M'offrir un Ko-fi</value>
+  </data>
+  <data name="btn_layer_back" xml:space="preserve">
+    <value>Envoyer derrière</value>
+  </data>
+  <data name="btn_layer_front" xml:space="preserve">
+    <value>Mettre devant</value>
+  </data>
+  <data name="btn_mode_crop" xml:space="preserve">
+    <value>Mode: ROGNER</value>
+  </data>
+  <data name="btn_mode_move" xml:space="preserve">
+    <value>Mode: DÉPLACER</value>
+  </data>
+  <data name="btn_new_project" xml:space="preserve">
+    <value>Nouveau projet</value>
+  </data>
+  <data name="btn_ok" xml:space="preserve">
+    <value>Valider</value>
+  </data>
+  <data name="btn_remove" xml:space="preserve">
+    <value>Supprimer l'image</value>
+  </data>
+  <data name="btn_rotate" xml:space="preserve">
+    <value>Pivoter 90°</value>
+  </data>
+  <data name="btn_variants" xml:space="preserve">
+    <value>Variantes…</value>
+  </data>
+  <data name="canvas_empty" xml:space="preserve">
+    <value>Ajoutez des images, choisissez une disposition, puis composez.</value>
+  </data>
+  <data name="chk_show_monitors" xml:space="preserve">
+    <value>Cadres des écrans</value>
+  </data>
+  <data name="crop" xml:space="preserve">
+    <value>Zone visible</value>
+  </data>
+  <data name="edit_mode" xml:space="preserve">
+    <value>Mode édition</value>
+  </data>
+  <data name="err_api_fail" xml:space="preserve">
+    <value>Échec de l'API Windows. Le fond n'a peut-être pas été appliqué.</value>
+  </data>
+  <data name="err_no_monitors" xml:space="preserve">
+    <value>Aucun écran détecté</value>
+  </data>
+  <data name="error_title" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="filetype_images" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="filetype_jpeg" xml:space="preserve">
+    <value>Image JPEG</value>
+  </data>
+  <data name="filetype_png" xml:space="preserve">
+    <value>Image PNG</value>
+  </data>
+  <data name="filetype_project" xml:space="preserve">
+    <value>Projet WallCraft</value>
+  </data>
+  <data name="fill_fill" xml:space="preserve">
+    <value>Remplir</value>
+  </data>
+  <data name="fill_fit" xml:space="preserve">
+    <value>Ajuster</value>
+  </data>
+  <data name="images_count" xml:space="preserve">
+    <value>{0} image(s) chargée(s)</value>
+  </data>
+  <data name="info_title" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="lang_select" xml:space="preserve">
+    <value>Langue / Language</value>
+  </data>
+  <data name="layout_grid" xml:space="preserve">
+    <value>Grille régulière</value>
+  </data>
+  <data name="layout_h_strip" xml:space="preserve">
+    <value>Bandes horizontales</value>
+  </data>
+  <data name="layout_lines" xml:space="preserve">
+    <value>Lignes justifiées</value>
+  </data>
+  <data name="layout_mosaic" xml:space="preserve">
+    <value>Mosaïque parfaite</value>
+  </data>
+  <data name="layout_optimal" xml:space="preserve">
+    <value>Optimisation maximale</value>
+  </data>
+  <data name="layout_v_strip" xml:space="preserve">
+    <value>Bandes verticales</value>
+  </data>
+  <data name="lbl_fit" xml:space="preserve">
+    <value>Cadrage</value>
+  </data>
+  <data name="lbl_layout" xml:space="preserve">
+    <value>Disposition</value>
+  </data>
+  <data name="lbl_simulated_view" xml:space="preserve">
+    <value>Vue Simulée</value>
+  </data>
+  <data name="lbl_tool" xml:space="preserve">
+    <value>Outil</value>
+  </data>
+  <data name="library_count" xml:space="preserve">
+    <value>{0} image(s)</value>
+  </data>
+  <data name="library_empty" xml:space="preserve">
+    <value>Ajoutez des images pour commencer une composition.</value>
+  </data>
+  <data name="library_ready" xml:space="preserve">
+    <value>Prête</value>
+  </data>
+  <data name="library_selected" xml:space="preserve">
+    <value>Sélectionnée</value>
+  </data>
+  <data name="library_title" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="lowres_badge" xml:space="preserve">
+    <value>Basse résolution ×{0}</value>
+  </data>
+  <data name="lowres_tip" xml:space="preserve">
+    <value>agrandie {0} fois, elle sera floue</value>
+  </data>
+  <data name="menu_export" xml:space="preserve">
+    <value>Exporter l'image complète…</value>
+  </data>
+  <data name="menu_file" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="menu_image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="menu_language" xml:space="preserve">
+    <value>Langue / Language</value>
+  </data>
+  <data name="menu_open" xml:space="preserve">
+    <value>Ouvrir un projet…</value>
+  </data>
+  <data name="menu_physical" xml:space="preserve">
+    <value>Taille réelle des écrans…</value>
+  </data>
+  <data name="menu_prefs" xml:space="preserve">
+    <value>Fond automatique…</value>
+  </data>
+  <data name="menu_quit" xml:space="preserve">
+    <value>Quitter</value>
+  </data>
+  <data name="menu_reload_screens" xml:space="preserve">
+    <value>Redétecter les écrans</value>
+  </data>
+  <data name="menu_save" xml:space="preserve">
+    <value>Enregistrer le projet…</value>
+  </data>
+  <data name="menu_screens" xml:space="preserve">
+    <value>Écrans</value>
+  </data>
+  <data name="menu_split" xml:space="preserve">
+    <value>Exporter une image par écran…</value>
+  </data>
+  <data name="mode_crop" xml:space="preserve">
+    <value>Rogner</value>
+  </data>
+  <data name="mode_move" xml:space="preserve">
+    <value>Déplacer</value>
+  </data>
+  <data name="mode_scale" xml:space="preserve">
+    <value>Redimensionner</value>
+  </data>
+  <data name="monitors_count" xml:space="preserve">
+    <value>{0} écran(s)</value>
+  </data>
+  <data name="msg_apply_ok" xml:space="preserve">
+    <value>Fond d'écran appliqué sur chaque écran !</value>
+  </data>
+  <data name="msg_apply_partial" xml:space="preserve">
+    <value>Le fond d'écran a été appliqué avec des avertissements :
+
+{0}</value>
+  </data>
+  <data name="msg_autostart_failed" xml:space="preserve">
+    <value>Impossible de modifier le lancement au démarrage de Windows :
+
+{0}</value>
+  </data>
+  <data name="msg_exported" xml:space="preserve">
+    <value>Exporté : {0}</value>
+  </data>
+  <data name="msg_load_errors" xml:space="preserve">
+    <value>Certaines images n'ont pas pu être chargées :
+
+{0}</value>
+  </data>
+  <data name="msg_no_images" xml:space="preserve">
+    <value>Ajoutez d'abord au moins une image.</value>
+  </data>
+  <data name="msg_optimal_warn_text" xml:space="preserve">
+    <value>La recherche d'imbrication parfaite (Slicing Floorplan) peut prendre jusqu'à 1 seconde selon le nombre d'images. Merci de patienter pendant que l'algorithme teste toutes les dimensions...</value>
+  </data>
+  <data name="msg_optimal_warn_title" xml:space="preserve">
+    <value>Heuristique</value>
+  </data>
+  <data name="msg_rotation_empty" xml:space="preserve">
+    <value>Le dossier de rotation ne contient aucune image.</value>
+  </data>
+  <data name="msg_saved" xml:space="preserve">
+    <value>Projet enregistré : {0}</value>
+  </data>
+  <data name="msg_span_fallback" xml:space="preserve">
+    <value>Le mode par écran a échoué :
+
+{0}
+
+L'image a été appliquée en mode « Étendre » de Windows à la place.</value>
+  </data>
+  <data name="msg_split_done" xml:space="preserve">
+    <value>{0} image(s) écrite(s) dans {1}</value>
+  </data>
+  <data name="n_images_One" xml:space="preserve">
+    <value>{0} image</value>
+  </data>
+  <data name="n_images_Other" xml:space="preserve">
+    <value>{0} images</value>
+  </data>
+  <data name="n_screens_One" xml:space="preserve">
+    <value>{0} écran</value>
+  </data>
+  <data name="n_screens_Other" xml:space="preserve">
+    <value>{0} écrans</value>
+  </data>
+  <data name="new_project_confirm" xml:space="preserve">
+    <value>Démarrer un nouveau projet et supprimer toutes les images importées ?</value>
+  </data>
+  <data name="output_subtitle" xml:space="preserve">
+    <value>Résultat sur les écrans en direct, selon votre disposition actuelle.</value>
+  </data>
+  <data name="output_summary" xml:space="preserve">
+    <value>{0} écran(s)  •  {1}  •  {2}%</value>
+  </data>
+  <data name="output_title" xml:space="preserve">
+    <value>Aperçu de sortie</value>
+  </data>
+  <data name="physical_badge" xml:space="preserve">
+    <value>taille réelle</value>
+  </data>
+  <data name="physical_bezel" xml:space="preserve">
+    <value>Espace entre les dalles (mm)</value>
+  </data>
+  <data name="physical_diag" xml:space="preserve">
+    <value>Diagonale</value>
+  </data>
+  <data name="physical_enable" xml:space="preserve">
+    <value>Aligner l'image sur la taille réelle des écrans (une ligne d'horizon reste droite entre des écrans de tailles différentes)</value>
+  </data>
+  <data name="physical_height" xml:space="preserve">
+    <value>Hauteur (mm)</value>
+  </data>
+  <data name="physical_hint" xml:space="preserve">
+    <value>Les tailles sont lues dans les écrans (EDID) et sont parfois approximatives : mesurez la zone d'affichage si besoin. Espace = les deux bordures entre deux dalles. Un décalage vertical positif abaisse l'écran.</value>
+  </data>
+  <data name="physical_offset" xml:space="preserve">
+    <value>Décalage vertical (mm)</value>
+  </data>
+  <data name="physical_res" xml:space="preserve">
+    <value>Résolution</value>
+  </data>
+  <data name="physical_screen" xml:space="preserve">
+    <value>Écran</value>
+  </data>
+  <data name="physical_title" xml:space="preserve">
+    <value>Taille réelle des écrans</value>
+  </data>
+  <data name="physical_unknown" xml:space="preserve">
+    <value>inconnue</value>
+  </data>
+  <data name="physical_width" xml:space="preserve">
+    <value>Largeur (mm)</value>
+  </data>
+  <data name="pos_bottom" xml:space="preserve">
+    <value>Bas</value>
+  </data>
+  <data name="pos_center" xml:space="preserve">
+    <value>Centre</value>
+  </data>
+  <data name="pos_left" xml:space="preserve">
+    <value>Gauche</value>
+  </data>
+  <data name="pos_right" xml:space="preserve">
+    <value>Droite</value>
+  </data>
+  <data name="pos_screen" xml:space="preserve">
+    <value>Écran {0}</value>
+  </data>
+  <data name="pos_top" xml:space="preserve">
+    <value>Haut</value>
+  </data>
+  <data name="position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="prefs_autostart" xml:space="preserve">
+    <value>Lancer WallCraft au démarrage de Windows</value>
+  </data>
+  <data name="prefs_browse" xml:space="preserve">
+    <value>Parcourir…</value>
+  </data>
+  <data name="prefs_count" xml:space="preserve">
+    <value>Nombre d'images</value>
+  </data>
+  <data name="prefs_folder" xml:space="preserve">
+    <value>Dossier d'images</value>
+  </data>
+  <data name="prefs_folder_none" xml:space="preserve">
+    <value>Aucun dossier choisi</value>
+  </data>
+  <data name="prefs_keep" xml:space="preserve">
+    <value>Réappliquer le fond quand les écrans changent ou quand Windows remet un thème</value>
+  </data>
+  <data name="prefs_minutes" xml:space="preserve">
+    <value>Toutes les (minutes)</value>
+  </data>
+  <data name="prefs_rotation" xml:space="preserve">
+    <value>Changer les images automatiquement</value>
+  </data>
+  <data name="prefs_section_rotation" xml:space="preserve">
+    <value>Rotation des images</value>
+  </data>
+  <data name="prefs_section_startup" xml:space="preserve">
+    <value>Démarrage et zone de notification</value>
+  </data>
+  <data name="prefs_section_wallpaper" xml:space="preserve">
+    <value>Fond d'écran</value>
+  </data>
+  <data name="prefs_title" xml:space="preserve">
+    <value>Fond automatique</value>
+  </data>
+  <data name="prefs_tray" xml:space="preserve">
+    <value>Rester dans la zone de notification à la fermeture de la fenêtre</value>
+  </data>
+  <data name="preview_hint" xml:space="preserve">
+    <value>Ce que chaque écran affichera. Passez en Composition pour modifier.</value>
+  </data>
+  <data name="project_actions" xml:space="preserve">
+    <value>Projet</value>
+  </data>
+  <data name="project_reset_status" xml:space="preserve">
+    <value>Nouveau projet prêt</value>
+  </data>
+  <data name="selection_empty" xml:space="preserve">
+    <value>Aucune sélection</value>
+  </data>
+  <data name="selection_hint" xml:space="preserve">
+    <value>Sélectionnez une image, puis déplacez-la, redimensionnez-la ou rognez-la sur la scène.</value>
+  </data>
+  <data name="selection_summary" xml:space="preserve">
+    <value>{0}  •  {1} × {2}  •  calque {3}/{4}</value>
+  </data>
+  <data name="stage_subtitle" xml:space="preserve">
+    <value>Déplacez, redimensionnez, rognez et organisez les images dans le bureau virtuel.</value>
+  </data>
+  <data name="stage_title" xml:space="preserve">
+    <value>Zone de composition</value>
+  </data>
+  <data name="status_processing" xml:space="preserve">
+    <value>Traitement...</value>
+  </data>
+  <data name="status_ready" xml:space="preserve">
+    <value>Prêt</value>
+  </data>
+  <data name="status_reapplied" xml:space="preserve">
+    <value>Fond réappliqué</value>
+  </data>
+  <data name="status_removed" xml:space="preserve">
+    <value>Image supprimée (Ctrl+Z pour annuler)</value>
+  </data>
+  <data name="status_rotation" xml:space="preserve">
+    <value>Rotation : {0} image(s) appliquée(s)</value>
+  </data>
+  <data name="status_screens_changed" xml:space="preserve">
+    <value>Disposition des écrans modifiée</value>
+  </data>
+  <data name="tray_autostart" xml:space="preserve">
+    <value>Lancer au démarrage</value>
+  </data>
+  <data name="tray_keep" xml:space="preserve">
+    <value>Garder le fond</value>
+  </data>
+  <data name="tray_next" xml:space="preserve">
+    <value>Images suivantes</value>
+  </data>
+  <data name="tray_open" xml:space="preserve">
+    <value>Ouvrir WallCraft</value>
+  </data>
+  <data name="tray_quit" xml:space="preserve">
+    <value>Quitter</value>
+  </data>
+  <data name="tray_reapply" xml:space="preserve">
+    <value>Réappliquer le fond</value>
+  </data>
+  <data name="tray_rotation" xml:space="preserve">
+    <value>Rotation automatique</value>
+  </data>
+  <data name="variant_n" xml:space="preserve">
+    <value>Variante {0}</value>
+  </data>
+  <data name="variants_computing" xml:space="preserve">
+    <value>Calcul des variantes…</value>
+  </data>
+  <data name="variants_hint" xml:space="preserve">
+    <value>Cliquez sur une miniature pour utiliser cette variante.</value>
+  </data>
+  <data name="variants_title" xml:space="preserve">
+    <value>Choisir une variante</value>
+  </data>
+  <data name="view_compose" xml:space="preserve">
+    <value>Composition</value>
+  </data>
+  <data name="view_preview" xml:space="preserve">
+    <value>Aperçu sur les écrans</value>
+  </data>
+</root>

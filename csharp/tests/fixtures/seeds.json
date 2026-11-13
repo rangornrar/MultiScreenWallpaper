@@ -1,0 +1,1519 @@
+{
+ "meta": {
+  "generator": "tools/export_golden.py",
+  "python": "3.12.3",
+  "pillow": "13.0.0",
+  "description": "Graine de AutoLayoutStrategy._seed : chaîne key (repr du tuple), sha1 et graine entière. `ratio` = valeur brute renvoyée par visible_aspect(), `ratio_rounded` = round(ratio, 4)."
+ },
+ "cases": [
+  {
+   "id": "real5_layout_mosaic_v0",
+   "mode": "layout_mosaic",
+   "tw": 5760,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 5760,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 5760, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0), ('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "ac84a18a1631c4e729c5f1e3b641ca39f3fbdb2f",
+   "seed": 189685645841969
+  },
+  {
+   "id": "real3_layout_mosaic_v0",
+   "mode": "layout_mosaic",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 1920, 1080, 0, [('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "d0acd0ddf97690a19889c77f3cb822e58f456aac",
+   "seed": 229440657160566
+  },
+  {
+   "id": "real5_layout_lines_v0",
+   "mode": "layout_lines",
+   "tw": 5760,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 5760,
+   "th_rounded": 1080,
+   "key": "('layout_lines', 5760, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0), ('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "249c66ceaf4bd98858e919b51177a1a05a2696a2",
+   "seed": 40254158319435
+  },
+  {
+   "id": "real3_layout_lines_v1",
+   "mode": "layout_lines",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 1,
+   "images": [
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_lines', 1920, 1080, 1, [('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "061351e656939bafe65d9955ae930458bc8f90d9",
+   "seed": 6680048195219
+  },
+  {
+   "id": "real5_layout_grid_v0",
+   "mode": "layout_grid",
+   "tw": 5760,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 5760,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 5760, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0), ('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "06c5b1efdaa6e4ec6862588c977d884158f03728",
+   "seed": 7446163610278
+  },
+  {
+   "id": "real3_layout_grid_v2",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 2,
+   "images": [
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 2, [('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "35460ea19250ffea336226a9276dda879b256805",
+   "seed": 58575009452624
+  },
+  {
+   "id": "real5_layout_v_strip_v0",
+   "mode": "layout_v_strip",
+   "tw": 5760,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 5760,
+   "th_rounded": 1080,
+   "key": "('layout_v_strip', 5760, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0), ('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "9d4541158229ccf6924a2adaaaa2fd5c519554d5",
+   "seed": 172920770232873
+  },
+  {
+   "id": "real3_layout_v_strip_v0",
+   "mode": "layout_v_strip",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_v_strip', 1920, 1080, 0, [('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "9985440984a3e204f01d30af8994fec5038b8617",
+   "seed": 168797651174563
+  },
+  {
+   "id": "real5_layout_h_strip_v0",
+   "mode": "layout_h_strip",
+   "tw": 5760,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 5760,
+   "th_rounded": 1080,
+   "key": "('layout_h_strip', 5760, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0), ('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "278cb596fbc2960e0f80802623a865c337d8380a",
+   "seed": 43485295475650
+  },
+  {
+   "id": "real3_layout_h_strip_v1",
+   "mode": "layout_h_strip",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 1,
+   "images": [
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_h_strip', 1920, 1080, 1, [('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "016343f150779d093d0e1e11be5b0cd536917f3f",
+   "seed": 1525853278327
+  },
+  {
+   "id": "real5_layout_optimal_v0",
+   "mode": "layout_optimal",
+   "tw": 5760,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 5760,
+   "th_rounded": 1080,
+   "key": "('layout_optimal', 5760, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0), ('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "a2289571af94af6ae828389bbb89075efa480384",
+   "seed": 178295189647252
+  },
+  {
+   "id": "real3_layout_optimal_v2",
+   "mode": "layout_optimal",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 2,
+   "images": [
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_optimal', 1920, 1080, 2, [('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('D:\\\\Images\\\\petite.jpg', 1.5)])",
+   "sha1": "1d4c5d48bd8801513d8d1b0aee707ef43432a240",
+   "seed": 32213819768200
+  },
+  {
+   "id": "optimal_13_v2",
+   "mode": "layout_optimal",
+   "tw": 6175,
+   "th": 1143,
+   "variant": 2,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Users\\Public\\Pictures\\Tulips.jpg",
+     "ratio": 1.3333333333333333,
+     "ratio_rounded": 1.3333
+    },
+    {
+     "path": "D:\\Fonds\\4k_ville.png",
+     "ratio": 1.7777777777777777,
+     "ratio_rounded": 1.7778
+    },
+    {
+     "path": "D:\\Fonds\\vertical_1080x1920.jpg",
+     "ratio": 0.5625,
+     "ratio_rounded": 0.5625
+    },
+    {
+     "path": "C:\\Photos\\2025\\DSC_0100.JPG",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\2025\\DSC_0101.JPG",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "E:\\Scans\\carte postale.tif",
+     "ratio": 1.2941176470588236,
+     "ratio_rounded": 1.2941
+    },
+    {
+     "path": "D:\\Images\\bandeau_3x1.png",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "C:\\Photos\\日本\\京都.jpg",
+     "ratio": 1.3333333333333333,
+     "ratio_rounded": 1.3333
+    }
+   ],
+   "tw_rounded": 6175,
+   "th_rounded": 1143,
+   "key": "('layout_optimal', 6175, 1143, 2, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0), ('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('D:\\\\Images\\\\petite.jpg', 1.5), ('C:\\\\Users\\\\Public\\\\Pictures\\\\Tulips.jpg', 1.3333), ('D:\\\\Fonds\\\\4k_ville.png', 1.7778), ('D:\\\\Fonds\\\\vertical_1080x1920.jpg', 0.5625), ('C:\\\\Photos\\\\2025\\\\DSC_0100.JPG', 1.5), ('C:\\\\Photos\\\\2025\\\\DSC_0101.JPG', 0.6667), ('E:\\\\Scans\\\\carte postale.tif', 1.2941), ('D:\\\\Images\\\\bandeau_3x1.png', 3.0), ('C:\\\\Photos\\\\日本\\\\京都.jpg', 1.3333)])",
+   "sha1": "c375aae0f2cfcc8d21e15bacea9f94a8c8ea4f52",
+   "seed": 214910145458895
+  },
+  {
+   "id": "mosaic_variant_11",
+   "mode": "layout_mosaic",
+   "tw": 3840,
+   "th": 2160,
+   "variant": 11,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "D:\\Images\\panorama_pyrénées.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    },
+    {
+     "path": "D:\\Images\\petite.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Users\\Public\\Pictures\\Tulips.jpg",
+     "ratio": 1.3333333333333333,
+     "ratio_rounded": 1.3333
+    },
+    {
+     "path": "D:\\Fonds\\4k_ville.png",
+     "ratio": 1.7777777777777777,
+     "ratio_rounded": 1.7778
+    },
+    {
+     "path": "D:\\Fonds\\vertical_1080x1920.jpg",
+     "ratio": 0.5625,
+     "ratio_rounded": 0.5625
+    }
+   ],
+   "tw_rounded": 3840,
+   "th_rounded": 2160,
+   "key": "('layout_mosaic', 3840, 2160, 11, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0), ('D:\\\\Images\\\\panorama_pyrénées.jpg', 3.0), ('D:\\\\Images\\\\petite.jpg', 1.5), ('C:\\\\Users\\\\Public\\\\Pictures\\\\Tulips.jpg', 1.3333), ('D:\\\\Fonds\\\\4k_ville.png', 1.7778), ('D:\\\\Fonds\\\\vertical_1080x1920.jpg', 0.5625)])",
+   "sha1": "a5a828ae47ceaaa19a1b4f522cc717ed20678cea",
+   "seed": 182141655599054
+  },
+  {
+   "id": "one_image",
+   "mode": "layout_grid",
+   "tw": 1080,
+   "th": 1920,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 1080,
+   "th_rounded": 1920,
+   "key": "('layout_grid', 1080, 1920, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5)])",
+   "sha1": "b649a1418d8d7eda47b4bc19960efcdae2a330e0",
+   "seed": 200427354295693
+  },
+  {
+   "id": "empty_list",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [])",
+   "sha1": "5da59fd4a2a77a3ca3228a27e94d25964366bff3",
+   "seed": 102965932499623
+  },
+  {
+   "id": "size_float_6175.0",
+   "mode": "layout_optimal",
+   "tw": 6175.0,
+   "th": 1143.0,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 6175,
+   "th_rounded": 1143,
+   "key": "('layout_optimal', 6175, 1143, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0)])",
+   "sha1": "a3286b62d170635f8ef6676fe1b2573391262a0c",
+   "seed": 179393995657584
+  },
+  {
+   "id": "size_float_1920.4",
+   "mode": "layout_optimal",
+   "tw": 1920.4,
+   "th": 1080.4,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Famille\\été 2026\\carré.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_optimal', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Famille\\\\été 2026\\\\carré.png', 1.0)])",
+   "sha1": "57403352f157e5f63297fb6a9f307ffa1f816994",
+   "seed": 95933250597207
+  },
+  {
+   "id": "size_half_even_down",
+   "mode": "layout_optimal",
+   "tw": 1920.5,
+   "th": 1080.5,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_optimal', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667)])",
+   "sha1": "82f3d2e459a9cb68b583ff5da6f550d0bf88dfb1",
+   "seed": 143983726844329
+  },
+  {
+   "id": "size_half_even_up",
+   "mode": "layout_optimal",
+   "tw": 1921.5,
+   "th": 1081.5,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    }
+   ],
+   "tw_rounded": 1922,
+   "th_rounded": 1082,
+   "key": "('layout_optimal', 1922, 1082, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667)])",
+   "sha1": "e89c34f5f40efb4e45e62816cf28b7d2a0d92d24",
+   "seed": 255757601076238
+  },
+  {
+   "id": "size_two_point_five",
+   "mode": "layout_mosaic",
+   "tw": 2.5,
+   "th": 3.5,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    }
+   ],
+   "tw_rounded": 2,
+   "th_rounded": 4,
+   "key": "('layout_mosaic', 2, 4, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667)])",
+   "sha1": "35e2664db84a894a21184dae355aaf381d4ed690",
+   "seed": 59246495250506
+  },
+  {
+   "id": "size_float_5759.6",
+   "mode": "layout_lines",
+   "tw": 5759.6,
+   "th": 1079.5,
+   "variant": 1,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    }
+   ],
+   "tw_rounded": 5760,
+   "th_rounded": 1080,
+   "key": "('layout_lines', 5760, 1080, 1, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667)])",
+   "sha1": "f98e158c2278ecaf7269aa7106e52f4295de2e9f",
+   "seed": 274388642177656
+  },
+  {
+   "id": "path_windows_backslash",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\été 2026\\a.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\été 2026\\\\a.jpg', 1.5)])",
+   "sha1": "c010b3beafacb3e7081ab1f110b6c6421eda658f",
+   "seed": 211177967628204
+  },
+  {
+   "id": "path_apostrophe",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Users\\l'été\\b.png",
+     "ratio": 0.5625,
+     "ratio_rounded": 0.5625
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [(\"C:\\\\Users\\\\l'été\\\\b.png\", 0.5625)])",
+   "sha1": "8ee8fc347155aac4271ba83891b5e0cc2e682f3b",
+   "seed": 157131314852181
+  },
+  {
+   "id": "path_double_quotes",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\\"quoted\".jpg",
+     "ratio": 1.7778,
+     "ratio_rounded": 1.7778
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\\"quoted\".jpg', 1.7778)])",
+   "sha1": "7c175351b3f4447098064958b7e00e7f5d5b3711",
+   "seed": 136439623955444
+  },
+  {
+   "id": "path_both_quotes",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Users\\l'été\\\"x\".png",
+     "ratio": 1.3333,
+     "ratio_rounded": 1.3333
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Users\\\\l\\'été\\\\\"x\".png', 1.3333)])",
+   "sha1": "f2a4ba014aea5ba966c9ef31f2cb6118abe866d2",
+   "seed": 266789309205226
+  },
+  {
+   "id": "path_unicode",
+   "mode": "layout_lines",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 1,
+   "images": [
+    {
+     "path": "D:\\Ünïcode\\ñandú.jpg",
+     "ratio": 2.0,
+     "ratio_rounded": 2.0
+    },
+    {
+     "path": "C:\\日本\\京都.jpg",
+     "ratio": 0.75,
+     "ratio_rounded": 0.75
+    },
+    {
+     "path": "E:\\ü\\é.png",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_lines', 1920, 1080, 1, [('D:\\\\Ünïcode\\\\ñandú.jpg', 2.0), ('C:\\\\日本\\\\京都.jpg', 0.75), ('E:\\\\ü\\\\é.png', 1.0)])",
+   "sha1": "c23e6314ba10c97320aa4ed34dde59b4d56e8774",
+   "seed": 213573206063632
+  },
+  {
+   "id": "path_posix",
+   "mode": "layout_mosaic",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "/home/user/Pictures/a b.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "relative/c.png",
+     "ratio": 0.5,
+     "ratio_rounded": 0.5
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 1920, 1080, 0, [('/home/user/Pictures/a b.jpg', 1.5), ('relative/c.png', 0.5)])",
+   "sha1": "72ac4634cb230bdc98b553797ce596845d53264d",
+   "seed": 126084237806371
+  },
+  {
+   "id": "path_empty_string",
+   "mode": "layout_mosaic",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 1920, 1080, 0, [('', 1.0)])",
+   "sha1": "79f78583251bb0b6d00d2f12b21216b30208116f",
+   "seed": 134104003847451
+  },
+  {
+   "id": "path_control_chars",
+   "mode": "layout_mosaic",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\a\nb\tc\rd.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "C:\\nul\u0000x.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 1920, 1080, 0, [('C:\\\\a\\nb\\tc\\rd.jpg', 1.0), ('C:\\\\nul\\x00x.jpg', 1.0)])",
+   "sha1": "167e71fdeffbc74c2ca20a2bb7b8f173e87ca018",
+   "seed": 24732334157819
+  },
+  {
+   "id": "path_escapes_other",
+   "mode": "layout_mosaic",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\\u001b.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "C:\\nbsp .jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "C:\\zw​.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "C:\\soft­.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 1920, 1080, 0, [('C:\\\\\\x7f\\x1b.jpg', 1.0), ('C:\\\\nbsp\\xa0.jpg', 1.0), ('C:\\\\zw\\u200b.jpg', 1.0), ('C:\\\\soft\\xad.jpg', 1.0)])",
+   "sha1": "96ea295df91014d68f7f12cfeeb976c578cb1711",
+   "seed": 165932460538128
+  },
+  {
+   "id": "path_emoji_and_astral",
+   "mode": "layout_mosaic",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\😀.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "C:\\Photos\\𝄞.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "C:\\Photos\\é.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 1920, 1080, 0, [('C:\\\\Photos\\\\😀.jpg', 1.0), ('C:\\\\Photos\\\\𝄞.jpg', 1.0), ('C:\\\\Photos\\\\é.jpg', 1.0)])",
+   "sha1": "ce795a23c4554c8926322938bd772ed9547858b3",
+   "seed": 227020598658133
+  },
+  {
+   "id": "path_both_quotes_backslash_end",
+   "mode": "layout_mosaic",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "it's \"a\" \\",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 1920, 1080, 0, [('it\\'s \"a\" \\\\', 1.0)])",
+   "sha1": "651c2f9dddce151ffe5cb1b1275bf34336e804e8",
+   "seed": 111171732364750
+  },
+  {
+   "id": "path_unpaired_quote_start",
+   "mode": "layout_mosaic",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "'",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    },
+    {
+     "path": "\"",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_mosaic', 1920, 1080, 0, [(\"'\", 1.0), ('\"', 1.0)])",
+   "sha1": "10209d7e7bad3f2b3a76b90eae837f4a32c01c04",
+   "seed": 17732267309997
+  },
+  {
+   "id": "ratio_1.0",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.0,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.0)])",
+   "sha1": "e244d4b3b59b8e88da7d48d709e5566dada18331",
+   "seed": 248785254200731
+  },
+  {
+   "id": "ratio_0.5625",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 0.5625,
+     "ratio_rounded": 0.5625
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 0.5625)])",
+   "sha1": "01cc902d134e8ab38a3d9e79638fe2dbfadf3d2e",
+   "seed": 1978103829326
+  },
+  {
+   "id": "ratio_1.7778",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.7777777777777777,
+     "ratio_rounded": 1.7778
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.7778)])",
+   "sha1": "b784f7b4065f84715b7f2859c64b49e924658168",
+   "seed": 201781719336543
+  },
+  {
+   "id": "ratio_1.3333",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.3333333333333333,
+     "ratio_rounded": 1.3333
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.3333)])",
+   "sha1": "573af55247afb67e560c9af546f6749e2a686e16",
+   "seed": 95910735529903
+  },
+  {
+   "id": "ratio_2.0",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 2.0,
+     "ratio_rounded": 2.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 2.0)])",
+   "sha1": "ea0b9657638ff68b91ee0d63b22f93f93f0d9ac5",
+   "seed": 257335487849359
+  },
+  {
+   "id": "ratio_0.75",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 0.75,
+     "ratio_rounded": 0.75
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 0.75)])",
+   "sha1": "52cdc140166fa923b344bfc013a222c5ed3b813d",
+   "seed": 91043663976047
+  },
+  {
+   "id": "ratio_3.0",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 3.0,
+     "ratio_rounded": 3.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 3.0)])",
+   "sha1": "bf163fc3e74a1e4b776691e79ecb0a70b21a7ca7",
+   "seed": 210102279989066
+  },
+  {
+   "id": "ratio_0.6667",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 0.6667)])",
+   "sha1": "24d5fb6440a601df84870920deaebd741d9625a9",
+   "seed": 40501464285350
+  },
+  {
+   "id": "ratio_12345.6789",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 12345.6789,
+     "ratio_rounded": 12345.6789
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 12345.6789)])",
+   "sha1": "37f0827094e11afeab5831bdb1d23e8d22cd16d2",
+   "seed": 61506120094945
+  },
+  {
+   "id": "ratio_1e-05_arrondi",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1e-05,
+     "ratio_rounded": 0.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 0.0)])",
+   "sha1": "dcf3e7bca147c6bcc3ff71477b6a1810cc0d3793",
+   "seed": 242940123062599
+  },
+  {
+   "id": "ratio_0.0001",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 0.0001,
+     "ratio_rounded": 0.0001
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 0.0001)])",
+   "sha1": "6b53ff17b33b13985b6b7a6e9821c49c3ae83354",
+   "seed": 118008506200891
+  },
+  {
+   "id": "ratio_1e16",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1e+16,
+     "ratio_rounded": 1e+16
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1e+16)])",
+   "sha1": "9ea63305da02edfa03bc2d8223da941c7fc1b10a",
+   "seed": 174436657781250
+  },
+  {
+   "id": "ratio_1.2345678901234568e17",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.2345678901234568e+17,
+     "ratio_rounded": 1.2345678901234568e+17
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.2345678901234568e+17)])",
+   "sha1": "466dc59510bb60906ef23a8be916bb99771823b8",
+   "seed": 77437280260283
+  },
+  {
+   "id": "ratio_123456789012345.6",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 123456789012345.6,
+     "ratio_rounded": 123456789012345.6
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 123456789012345.6)])",
+   "sha1": "8006a5850776075c7d80d386e3a9006a2f0cc9db",
+   "seed": 140766035117942
+  },
+  {
+   "id": "ratio_1e15",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1000000000000000.0,
+     "ratio_rounded": 1000000000000000.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1000000000000000.0)])",
+   "sha1": "82c6e147cee3f0ec0f04e7f11799bc8494ee3069",
+   "seed": 143790694715107
+  },
+  {
+   "id": "round4_1.00005",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 1.00005,
+     "ratio_rounded": 1.0001
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 1.0001)])",
+   "sha1": "940a8f546b9fe277420cd2d6a21990d76534ee00",
+   "seed": 162773075258271
+  },
+  {
+   "id": "round4_0.00005",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 5e-05,
+     "ratio_rounded": 0.0001
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.0001)])",
+   "sha1": "1a534494adfeb87d175f94d4ff4e9fa9928735a3",
+   "seed": 28944935202302
+  },
+  {
+   "id": "round4_1.23455",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 1.23455,
+     "ratio_rounded": 1.2346
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 1.2346)])",
+   "sha1": "48f290ed908432f8f3a4ce52e00aec29b99d0023",
+   "seed": 80206650773636
+  },
+  {
+   "id": "round4_2.00005",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 2.00005,
+     "ratio_rounded": 2.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 2.0)])",
+   "sha1": "262e4f25864484cadb596bafbc6c3a1190b2348f",
+   "seed": 41980338210372
+  },
+  {
+   "id": "round4_0.99995",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.99995,
+     "ratio_rounded": 1.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 1.0)])",
+   "sha1": "a0e4835dc33f4ff957acd7b0e9fe2ea83624ef07",
+   "seed": 176903316947775
+  },
+  {
+   "id": "round4_3.14155",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 3.14155,
+     "ratio_rounded": 3.1416
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 3.1416)])",
+   "sha1": "6a745d738292a451d5322b7c687c9ed517fd434e",
+   "seed": 117048016601746
+  },
+  {
+   "id": "round4_0.12345",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.12345,
+     "ratio_rounded": 0.1235
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.1235)])",
+   "sha1": "5d9cc2a64a839d2b6ba2fbd653b6595a49dd7259",
+   "seed": 102927861959299
+  },
+  {
+   "id": "round4_0.00015",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.00015,
+     "ratio_rounded": 0.0001
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.0001)])",
+   "sha1": "1a534494adfeb87d175f94d4ff4e9fa9928735a3",
+   "seed": 28944935202302
+  },
+  {
+   "id": "round4_5.00005",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 5.00005,
+     "ratio_rounded": 5.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 5.0)])",
+   "sha1": "bca76636bd7503a87f98037ccd8b83c3ab8e208f",
+   "seed": 207427160423797
+  },
+  {
+   "id": "round4_1.5e-05",
+   "mode": "layout_grid",
+   "tw": 1920,
+   "th": 1080,
+   "variant": 0,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 1.5e-05,
+     "ratio_rounded": 0.0
+    }
+   ],
+   "tw_rounded": 1920,
+   "th_rounded": 1080,
+   "key": "('layout_grid', 1920, 1080, 0, [('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.0)])",
+   "sha1": "4722d47c65acb5decee9ee0bd2ca71eeedeb1039",
+   "seed": 78214919382444
+  },
+  {
+   "id": "multi_ratio_order",
+   "mode": "layout_optimal",
+   "tw": 5760,
+   "th": 1080,
+   "variant": 1,
+   "images": [
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0002.jpg",
+     "ratio": 0.6666666666666666,
+     "ratio_rounded": 0.6667
+    },
+    {
+     "path": "C:\\Photos\\Vacances\\IMG_0001.jpg",
+     "ratio": 1.5,
+     "ratio_rounded": 1.5
+    }
+   ],
+   "tw_rounded": 5760,
+   "th_rounded": 1080,
+   "key": "('layout_optimal', 5760, 1080, 1, [('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5), ('C:\\\\Photos\\\\Vacances\\\\IMG_0002.jpg', 0.6667), ('C:\\\\Photos\\\\Vacances\\\\IMG_0001.jpg', 1.5)])",
+   "sha1": "a3ededfa3d53dbbd3d52f99ae438d90c4a12c946",
+   "seed": 180242295176531
+  }
+ ]
+}

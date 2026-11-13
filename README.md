@@ -8,7 +8,7 @@
 
 Elle résout le problème des résolutions et des bordures de moniteurs disparates grâce à son moteur de placement : elle permet de fusionner de multiples photos sans **jamais les déformer ni les rogner**, en conservant l’intégralité de chaque image dans les modes de placement décrits ("Fit Inside").
 
-![WallCraft Interface](assets/wallcraft_app_ui_1773221294829.png)
+![WallCraft Interface](site/assets/wallcraft_app_ui_1773221294829.png)
 
 ---
 
@@ -36,7 +36,7 @@ Le programme garantit la règle du 100% :
 - **Grille Régulière** : Quadrillage mathématique et étendu.
 - **Bandes Verticales** et **Bandes Horizontales** : Découpage panoramique pleine hauteur ou largeur.
 
-![Optimisation Maximale Heuristique](assets/wallcraft_optimal_layout_1773221310533.png)
+![Optimisation Maximale Heuristique](site/assets/wallcraft_optimal_layout_1773221310533.png)
 
 ### ⚡ Performance & Édition
 - **Système de Proxy** : Utilise des miniatures pour une interface plus réactive grâce à des miniatures de 1 024 pixels maximum.
@@ -53,6 +53,7 @@ Le programme garantit la règle du 100% :
 
 ### Dépendances
 ```bash
+cd python
 python -m pip install -r requirements.txt
 ```
 
@@ -60,7 +61,7 @@ python -m pip install -r requirements.txt
 L'exécutable Windows est publié sur la page [GitHub Releases](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest). Son empreinte SHA-256 figure dans les notes de chaque version.
 
 ## 🛠️ Utilisation
-1. Lancer l'application : `python main.py` (ou l'exécutable de la [dernière release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
+1. Lancer l'application : `python main.py` (dans `python/`) (ou l'exécutable de la [dernière release](https://github.com/rangornrar/MultiScreenWallpaper/releases/latest)).
 2. **Ajouter des images** : bouton « + Ajouter des images » ou menu *Fichier*. Les photos de smartphone sont automatiquement remises dans le bon sens.
 3. **Langue** : choisissez EN/FR/ES/DE directement depuis l'interface.
 4. **Choisir une disposition** : sélectionnez l'un des 6 modes (« Optimisation Maximale » recommandé pour limiter les bandes noires).
@@ -70,7 +71,16 @@ L'exécutable Windows est publié sur la page [GitHub Releases](https://github.c
     * Exporter l'image complète (`Ctrl+E`) ou une image par écran.
     * 🖥️ Appliquer en fond : modifie votre bureau Windows, écran par écran.
 
-## 📂 Structure du Projet
+## 📂 Organisation du dépôt
+| Dossier | Contenu |
+|---|---|
+| `python/` | Version actuelle de l'application (Python/Tkinter), ses tests et la recette PyInstaller |
+| `csharp/` | Nouvelle version en cours (C# / WinUI 3), voir [docs/MIGRATION_CSHARP.md](docs/MIGRATION_CSHARP.md) |
+| `site/` | Générateur du site wallcraft.archi-it.fr (`site_builder.py`), captures (`assets/`) et site prêt à publier (`html/`) |
+| `docs/` | Architecture, qualité, migration, procédure de publication |
+| `tools/` | Scripts : résultats de référence pour la version C#, traductions, maquettes |
+
+### Version Python (`python/`)
 * `main.py` : Point d'entrée, gestion High-DPI Windows.
 * `ui.py` : Fenêtre, canevas interactif, menus et interactions souris.
 * `locales.py` : Registre multilingue des chaînes de caractères.

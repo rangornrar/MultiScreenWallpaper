@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SOURCE = Path(r"C:\Users\user\Downloads\Gemini_Generated_Image_t1k5lut1k5lut1k5.png")
-OUTPUT = ROOT / "assets" / "wallcraft_app_redesign_concept.png"
+OUTPUT = ROOT / "site" / "assets" / "wallcraft_app_redesign_concept.png"
 
 
 def load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
@@ -103,7 +103,7 @@ def draw_slider(draw: ImageDraw.ImageDraw, x: int, y: int, width: int, value: fl
 
 
 def build() -> Path:
-    source_path = DEFAULT_SOURCE if DEFAULT_SOURCE.exists() else ROOT / "assets" / "wallcraft_app_ui_1773221294829.png"
+    source_path = DEFAULT_SOURCE if DEFAULT_SOURCE.exists() else ROOT / "site" / "assets" / "wallcraft_app_ui_1773221294829.png"
     source = Image.open(source_path).convert("RGB")
 
     canvas = background(source, (1800, 1120))
