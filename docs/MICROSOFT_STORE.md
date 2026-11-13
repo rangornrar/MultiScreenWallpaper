@@ -1,27 +1,29 @@
 # Publier WallCraft Pro sur le Microsoft Store
 
-WallCraft Pro (version Python) est publié sous forme de **paquet MSIX** :
+C'est la **version C# (WinUI 3)** qui est publiée sur le Store, sous forme de **paquet MSIX** :
 
 - le Store **signe le paquet lui-même**, il n'y a pas de certificat à acheter ;
 - le Store héberge le paquet et installe les mises à jour ;
-- l'exe de GitHub continue d'exister à côté, sans changement.
+- l'exe de GitHub (version Python) reste disponible à côté.
+
+**Avant la première soumission** : tester la version C# sur un vrai PC à plusieurs écrans et cocher la liste de parité de `MIGRATION_CSHARP.md`. Une application qui plante à l'ouverture est refusée à la certification.
 
 ## Ce qui est déjà prêt dans le dépôt
 
 | Élément | Où |
 |---|---|
-| Manifeste du paquet | `python/msix/AppxManifest.xml` |
-| Icônes du paquet | `python/msix/Assets/` (générées par `tools/make_msix_assets.py`) |
-| Construction du paquet | `python/msix/build_msix.ps1` et workflow **Microsoft Store (MSIX)** |
-| Vérification automatique | Le workflow installe le paquet sur un PC Windows de GitHub et vérifie trois choses : le fond d'écran, la tâche de démarrage et le lancement de l'application. |
+| Manifeste du paquet | `csharp/src/WallCraft.App/Package.appxmanifest` |
+| Icônes du paquet | `csharp/src/WallCraft.App/Images/` (générées par `tools/make_msix_assets.py`) |
+| Construction du paquet | workflow **Microsoft Store (MSIX)** (`.github/workflows/store.yml`) |
+| Vérification automatique | Le workflow installe le paquet sur un PC Windows de GitHub et vérifie : le dossier de données, le fond d'écran, la tâche de démarrage et l'ouverture de la fenêtre. |
 | Politique de confidentialité | https://wallcraft.archi-it.fr/fr/privacy/ (et `/en/privacy/`, `/es/privacy/`, `/de/privacy/`), en ligne après l'envoi du site |
-| Captures pour la fiche | `docs/store/screenshots/<langue>/` (PNG 1536 × 864, générées par `tools/make_store_assets.py`) |
 | Logo carré 300 × 300 | `docs/store/logo-300.png` |
+| Captures pour la fiche | **à faire** sur votre PC une fois la version C# validée : 4 par langue, PNG, 1366 × 768 au minimum (Win + Maj + S) |
 
-Ce qui change dans un paquet, et que l'application gère (`python/appmodel.py`) :
+Ce qui change dans un paquet, et que l'application gère :
 
-- **Fonds d'écran** : ils sont enregistrés dans le dossier réel du paquet, pour que Windows les affiche.
-- **Lancement au démarrage** : il passe par la tâche de démarrage du paquet. L'utilisateur la retrouve aussi dans Paramètres > Applications > Démarrage.
+- **Fonds d'écran** (`AppPaths`) : ils sont enregistrés dans le dossier réel du paquet, pour que Windows les affiche.
+- **Lancement au démarrage** (`StoreStartup`) : il passe par la tâche de démarrage du paquet. L'utilisateur la retrouve aussi dans Paramètres > Applications > Démarrage, et WallCraft s'ouvre alors directement dans la zone de notification.
 - **Réglages** : ceux de l'exe GitHub sont repris au premier lancement.
 
 ## Étapes (une seule fois)
@@ -41,7 +43,7 @@ Ce qui change dans un paquet, et que l'application gère (`python/appmodel.py`) 
 
    Ces valeurs ne sont pas secrètes.
 4. **Construire le paquet** : dans Actions > Microsoft Store (MSIX) > Run workflow, entrez la version (ex. `2026.11.13`).
-   - Une fois le workflow terminé, téléchargez l'artefact `wallcraft-msix` et dézippez-le pour obtenir `WallCraft-Pro-v2026.11.13-Store.msix`.
+   - Une fois le workflow terminé, téléchargez l'artefact `wallcraft-store-msix` et dézippez-le pour obtenir `WallCraft-Pro-v2026.11.13-Store.msix`.
    - Pour les versions suivantes, il est construit automatiquement à chaque tag `Tag_v…`.
 5. **Créer la soumission** dans Partner Center, section par section :
    - **Tarification et disponibilité** : Gratuit, tous les marchés, visibilité publique.
@@ -52,14 +54,14 @@ Ce qui change dans un paquet, et que l'application gère (`python/appmodel.py`) 
      - Contact support : https://github.com/rangornrar/MultiScreenWallpaper/issues
    - **Classification par âge** : remplissez le questionnaire en répondant « non » partout ; le résultat attendu est 3+ ou PEGI 3.
    - **Paquets** : déposez le fichier `.msix`.
-   - **Fiches du Store** : ajoutez les 4 langues (fr-FR, en-US, es-ES, de-DE), puis copiez les textes ci-dessous et les 4 captures de la langue.
+   - **Fiches du Store** : ajoutez les 4 langues (fr-FR, en-US, es-ES, de-DE), puis copiez les textes ci-dessous et ajoutez les captures de la langue.
    - **Options de soumission** :
      - Collez la justification de `runFullTrust` et les notes pour la certification (ci-dessous).
 6. **Envoyer à la certification** : il faut compter de quelques heures à 3 jours ouvrés.
 
 ## Justification de la capacité restreinte `runFullTrust`
 
-> WallCraft Pro is a classic Win32 desktop application (Python/Tk) packaged with MSIX. It needs full trust to set a different wallpaper on each monitor through the IDesktopWallpaper COM interface, to read the physical size of each monitor (EDID in the registry) and to show a notification-area icon. It makes no network connections and collects no data.
+> WallCraft Pro is a WinUI 3 desktop application (.NET) packaged with MSIX. It needs full trust to set a different wallpaper on each monitor through the IDesktopWallpaper COM interface, to read the physical size of each monitor (EDID in the registry) and to show a notification-area icon. It makes no network connections and collects no data.
 
 ## Notes pour la certification
 

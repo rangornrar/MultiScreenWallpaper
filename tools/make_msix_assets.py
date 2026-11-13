@@ -1,5 +1,6 @@
 """
-Icônes du paquet MSIX (Microsoft Store) : csharp/src/WallCraft.App/Images/*.png
+Icônes du paquet MSIX (Microsoft Store) : csharp/src/WallCraft.App/Images/*.png,
+et logo 300 × 300 de la fiche du Store : docs/store/logo-300.png
 
 Même motif que l'icône de la zone de notification (trois écrans et un pied), dessiné
 en grand puis réduit pour rester net à chaque taille demandée par Windows.
@@ -10,6 +11,7 @@ import os
 
 from PIL import Image, ImageDraw
 
+STORE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "store")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "csharp", "src", "WallCraft.App", "Images")
 COLORS = [(138, 180, 248), (120, 212, 160), (255, 196, 110)]
 STAND = (200, 210, 225)
@@ -59,6 +61,11 @@ def main():
         files[f"Square44x44Logo.targetsize-{size}_altform-unplated.png"] = motif(size, margin=0.02)
     for name, img in files.items():
         img.save(os.path.join(OUT, name), optimize=True)
+    # Logo carré 300 × 300 de la fiche du Store (Partner Center), sur fond sombre.
+    logo = Image.new("RGBA", (300, 300), (16, 20, 28, 255))
+    icon = motif(300, margin=0.14)
+    logo.paste(icon, (0, 0), icon)
+    logo.save(os.path.join(STORE, "logo-300.png"), optimize=True)
     print(f"{len(files)} icônes dans {os.path.normpath(OUT)}")
 
 
