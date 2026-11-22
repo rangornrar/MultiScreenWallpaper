@@ -1708,6 +1708,11 @@ def apply_privacy():
 
 apply_privacy()
 
+import content_store as _store  # noqa: E402
+
+_store.apply(PAGES, LANGS, DOWNLOAD_URL)
+DOWNLOAD_URL = _store.BUILD_URL
+
 
 def page_label(lang, key):
     return LANGS[lang]["nav"][key]

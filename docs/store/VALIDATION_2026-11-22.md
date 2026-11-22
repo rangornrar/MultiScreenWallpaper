@@ -7,8 +7,8 @@ Le MSIX **2026.11.22.0 x64** porte l’identité officielle `Rangorn.WallCraftPr
 | Élément | Résultat |
 | --- | --- |
 | Fichier Store non signé | `WallCraft-Pro-2026.11.22-Store-x64.msix` |
-| Taille | 98 644 978 octets |
-| SHA-256 | `71f0f9457d503aa3ea4f431b8ff9a15a5a97ca8d4335d2a6824877f0aa0ff161` |
+| Taille | 98 644 010 octets |
+| SHA-256 | `a5e6d1f1d42faaae451bf121534752115fac4953473e04f17dc30540ce7e83e0` |
 | Publisher | `CN=16653A68-8E9A-4C36-AC6F-C99EE31C0592` |
 | Éditeur affiché | Rangorn |
 | Version / architecture | 2026.11.22.0 / x64 |
@@ -17,6 +17,8 @@ Le MSIX **2026.11.22.0 x64** porte l’identité officielle `Rangorn.WallCraftPr
 | Code Python ou clé privée dans le MSIX | Aucun fichier .py, .pfx ou .key |
 
 Compilation Release réussie : zéro erreur. Un avertissement indique l’absence de `mspdbcmf.exe` pour la production des symboles `.appxsym` ; le MSIX est généré. La livraison est un MSIX autonome, sans fichier de symboles d’envoi `.msixupload`.
+
+La compilation finale inclut aussi les types concrets des trois collections signalées par l’analyseur WinRT récent et l’actualisation du texte de sélection lors du changement de langue.
 
 ## Vérifications réussies
 
@@ -30,7 +32,7 @@ Compilation Release réussie : zéro erreur. Un avertissement indique l’absenc
 - Mode Étendre : `wallpaper_set=true`.
 - Tâche de démarrage : désactivée avant, activation réussie, état activé confirmé, puis désactivation confirmée. Cela ne prouve pas un lancement après une vraie ouverture de session.
 - Fonds d’écran précédents sauvegardés puis restaurés après le test.
-- Certificat de contrôle retiré de `LocalMachine/TrustedPeople`, `CurrentUser/TrustedPeople` et `CurrentUser/My` ; absence confirmée par le script de nettoyage.
+- Les deux certificats de contrôle retirés de `LocalMachine/TrustedPeople`, `CurrentUser/TrustedPeople` et `CurrentUser/My` ; absence confirmée par le script de nettoyage.
 - **16 captures PNG réelles de l’interface C#**, quatre par langue, 1522 × 818. Une copie de capture utilise des réglages isolés et un panorama de démonstration sans photo privée.
 - Bande-annonce 28 secondes, H.264, 1920 × 1080, yuv420p, sans audio, décodée sans erreur. Export agrandi depuis le montage web 1280 × 720 ; la résolution supplémentaire n’ajoute pas de détail.
 
@@ -38,7 +40,7 @@ Les rapports techniques locaux sont conservés dans le dossier de livraison. Les
 
 ## Rapport Windows App Certification Kit
 
-Environnement : Windows 11 Professionnel build **26300**, WACK **10.0.26100.9457**, analyse du paquet installé. Résultat global : **WARNING**. Total : **21 PASS, 2 FAIL facultatifs, 1 WARNING**.
+Environnement : Windows 11 Professionnel build **26300**, WACK **10.0.26100.9457**, analyse du paquet installé. Rapport final généré à **19:55:19** (heure locale). Résultat global : **WARNING**. Total : **21 PASS, 2 FAIL facultatifs, 1 WARNING**.
 
 | Contrôle restant signalé | Résultat | Éléments constatés et portée |
 | --- | --- | --- |
@@ -59,7 +61,7 @@ Ces étapes restent à réaliser avant une ouverture publique :
 - Branchement/débranchement d’une station d’accueil, dispositions avec coordonnées négatives, écrans à DPI ou orientations différents, retour d’un thème Windows.
 - Fermeture puis ouverture réelle de session avec le démarrage activé.
 - Recette complète des imports/exports, des formats d’images, de la reprise des projets Python et de la rotation de dossier, selon la [liste de parité](../MIGRATION_CSHARP.md).
-- Vérification du changement de langue à chaud : un texte de sélection déjà affiché peut garder sa langue précédente jusqu’à la prochaine modification de sélection. Les captures reflètent cette limite de l’interface actuelle.
+- Vérifier le changement de langue à chaud sur le poste de recette : le texte de sélection est désormais recalculé lors du changement. Les captures ont été prises avant cette correction de la seule barre d’état.
 - Déploiement du site régénéré : vidéo et révision du 22 novembre de la politique de confidentialité ; validation des URL publiques après déploiement.
 - Questionnaire IARC et coordonnées réelles de contact de l’éditeur, récapitulatif Partner Center, envoi à la certification puis installation depuis le Store.
 
