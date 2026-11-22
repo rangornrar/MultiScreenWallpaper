@@ -15,13 +15,13 @@ public sealed record UiLanguage(string Code, string Culture, string Name);
 public sealed class Localizer
 {
     /// <summary>Les 4 langues, avec leur nom dans leur propre langue (comme <c>locales.LANGUAGES</c>).</summary>
-    public static readonly IReadOnlyList<UiLanguage> Languages =
-    [
+    public static readonly IReadOnlyList<UiLanguage> Languages = new UiLanguage[]
+    {
         new("en", "en-US", "English"),
         new("fr", "fr-FR", "Français"),
         new("es", "es-ES", "Español"),
         new("de", "de-DE", "Deutsch"),
-    ];
+    };
 
     public static Localizer Current { get; } = new();
 

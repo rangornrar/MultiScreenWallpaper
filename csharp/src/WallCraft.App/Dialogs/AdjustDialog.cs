@@ -21,13 +21,13 @@ public sealed record AdjustValues(double Brightness, double Contrast, double Sat
 public static class AdjustDialog
 {
     /// <summary>Curseurs : clé du texte, minimum, maximum, pas (SPECS de la version Python).</summary>
-    public static readonly IReadOnlyList<(string LabelKey, double Min, double Max, double Step)> Specs =
-    [
+    public static readonly IReadOnlyList<(string LabelKey, double Min, double Max, double Step)> Specs = new (string LabelKey, double Min, double Max, double Step)[]
+    {
         ("adjust_brightness", 0.2, 2.0, 0.05),
         ("adjust_contrast", 0.2, 2.0, 0.05),
         ("adjust_saturation", 0.0, 2.0, 0.05),
         ("adjust_blur", 0.0, 20.0, 0.5),
-    ];
+    };
 
     /// <summary>Délai de regroupement des aperçus pendant le glissement (80 ms, comme la version Python).</summary>
     public static readonly TimeSpan PreviewDelay = TimeSpan.FromMilliseconds(80);
