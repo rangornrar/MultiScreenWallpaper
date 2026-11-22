@@ -68,4 +68,3 @@ La recommandation est de déposer ce paquet pour une validation auprès d’une 
 ## Sources
 
 [Contrôle local WACK](https://learn.microsoft.com/windows/uwp/debug-test-perf/windows-app-certification-kit), [configuration DPI](https://learn.microsoft.com/windows/win32/hidpi/setting-the-default-dpi-awareness-for-a-process), code du manifeste et rapports locaux du 22 novembre 2026.
-
