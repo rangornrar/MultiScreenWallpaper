@@ -14,6 +14,8 @@ La CI compile l’application WinUI 3 sur Windows et publie le dossier autonome 
 
 Sur un poste de test Windows, lancez `WallCraft.exe --selftest rapport.json --render-only` pour contrôler le rendu synthétique sans changer le fond ni le démarrage. La [recette matérielle](MIGRATION_CSHARP.md) couvre les DPI mixtes, les coordonnées négatives, le branchement réel et le démarrage à l’ouverture de session.
 
+La version officielle 2026.11.22.0 a été installée et testée sur trois écrans réels. Le [rapport daté](store/VALIDATION_2026-11-22.md) détaille les résultats du kit Microsoft, ses avertissements et la recette restante. Un statut global WACK `WARNING` ne doit pas être présenté comme un succès sans réserve. Pour un test complet qui applique des fonds, sauvegarder puis restaurer les fonds précédents et retirer les certificats temporaires après les contrôles.
+
 ## Traductions et site
 
 Python sert à exécuter les scripts de maintenance ci-dessous. Le site généré est vérifié par la CI.

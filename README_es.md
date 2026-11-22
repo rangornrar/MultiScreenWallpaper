@@ -21,7 +21,7 @@ El programa se adhiere a la regla del 100%:
 - **0 Superposición**: Ninguna foto cubre a otra foto.
 - **0 Desbordamiento**: Las imágenes nunca superarán los bordes de la pantalla.
 - **0 Distorsión**: La relación de aspecto original se conserva matemáticamente.
-- **Modo Rellenar (opcional)**: cubre todas las pantallas; cada foto se recorta alrededor de las caras detectadas (OpenCV) o de su zona con más detalle. Nunca se deforma.
+- **Modo Rellenar (opcional)**: cubre todas las pantallas; cada foto se recorta alrededor de las caras detectadas (Windows.Media.FaceAnalysis) o de su zona con más detalle. Nunca se deforma.
 
 ### 🧩 6 Algoritmos de Disposición (Auto-Layout)
 - ⭐ **Optimización Máxima**: búsqueda en árboles de corte binarios con un número de intentos y una semilla fijos: mismas imágenes, mismo resultado. El botón *Variantes…* muestra 4 disposiciones lado a lado. Heurística: sin garantía de óptimo global.

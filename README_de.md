@@ -21,7 +21,7 @@ Das Programm hält sich strikt an die 100 % Regel:
 - **0 Überlappung**: Kein Foto verdeckt ein anderes Foto.
 - **0 Überstand**: Bilder ragen niemals über die Bildschirmränder hinaus.
 - **0 Verzerrung**: Das ursprüngliche Seitenverhältnis bleibt mathematisch gewahrt.
-- **Modus Füllen (optional)**: bedeckt alle Bildschirme; jedes Foto wird um erkannte Gesichter (OpenCV) zugeschnitten, sonst um seinen detailreichsten Bereich. Nie verzerrt.
+- **Modus Füllen (optional)**: bedeckt alle Bildschirme; jedes Foto wird um erkannte Gesichter (Windows.Media.FaceAnalysis) zugeschnitten, sonst um seinen detailreichsten Bereich. Nie verzerrt.
 
 ### 🧩 6 Layout-Algorithmen (Auto-Layout)
 - ⭐ **Maximale Optimierung**: Suche über binäre Slicing-Floorplan-Bäume mit fester Anzahl an Versuchen und festem Startwert: gleiche Bilder, gleiches Ergebnis. Die Schaltfläche *Varianten…* zeigt 4 Layouts nebeneinander. Heuristik: kein garantiertes globales Optimum.

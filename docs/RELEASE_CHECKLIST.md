@@ -8,10 +8,11 @@
 
 ## Construire et soumettre le MSIX
 
-- Renseigner les variables `MSIX_*` avec l’identité du produit Partner Center.
-- Dans GitHub Actions, lancer **Microsoft Store (MSIX)** avec la version prévue et l’option de construction avec l’identité Partner Center. Un tag `Tag_vAAAA.MM.JJ` construit aussi ce paquet lorsque les variables sont renseignées.
+- Vérifier l’identité Partner Center intégrée au manifeste et au workflow. Les variables `MSIX_*` permettent de la remplacer ; elles ne sont pas nécessaires pour le produit Rangorn.WallCraftPro.
+- Dans GitHub Actions, lancer **Microsoft Store (MSIX)** avec la version prévue et l’option de construction avec l’identité Partner Center. Un tag `Tag_vAAAA.MM.JJ` construit aussi ce paquet.
 - Attendre le succès des vérifications. Télécharger `wallcraft-store-msix` et contrôler son identité et sa version. Exécuter le Windows App Certification Kit et suivre le [guide Microsoft Store](MICROSOFT_STORE.md).
 - Compléter les [notes de version](RELEASE_NOTES_TEMPLATE.md) et vérifier l’installation depuis la fiche après certification.
+- Utiliser le [dossier de soumission](store/SOUMISSION.md) pour les champs, les quatre fiches localisées, les légendes et les notes de certification. Consulter le [rapport du 22 novembre 2026](store/VALIDATION_2026-11-22.md) pour distinguer les vérifications réussies et celles restant à réaliser.
 
 ## Site et autres téléchargements
 

@@ -3,9 +3,8 @@ name: Microsoft Store (MSIX)
 # de test et vérifie qu'il fonctionne dans un paquet (dossier réel, fond d'écran, tâche de démarrage, ouverture).
 # L'artefact destiné à Partner Center est publié après les vérifications du paquet installé.
 #
-# Identité du paquet : variables du dépôt (Settings > Secrets and variables > Actions > Variables)
-# MSIX_IDENTITY_NAME, MSIX_PUBLISHER, MSIX_PUBLISHER_DISPLAY_NAME, recopiées depuis
-# Partner Center > WallCraft Pro > Identité du produit.
+# Identité Partner Center intégrée ; les variables MSIX_IDENTITY_NAME, MSIX_PUBLISHER et
+# MSIX_PUBLISHER_DISPLAY_NAME peuvent la remplacer. Les PR gardent l'identité de développement.
 on:
   push:
     tags: ['v*', 'Tag_v*']
@@ -47,9 +46,9 @@ jobs:
         env:
           REQUESTED_VERSION: ${{ inputs.version }}
           REQUESTED_PRODUCTION: ${{ inputs.partner_center }}
-          STORE_NAME: ${{ vars.MSIX_IDENTITY_NAME }}
-          STORE_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
-          STORE_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME }}
+          STORE_NAME: ${{ vars.MSIX_IDENTITY_NAME || 'Rangorn.WallCraftPro' }}
+          STORE_PUBLISHER: ${{ vars.MSIX_PUBLISHER || 'CN=16653A68-8E9A-4C36-AC6F-C99EE31C0592' }}
+          STORE_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME || 'Rangorn' }}
         run: |
           $tag = $env:GITHUB_REF_TYPE -eq 'tag'
           $version = if ($tag) { $env:GITHUB_REF_NAME -creplace '^(Tag_)?v', '' } else { $env:REQUESTED_VERSION }
