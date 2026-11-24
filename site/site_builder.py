@@ -164,6 +164,8 @@ a:hover { color: var(--accent-hover); }
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 .screen-card img { width: 100%; height: auto; display: block; }
+.demo-video { max-width: 1120px; margin-inline: auto; }
+.demo-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--bg); }
 .article-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
 .prose p { margin-bottom: 14px; color: var(--text); }
@@ -1681,6 +1683,18 @@ def apply_2026_11():
 
 apply_2026_11()
 
+DEMO_TEXT = {
+    "fr": ("WallCraft Pro en action", "En 28 secondes, composez un panorama, alignez-le sur trois écrans de tailles différentes et prévisualisez le résultat.", "Télécharger la démo vidéo", "Français"),
+    "en": ("WallCraft Pro in action", "In 28 seconds, see how to compose a panorama, align it across three differently sized screens, and preview the result.", "Download the video demo", "English"),
+    "es": ("WallCraft Pro en acción", "En 28 segundos, vea cómo componer una panorámica, alinearla en tres pantallas de distintos tamaños y previsualizar el resultado.", "Descargar el vídeo de demostración", "Español"),
+    "de": ("WallCraft Pro in Aktion", "In 28 Sekunden sehen Sie, wie Sie ein Panorama erstellen, über drei unterschiedlich große Bildschirme ausrichten und das Ergebnis in der Vorschau prüfen.", "Demovideo herunterladen", "Deutsch"),
+}
+
+for _demo_lang, (_demo_title, _demo_description, _, _) in DEMO_TEXT.items():
+    _demo = {"type": "demo", "id": "demo", "title": _demo_title, "text": _demo_description}
+    PAGES[_demo_lang]["home"]["sections"].insert(0, _demo)
+    PAGES[_demo_lang]["how-it-works"]["sections"].insert(0, _demo)
+
 
 import content_privacy as _p  # noqa: E402
 
@@ -1693,6 +1707,11 @@ def apply_privacy():
 
 
 apply_privacy()
+
+import content_store as _store  # noqa: E402
+
+_store.apply(PAGES, LANGS, DOWNLOAD_URL)
+DOWNLOAD_URL = _store.BUILD_URL
 
 
 def page_label(lang, key):
@@ -1832,6 +1851,24 @@ def render_shot(lang, prefix, section):
     return f'''<div class="screen-card"><img src="{prefix}{escape(section["image"])}" alt="{alt}" width="{w}" height="{h}" loading="lazy" decoding="async"><div class="shot-caption"><strong>{escape(section["caption_title"])}</strong><p>{escape(section["caption_text"])}</p></div></div>'''
 
 
+def render_demo(lang, prefix):
+    base = f"{prefix}assets/demo"
+    download = escape(DEMO_TEXT[lang][2])
+    tracks = "".join(
+        f'<track kind="subtitles" src="{base}/wallcraft-{code}.vtt" srclang="{code}" label="{escape(DEMO_TEXT[code][3])}"'
+        f'{" default" if code == lang else ""}>'
+        for code in LANG_ORDER
+    )
+    return f'''<figure class="screen-card demo-video">
+        <video controls playsinline preload="none" width="1280" height="720" poster="{base}/wallcraft-poster.webp" aria-label="{escape(DEMO_TEXT[lang][0])}">
+            <source src="{base}/wallcraft-demo.mp4" type="video/mp4">
+            {tracks}
+            <p><a href="{base}/wallcraft-demo.mp4">{download}</a></p>
+        </video>
+        <figcaption class="shot-caption"><a href="{base}/wallcraft-demo.mp4" download>{download}</a></figcaption>
+    </figure>'''
+
+
 def render_section(lang, current_key, prefix, section):
     anchor = f' id="{escape(section["id"])}"' if section.get("id") else ""
     top = f'<section class="section"{anchor}><div class="section-head"><div><h2>{escape(section["title"])}</h2></div><p>{escape(section["text"])}</p></div>'
@@ -1849,6 +1886,8 @@ def render_section(lang, current_key, prefix, section):
         body = render_links(lang, current_key, section)
     elif section["type"] == "shot":
         body = render_shot(lang, prefix, section)
+    elif section["type"] == "demo":
+        body = render_demo(lang, prefix)
     elif section["type"] == "feature":
         body = render_feature(lang, prefix, section)
     elif section["type"] == "toc":

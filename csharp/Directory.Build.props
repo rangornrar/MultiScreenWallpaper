@@ -7,7 +7,7 @@
     <!-- L’audit NuGet a besoin du réseau : il ne doit pas casser une compilation hors ligne. -->
     <WarningsNotAsErrors>NU1900</WarningsNotAsErrors>
     <InvariantGlobalization>false</InvariantGlobalization>
-    <Version>2027.0.0</Version>
+    <Version>2026.11.22</Version>
     <Authors>rangornrar</Authors>
     <Product>WallCraft Pro</Product>
     <Copyright>MIT</Copyright>

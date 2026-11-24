@@ -61,6 +61,8 @@ Risque connu : `x ** 0.15` peut différer au dernier bit entre bibliothèques ma
 
 ## 5. Recette de parité sur le MSIX installé
 
+Le [contrôle du 22 novembre 2026](store/VALIDATION_2026-11-22.md) confirme l’installation avec l’identité Partner Center, le rendu au-delà de la limite GPU, l’application sur trois écrans, le repli Étendre et l’activation/désactivation de la tâche de démarrage. Les cases ci-dessous restent une recette complète à exécuter ; elles ne sont pas toutes couvertes par ce contrôle automatisé.
+
 - [ ] Import d'images (dialogue + glisser-déposer), rotation EXIF, formats JPG/PNG/WebP/BMP/TIFF
 - [ ] 6 dispositions, Ajuster/Remplir, variantes, mêmes résultats que Python
 - [ ] Déplacer, redimensionner, rogner, aimantation, calques, annuler/rétablir

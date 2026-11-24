@@ -139,6 +139,8 @@ a:hover { color: var(--accent-hover); }
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 .screen-card img { width: 100%; height: auto; display: block; }
+.demo-video { max-width: 1120px; margin-inline: auto; }
+.demo-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--bg); }
 .article-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
 .prose p { margin-bottom: 14px; color: var(--text); }

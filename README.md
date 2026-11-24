@@ -21,10 +21,10 @@ Le programme garantit la règle du 100% :
 - **0 Superposition** : Aucune photo ne couvre une autre photo.
 - **0 Dépassement** : Les images ne déborderont jamais de l'écran.
 - **0 Déformation** : Le ratio original est mathématiquement préservé.
-- **Mode Remplir (au choix)** : couvre tous les écrans ; chaque photo est recadrée autour des visages détectés (OpenCV), sinon autour de sa zone la plus détaillée. Jamais de déformation.
+- **Mode Remplir (au choix)** : couvre tous les écrans ; chaque photo est recadrée autour des visages détectés (Windows.Media.FaceAnalysis), sinon autour de sa zone la plus détaillée. Jamais de déformation.
 
 ### 🧩 6 Algorithmes d'Organisation (Auto-Layout)
-- ⭐ **Optimisation Maximale** : recherche sur des arbres de découpage binaires, avec un nombre d'essais et une graine fixes : mêmes images, même résultat. Le bouton *Variantes…* propose 4 dispositions côte à côte. Heuristique : pas de garantie d'optimum global.
+- ⭐ **Optimisation Maximale** : recherche sur des arbres de découpage binaires, avec un nombre d'essais et une graine fixes : mêmes images, même résultat. Le bouton *Variantes…* propose jusqu’à 4 dispositions distinctes côte à côte. Heuristique : pas de garantie d'optimum global.
 - **Mosaïque Parfaite** : Un arrangement aléatoire de type patchwork (technique BSP).
 - **Lignes Justifiées** : Alignement type Flickr/Google Images.
 - **Grille Régulière** : Quadrillage mathématique et étendu.

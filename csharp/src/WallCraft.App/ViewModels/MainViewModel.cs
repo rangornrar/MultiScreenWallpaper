@@ -220,6 +220,7 @@ public sealed partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(LayoutNames));
         SyncLibrary(rebuild: true);
         RefreshSummary();
+        RefreshSelectionText();
         TextsChanged?.Invoke(this, EventArgs.Empty);
         RequestRedraw();
     }

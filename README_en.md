@@ -21,7 +21,7 @@ The program adheres to the 100% rule:
 - **0 Overlap**: No photo covers another photo.
 - **0 Overflow**: Images will never spill off the screen edges.
 - **0 Distortion**: The original aspect ratio is mathematically preserved.
-- **Fill mode (optional)**: covers every screen; each photo is cropped around detected faces (OpenCV), otherwise around its most detailed area. Never distorted.
+- **Fill mode (optional)**: covers every screen; each photo is cropped around detected faces (Windows.Media.FaceAnalysis), otherwise around its most detailed area. Never distorted.
 
 ### 🧩 6 Layout Algorithms (Auto-Layout)
 - ⭐ **Maximum Optimization**: searches binary slicing-floorplan trees with a fixed number of tries and a fixed seed: same images, same result. The *Variants…* button shows 4 layouts side by side. Heuristic: no guarantee of a global optimum.

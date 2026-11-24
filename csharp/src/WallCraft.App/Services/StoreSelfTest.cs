@@ -41,7 +41,7 @@ public static class StoreSelfTest
                 new MonitorInfo { Width = 64, Height = 36, Canvas = new IntRect(0, 0, 64, 36) },
                 new MonitorInfo { Width = 64, Height = 36, Canvas = new IntRect(limit, 0, 64, 36) },
             };
-            var wide = await HdRenderer.SplitAsync([new(image, 64, 36), new(secondImage, 64, 36) { X = limit }],
+            var wide = await HdRenderer.SplitAsync(new CompositionImage[] { new(image, 64, 36), new(secondImage, 64, 36) { X = limit } },
                 limit + 64, 36, simulated, background, folder, "selftest-wide");
             report["wide_render"] = wide.Count == 2;
             if (wide.Count == 2)
